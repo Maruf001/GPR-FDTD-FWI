@@ -1,0 +1,5 @@
+As part of the interview, we will discuss a short coding and technical exercise that assesses understanding of electromagnetic wave simulation, inversion methods, and scientific computing. The details of the task are attached.
+
+We recommend that you review the task in advance and prepare a working implementation that you can walk through and discuss during the interview. The goal is not necessarily to complete everything perfectly, but to demonstrate your reasoning, modelling choices, and coding approach.
+
+You do not need to submit the code in advance. Instead, please be prepared to share your screen and explain your solution during the interview.
