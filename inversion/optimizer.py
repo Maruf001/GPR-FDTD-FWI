@@ -11,7 +11,7 @@ import config as cfg
 
 
 def run_steepest_descent(objective_and_gradient, x0, bounds,
-                          max_iter=30, initial_step=0.5, callback=None):
+                          max_iter=30, initial_step=0.1, callback=None):
     """
     Steepest descent with fixed normalized step size.
 
@@ -64,8 +64,8 @@ def run_steepest_descent(objective_and_gradient, x0, bounds,
         x = np.clip(x, bounds[0], bounds[1])
 
         # Reduce step size gradually (cooling schedule)
-        if k > 0 and k % 10 == 0:
-            alpha *= 0.5
+        if k > 0 and k % 15 == 0:
+            alpha *= 0.7
 
         print(f"  Iteration {k+1}/{max_iter}: J = {J:.6e}, "
               f"|grad| = {grad_norm:.4e}, step = {alpha:.4e}")

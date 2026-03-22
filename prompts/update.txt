@@ -1,0 +1,11 @@
+⏺ Good news — the inversion actually completed successfully on the MacBook (just slowly). The key results from the 1-iteration test:
+                                                                                          
+  - 56 minutes per iteration on CPU (51 sources × forward + adjoint)                                                                                             
+  - Misfit J = 14.0 — significant initial mismatch confirms the inversion has work to do                                                                         
+  - NRMS data error = 31.7% — substantial data discrepancy to drive the inversion                                                                                
+  - NRMS model error = 4.3% — small because most of the domain is concrete (correct in initial model)                                                            
+                                                                                                                                                                 
+  On the DGX Spark with GPU acceleration, expect ~30-80x speedup, bringing each iteration down to ~1-2 minutes. A full 30-iteration inversion should complete in 
+  ~30-60 minutes.                                                                                                                                                
+                                                                                                                                                                 
+  The project is ready to push to GitHub and run on the DGX. Want me to help set up the remote or is there anything else you'd like to adjust?   

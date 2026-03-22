@@ -1,0 +1,8 @@
+first go thorugh the files in the folder. there are two documents: note.txt contains the context (from the email I  
+recived.). Secondly, EM_wave_inversion_tests_for_Infra_applicants.pdf, which contains the overall instruction. don't  
+read into this too much (as it contains some irrelevent information, i.e. talking about the candidate and whatnot. My 
+ goal is to purely do the project, fully. you first need to create a research plan (save it as .md file), and the do  
+the actual research by search relvenet scientific papers, github/gitlab/huggingface etc. repos from the web, as you   
+see fits best.  I need to do this implementation and then be able to later explanin it (thus need guidance on that    
+too, maybe as a seperate md files.). you should create appropriately named folders too, because organization of a     
+project matters a lot, so that I can keep track of everything. so use your plan mode.

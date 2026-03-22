@@ -1,0 +1,36 @@
+Done — I created both files for you:
+
+[Research plan (.md)](chatgpt_research/EM_wave_inversion_research_plan.md)
+[Research notes + resource map (.md)](chatgpt_research/EM_wave_inversion_resource_map.md)
+
+I anchored the plan to the actual task, not the interview fluff. The note says the goal is to be ready to walk through a working implementation and explain your reasoning, modeling choices, and code approach; it also says you do not need to submit code in advance. The PDF makes the required scope explicit: 2D/2.5D forward EM simulation, reinforced-concrete geometry, moving Tx/Rx scan, B-scan plus propagation animation, inversion to recover rebar geometry, and optional CUDA acceleration with runtime comparison.  
+
+My recommendation is to tackle this as a focused, interview-ready engineering build:
+
+1. Implement a custom **2D TMz Yee-grid FDTD** solver.
+2. Use a **reinforced-concrete scene with circular PEC-like rebars** as the first working model.
+3. Generate a **moving-source/moving-receiver B-scan**.
+4. Do inversion first over a **small parameter vector** like rebar center and radius, instead of trying to invert every grid cell.
+5. Add GPU acceleration only after the CPU version is correct. This is the highest signal-to-effort path for this assignment. ([gprMax Documentation][1])
+
+The research stack I found most useful is this. For forward GPR/FDTD, **gprMax** is the best reference because it is explicitly built for GPR, documents 2D TMz usage, shows metal-cylinder A-scan/B-scan examples, and includes CUDA-based GPU support for the FDTD solver loops. **Meep** is very good for FDTD and adjoint concepts, but its documentation says it does not currently support GPUs via CUDA/OpenCL. **FDTDX** is the strongest modern differentiable-FDTD reference if you want a JAX-native GPU/autodiff path, since it advertises GPU acceleration, multi-GPU scaling, and automatic differentiation. ([gprMax Documentation][1])
+
+For inversion-specific reading, the most relevant chain is: **Ernst et al.** for early FDTD-based radar waveform inversion, **Kuroda et al.** for the theoretical FWI setup, **Meles et al.** for adjoint-state sensitivity in GPR, **Soydan et al. 2024** for a modern adjoint-method view in EM imaging, **GPR-FWI-Py (2025)** for a current open-source Python FWI codebase, and **Fast-GPR-FWI (2025/2026)** for a very relevant GPU-accelerated GPR FWI direction using CUDA plus PyTorch. ([SEG Library][2])
+
+The practical outline I’d follow is:
+
+* Start with homogeneous-medium pulse propagation and verify CFL stability.
+* Add one buried metal cylinder/rebar and confirm the reflected hyperbola in the B-scan.
+* Extend to 2–3 rebars in concrete.
+* Invert only `[x, y, r]` for each bar, plus maybe one global concrete permittivity if needed.
+* Use normalized waveform misfit and geometry error metrics.
+* Only after that, consider pixelwise refinement, dual-parameter inversion, or CUDA/JAX acceleration. This is also consistent with how gprMax’s simple 2D examples structure source, receiver, scan stepping, and B-scan generation. ([gprMax Documentation][3])
+
+One useful up-to-date takeaway from the research: there are relevant datasets and surrogate-model projects around rebar/GPR, including a bridge-deck dataset generated with gprMax and PINN4GPR for railway-style synthetic GPR workflows, but for this exact test they are secondary. The main deliverable should still be a classical physics-based forward-plus-inversion implementation that you can explain line by line. ([GitHub][4])
+
+The two markdown files already capture the full plan, curated references, repo map, milestones, risks, and the exact implementation order I think is best.
+
+[1]: https://docs.gprmax.com/en/latest/gprmodelling.html "Guidance on GPR modelling — gprMax  documentation"
+[2]: https://library.seg.org/doi/10.1190/1.2148249?utm_source=chatgpt.com "Full-waveform inversion of crosshole georadar data"
+[3]: https://docs.gprmax.com/en/latest/examples_simple_2D.html "Introductory (2D) models — gprMax  documentation"
+[4]: https://github.com/InfraSmartLab/Open_GPR_Dataset_for_Bridge_Deck "GitHub - InfraSmartLab/Open_GPR_Dataset_for_Bridge_Deck · GitHub"

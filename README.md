@@ -1,6 +1,8 @@
-# 2D FDTD GPR Simulation & Adjoint-State Full-Waveform Inversion
+# GPR-FDTD-FWI
 
-A complete implementation of 2D finite-difference time-domain (FDTD) electromagnetic forward modeling and adjoint-state full-waveform inversion (FWI) for ground penetrating radar (GPR) inspection of reinforced concrete.
+**2D FDTD Forward Modeling & Adjoint-State Full-Waveform Inversion for Ground Penetrating Radar**
+
+A from-scratch implementation of 2D finite-difference time-domain (FDTD) electromagnetic simulation and adjoint-state full-waveform inversion (FWI) for GPR inspection of reinforced concrete.
 
 ## Problem Setup
 

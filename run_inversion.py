@@ -27,7 +27,7 @@ def main():
     parser = argparse.ArgumentParser(description='GPR Full-Waveform Inversion')
     parser.add_argument('--iterations', type=int, default=cfg.N_ITERATIONS,
                         help='Number of inversion iterations')
-    parser.add_argument('--method', type=str, default='steepest_descent',
+    parser.add_argument('--method', type=str, default='lbfgs',
                         choices=['steepest_descent', 'lbfgs'],
                         help='Optimization method')
     args = parser.parse_args()
