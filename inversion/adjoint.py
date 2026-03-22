@@ -111,8 +111,16 @@ def compute_gradient_single_source(model, source_waveform,
         # Accumulate gradient: g += Ez_adj * dEz_fwd/dt * dt
         gradient += sim_adj.Ez * dEz_dt * cfg.DT
 
-    # Scale by -eps0
-    gradient *= -cfg.EPS0
+    # The raw cross-correlation is: Σ(Ez_adj * dEz_fwd/dt * dt)
+    # The theoretical continuous adjoint formula includes -eps0, but this
+    # produces gradient magnitudes at ~1e-17 (near machine precision),
+    # preventing the optimizer from making progress.
+    # We normalize to unit max magnitude — the line search in L-BFGS-B
+    # determines the correct step size adaptively.
+    gradient *= -1.0
+    grad_max = np.max(np.abs(gradient))
+    if grad_max > 0:
+        gradient /= grad_max
 
     return gradient, misfit, d_syn_trace
 

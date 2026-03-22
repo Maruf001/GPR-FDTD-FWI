@@ -83,20 +83,22 @@ class FDTDSimulatorGPU:
 
         Same algorithm as CPU, using CuPy's vectorized operations.
         """
-        # H update
-        self.Hx[:, :-1] -= (self.Dh_gpu[:, :-1] / self.dz) * (
-            self.Ez[:, 1:] - self.Ez[:, :-1]
-        )
-        self.Hy[:-1, :] += (self.Dh_gpu[:-1, :] / self.dx) * (
+        # H update: same equations as CPU version
+        # Hx: dEz/dz → first index difference
+        self.Hx[:-1, :] -= (self.Dh_gpu[:-1, :] / self.dz) * (
             self.Ez[1:, :] - self.Ez[:-1, :]
+        )
+        # Hy: dEz/dx → second index difference
+        self.Hy[:, :-1] += (self.Dh_gpu[:, :-1] / self.dx) * (
+            self.Ez[:, 1:] - self.Ez[:, :-1]
         )
 
         # E update
         self.Ez[1:, 1:] = (
             self.Ca_gpu[1:, 1:] * self.Ez[1:, 1:]
             + self.Cb_gpu[1:, 1:] * (
-                (self.Hy[1:, 1:] - self.Hy[:-1, 1:]) / self.dx
-                - (self.Hx[1:, 1:] - self.Hx[1:, :-1]) / self.dz
+                (self.Hy[1:, 1:] - self.Hy[1:, :-1]) / self.dx   # dHy/dx: 2nd index
+                - (self.Hx[1:, 1:] - self.Hx[:-1, 1:]) / self.dz  # dHx/dz: 1st index
             )
         )
 
