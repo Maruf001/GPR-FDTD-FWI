@@ -48,7 +48,7 @@ A from-scratch implementation of 2D finite-difference time-domain (FDTD) electro
 │   └── plot_signals.py        # Signal + convergence plots
 │
 ├── docs/
-│   ├── theory_guide.md        # Interview preparation (FDTD, adjoint, GPU)
+│   ├── theory_guide.md        # Theory discussion notes (FDTD, adjoint, GPU)
 │   ├── parameter_justifications.md  # Why each parameter was chosen
 │   └── dgx_spark_guide.md    # DGX Spark deployment instructions
 │
@@ -113,4 +113,4 @@ Compares CPU vs GPU execution time for the forward simulation.
 - Meles et al. (2010, 2012) — GPR FWI with adjoint method
 - Ernst et al. (2007) — FWI of crosshole radar
 
-See `docs/theory_guide.md` for detailed interview preparation notes.
+See `docs/theory_guide.md` for detailed theory discussion notes.
