@@ -145,6 +145,12 @@ for each step:
 
 ---
 
+## Important: README Policy
+
+**NEVER mention "interview", "interview prep", or any interview-related language in `README.md`.** The README is public-facing and should present this as a research project only. Interview context belongs here in PROJECT_CONTEXT.md and other internal docs, not in the README.
+
+---
+
 ## Interview Prep Files
 
 - `docs/theory_guide.md` — Comprehensive Part A answers (FDTD, adjoint-state, GPU topics)
