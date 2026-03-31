@@ -603,18 +603,47 @@ def build_presentation():
 
     # ── SLIDE 9: Inversion Problem ──
     slide = new_slide(prs)
-    add_title_bar(slide, "The Inversion Problem")
-    add_bullets(slide, Inches(0.5), Inches(1.5), Inches(7), Inches(3), [
-        "Given: observed B-scan data d_obs",
-        "Find: permittivity model m that explains the data",
-        "Misfit: J(m) = 0.5 * ||d_obs - d_syn(m)||^2",
+    add_title_bar(slide, "The Inverse Problem: From Data to Model")
+
+    # Left: plain-language framing
+    add_text_box(slide, Inches(0.5), Inches(1.4), Inches(6), Inches(0.5),
+                 "We have:", size=20, bold=True, color=TITLE_COLOR)
+    add_bullets(slide, Inches(0.8), Inches(1.9), Inches(5.5), Inches(1.2), [
+        "A B-scan radargram (recorded radar signals)",
+    ], size=17)
+
+    add_text_box(slide, Inches(0.5), Inches(2.8), Inches(6), Inches(0.5),
+                 "We want:", size=20, bold=True, color=TITLE_COLOR)
+    add_bullets(slide, Inches(0.8), Inches(3.3), Inches(5.5), Inches(1.2), [
+        "The underground model (where are the rebars?)",
+    ], size=17)
+
+    add_text_box(slide, Inches(0.5), Inches(4.2), Inches(6), Inches(0.5),
+                 "How:", size=20, bold=True, color=TITLE_COLOR)
+    add_bullets(slide, Inches(0.8), Inches(4.7), Inches(5.5), Inches(2), [
+        "Adjust the model until simulated signals match observed ones",
+        "Measure mismatch with a \"misfit\" score — then minimise it",
+    ], size=17)
+
+    # Right: the cost problem, visually
+    add_text_box(slide, Inches(7), Inches(1.4), Inches(5.5), Inches(0.5),
+                 "The cost problem:", size=20, bold=True, color=RGBColor(0xC6, 0x28, 0x28))
+    add_bullets(slide, Inches(7.3), Inches(2.0), Inches(5.2), Inches(2.5), [
+        "To know which direction to adjust,",
+        "we need a \"gradient\" — how does each",
+        "pixel affect the misfit?",
         "",
-        "Naive approach: perturb each of 50,000 grid cells",
-        "  → 50,000 forward simulations per gradient!",
-    ], size=18)
-    add_key_number(slide, Inches(9), Inches(2.5), "50,000", "parameters")
-    add_key_number(slide, Inches(9), Inches(4.5), "~4 hrs", "per naive gradient")
-    set_notes(slide, "This frames the core challenge. Direct FD gradient is O(N) simulations.")
+        "Brute force: tweak one pixel, re-run",
+        "the simulation, repeat for every pixel",
+    ], size=16)
+
+    add_key_number(slide, Inches(8), Inches(4.5), "50,000", "pixels to check")
+    add_key_number(slide, Inches(8), Inches(5.8), "~4 hours", "per brute-force gradient")
+
+    set_notes(slide, "Frame this as a detective problem: we have the clues (B-scan) "
+              "and want to find the culprit (rebar positions). The challenge is that "
+              "checking every possible change is prohibitively expensive — 50K forward "
+              "simulations just to know which direction to step.")
 
     # ── SLIDE 10: Adjoint ──
     slide = new_slide(prs)
