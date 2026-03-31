@@ -15,6 +15,7 @@ Orchestrates the complete inversion workflow:
 """
 import numpy as np
 import time as timer
+from scipy.ndimage import gaussian_filter
 from core.geometry import build_rebar_model, build_initial_model, model_from_epsilon_r
 from core.scan import Scanner
 from inversion.adjoint import compute_gradient_all_sources
@@ -91,7 +92,47 @@ class InversionEngine:
         iz_air = int(np.round(cfg.CONCRETE_TOP / cfg.DZ)) + cfg.NPML
         gradient[:iz_air, :] = 0.0
 
+        # Smooth gradient to suppress oscillatory numerical artifacts and
+        # reduce the effective L2 norm of the perturbation, allowing larger
+        # step sizes. Sigma = 3 cells ≈ 6 mm (standard FWI preconditioning).
+        gradient = gaussian_filter(gradient, sigma=3.0)
+
+        # Re-mask after smoothing
+        gradient[:n, :] = 0.0
+        gradient[-n:, :] = 0.0
+        gradient[:, :n] = 0.0
+        gradient[:, -n:] = 0.0
+        gradient[:iz_air, :] = 0.0
+
         return J, gradient.ravel()
+
+    def objective_only(self, eps_r_flat):
+        """Compute misfit without gradient (for line search)."""
+        from core.source import ricker_wavelet, generate_time_array
+        from core.fdtd import FDTDSimulator
+        from inversion.adjoint import _build_mute_window
+
+        eps_r_2d = eps_r_flat.reshape(cfg.NZ, cfg.NX)
+        model = model_from_epsilon_r(eps_r_2d)
+
+        t = generate_time_array(cfg.NT, cfg.DT)
+        wavelet = ricker_wavelet(t, cfg.F_CENTER)
+        mute = _build_mute_window(cfg.NT, cfg.DT)
+
+        total_misfit = 0.0
+        for k, (src_iz, src_ix, rec_iz, rec_ix) in enumerate(
+                self.scan_positions):
+            sim = FDTDSimulator(model)
+            result = sim.run(wavelet, src_iz, src_ix, rec_iz, rec_ix)
+            residual = (result['trace'] - self.d_obs[:, k]) * mute
+
+            total_misfit += 0.5 * np.sum(residual ** 2)
+
+        total_misfit /= len(self.scan_positions)
+
+        # Add TV regularization
+        tv_val = tv_penalty(eps_r_2d)
+        return total_misfit + cfg.TV_WEIGHT * tv_val
 
     def run(self, max_iter=None, method='steepest_descent'):
         """

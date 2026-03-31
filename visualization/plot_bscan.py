@@ -31,7 +31,7 @@ def plot_bscan(bscan, scan_x, time, save_path=None, show=True,
     title : str
         Plot title.
     """
-    fig, ax = plt.subplots(1, 1, figsize=(10, 6))
+    fig, ax = plt.subplots(1, 1, figsize=(10, 7))
 
     # Convert to mm and ns
     x_mm = scan_x * 1000
@@ -39,15 +39,16 @@ def plot_bscan(bscan, scan_x, time, save_path=None, show=True,
 
     vmax = clip_pct * np.max(np.abs(bscan))
 
-    im = ax.pcolormesh(x_mm, t_ns, bscan, cmap='seismic',
+    im = ax.pcolormesh(x_mm, t_ns, bscan, cmap='RdBu_r',
                        shading='auto', vmin=-vmax, vmax=vmax)
 
-    ax.set_xlabel('Scan position x [mm]')
-    ax.set_ylabel('Two-way travel time [ns]')
-    ax.set_title(title)
+    ax.set_xlabel('Scan position x [mm]', fontsize=12)
+    ax.set_ylabel('Two-way travel time [ns]', fontsize=12)
+    ax.set_title(title, fontsize=14, fontweight='bold')
     ax.invert_yaxis()
 
-    fig.colorbar(im, ax=ax, label='Normalized amplitude')
+    cbar = fig.colorbar(im, ax=ax, label='Amplitude', shrink=0.9)
+    cbar.ax.tick_params(labelsize=10)
 
     plt.tight_layout()
     if save_path:

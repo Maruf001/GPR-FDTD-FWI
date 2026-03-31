@@ -31,8 +31,42 @@ Workflow:
 import numpy as np
 from core.fdtd import FDTDSimulator
 from core.source import ricker_wavelet, generate_time_array
-from core.utils import pos_to_index
 import config as cfg
+
+
+def _build_mute_window(nt, dt, t_start=1.0e-9, t_end=7.0e-9, taper_ns=0.3e-9):
+    """
+    Build a time-domain muting window that suppresses the direct wave
+    and focuses on the rebar reflection window.
+
+    The direct wave and air-concrete interface reflection arrive before
+    ~1 ns. Rebar reflections arrive at ~1.5-4 ns. Muting early arrivals
+    dramatically improves gradient quality by removing the dominant signal
+    that is identical in both observed and synthetic data.
+
+    Returns
+    -------
+    window : ndarray, shape (nt,)
+        Weights in [0, 1] with cosine tapers.
+    """
+    t = np.arange(nt) * dt
+    window = np.ones(nt)
+
+    # Taper on at t_start
+    mask_early = t < t_start
+    taper_on = (t >= t_start) & (t < t_start + taper_ns)
+    window[mask_early] = 0.0
+    if np.any(taper_on):
+        window[taper_on] = 0.5 * (1 - np.cos(np.pi * (t[taper_on] - t_start) / taper_ns))
+
+    # Taper off at t_end
+    taper_off = (t >= t_end - taper_ns) & (t < t_end)
+    mask_late = t >= t_end
+    if np.any(taper_off):
+        window[taper_off] = 0.5 * (1 + np.cos(np.pi * (t[taper_off] - (t_end - taper_ns)) / taper_ns))
+    window[mask_late] = 0.0
+
+    return window
 
 
 def compute_gradient_single_source(model, source_waveform,
@@ -80,6 +114,14 @@ def compute_gradient_single_source(model, source_waveform,
     # Step 2: Compute residual and misfit
     # =========================================================
     residual = d_syn_trace - d_obs_trace
+
+    # Apply time-domain muting to focus on rebar reflections.
+    # This suppresses the direct wave and air-concrete reflection which
+    # are nearly identical in observed/synthetic data and produce large
+    # but uninformative gradients.
+    mute = _build_mute_window(nt, cfg.DT)
+    residual = residual * mute
+
     misfit = 0.5 * np.sum(residual ** 2)
 
     # =========================================================
@@ -111,16 +153,13 @@ def compute_gradient_single_source(model, source_waveform,
         # Accumulate gradient: g += Ez_adj * dEz_fwd/dt * dt
         gradient += sim_adj.Ez * dEz_dt * cfg.DT
 
-    # The raw cross-correlation is: Σ(Ez_adj * dEz_fwd/dt * dt)
-    # The theoretical continuous adjoint formula includes -eps0, but this
-    # produces gradient magnitudes at ~1e-17 (near machine precision),
-    # preventing the optimizer from making progress.
-    # We normalize to unit max magnitude — the line search in L-BFGS-B
-    # determines the correct step size adaptively.
+    # Apply the physical sign: gradient = -Σ(Ez_adj * dEz_fwd/dt * dt)
+    # Note: we omit the eps0 prefactor here. It produces ~1e-17 magnitudes
+    # which are near machine precision. Instead, the total gradient is
+    # normalized once after summing all sources (in compute_gradient_all_sources).
+    # This preserves relative source contributions while giving the optimizer
+    # a workable magnitude.
     gradient *= -1.0
-    grad_max = np.max(np.abs(gradient))
-    if grad_max > 0:
-        gradient /= grad_max
 
     return gradient, misfit, d_syn_trace
 
@@ -169,8 +208,7 @@ def compute_gradient_all_sources(model, d_obs_bscan, scan_positions, scan_x,
         total_misfit += misfit_i
         d_syn_bscan[:, i] = d_syn_i
 
-    # Normalize by number of sources for consistent scaling
-    total_gradient /= n_scans
+    # Average misfit over sources
     total_misfit /= n_scans
 
     # Mask gradient in PML region (no model updates in absorbing layer)

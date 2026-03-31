@@ -37,7 +37,7 @@ class FDTDSimulatorGPU:
     Drop-in replacement for FDTDSimulator when CuPy is available.
     """
 
-    def __init__(self, model, config):
+    def __init__(self, model, config, nt_override=None):
         """
         Initialize GPU simulator by transferring arrays to GPU memory.
 
@@ -47,6 +47,8 @@ class FDTDSimulatorGPU:
             CPU-side material model.
         config : module
             Configuration module.
+        nt_override : int, optional
+            Override number of time steps (for benchmarking).
         """
         if not HAS_CUPY:
             raise RuntimeError("CuPy is not installed. GPU acceleration unavailable.")

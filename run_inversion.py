@@ -1,123 +1,122 @@
 """
-Entry point: Adjoint-state full-waveform inversion.
+Entry point: Full-Waveform Inversion for GPR rebar detection.
 
-Recovers rebar geometry from simulated GPR data using the
-adjoint-state method for gradient computation and L-BFGS-B
-optimization with Total Variation regularization.
+Supports two inversion approaches:
+    1. 'geometry' (default): Recover rebar positions (x, z, r) — 9 parameters,
+       uses finite-difference gradients and L-BFGS-B. Fast and robust.
+    2. 'pixel': Pixel-wise eps_r recovery via adjoint-state method — 50K
+       parameters, steepest descent or L-BFGS-B. Research-grade.
 
 Usage:
-    python run_inversion.py [--iterations N] [--method steepest_descent|lbfgs]
+    python run_inversion.py                           # geometry, GPU, 30 iter
+    python run_inversion.py --method geometry --iter 30
+    python run_inversion.py --method pixel --iter 30 --optimizer lbfgs
 """
 import sys
 import os
 import argparse
-import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import config as cfg
-from inversion.inversion_engine import InversionEngine
-from inversion.objective import compute_ssim_map
-from visualization.plot_inversion import plot_inversion_comparison, plot_convergence
-from visualization.plot_signals import plot_signal_comparison, plot_residual_bscan
-from visualization.plot_bscan import plot_bscan
+import numpy as np
 
 
 def main():
-    parser = argparse.ArgumentParser(description='GPR Full-Waveform Inversion')
-    parser.add_argument('--iterations', type=int, default=cfg.N_ITERATIONS,
-                        help='Number of inversion iterations')
-    parser.add_argument('--method', type=str, default='lbfgs',
-                        choices=['steepest_descent', 'lbfgs'],
-                        help='Optimization method')
+    parser = argparse.ArgumentParser(description='GPR FWI Inversion')
+    parser.add_argument('--method', choices=['geometry', 'pixel'],
+                        default='geometry',
+                        help='Inversion method (default: geometry)')
+    parser.add_argument('--iterations', type=int, default=30,
+                        help='Max iterations (default: 30)')
+    parser.add_argument('--optimizer', choices=['lbfgs', 'steepest_descent'],
+                        default='lbfgs',
+                        help='Optimizer for pixel method (default: lbfgs)')
+    parser.add_argument('--sources', type=int, default=15,
+                        help='Number of sources for geometry method (default: 15)')
+    parser.add_argument('--no-gpu', action='store_true',
+                        help='Disable GPU acceleration')
     args = parser.parse_args()
-
-    print("=" * 60)
-    print("Adjoint-State Full-Waveform Inversion")
-    print("=" * 60)
 
     os.makedirs("outputs/figures", exist_ok=True)
     os.makedirs("outputs/data", exist_ok=True)
 
-    # --- Run inversion ---
-    engine = InversionEngine()
-    results = engine.run(max_iter=args.iterations, method=args.method)
+    if args.method == 'geometry':
+        from inversion.geometry_inversion import GeometryInversionEngine
 
-    # --- Save results ---
-    np.savez("outputs/data/inversion_results.npz",
-             initial_epsr=results['initial_epsr'],
-             inverted_epsr=results['inverted_epsr'],
-             true_epsr=results['true_epsr'],
-             misfit_history=results['misfit_history'],
-             d_obs=results['d_obs'],
-             d_syn_final=results['d_syn_final'])
+        engine = GeometryInversionEngine(
+            n_sources=args.sources,
+            use_gpu=not args.no_gpu,
+        )
+        results = engine.run(max_iter=args.iterations)
+    else:
+        from inversion.inversion_engine import InversionEngine
 
-    # --- Plots ---
-    print("\nGenerating plots...")
+        engine = InversionEngine()
+        results = engine.run(
+            max_iter=args.iterations,
+            method=args.optimizer,
+        )
 
-    # Model comparison
+    # ── Save visualizations ──
+    import config as cfg
+    from visualization.plot_inversion import (
+        plot_inversion_comparison, plot_convergence,
+    )
+    from visualization.plot_bscan import plot_bscan
+    from visualization.plot_signals import plot_signal_comparison
+
     plot_inversion_comparison(
         results['initial_epsr'],
         results['inverted_epsr'],
         results['true_epsr'],
-        save_path="outputs/figures/inversion_comparison.png",
+        save_path='outputs/figures/inversion_comparison.png',
         show=False,
     )
+    print("  Saved: outputs/figures/inversion_comparison.png")
 
-    # Convergence
     plot_convergence(
         results['misfit_history'],
-        save_path="outputs/figures/convergence.png",
+        save_path='outputs/figures/convergence.png',
         show=False,
     )
+    print("  Saved: outputs/figures/convergence.png")
 
-    # Signal comparison
-    plot_signal_comparison(
-        results['d_obs'], results['d_syn_final'],
-        results['scan_x'], results['time'],
-        save_path="outputs/figures/signal_comparison.png",
-        show=False,
-    )
-
-    # Observed B-scan
     plot_bscan(results['d_obs'], results['scan_x'], results['time'],
-               save_path="outputs/figures/bscan_observed.png",
-               show=False, title='Observed B-scan (Ground Truth)')
+               title='Observed B-scan',
+               save_path='outputs/figures/bscan_observed.png', show=False)
 
-    # Synthetic B-scan from inverted model
     plot_bscan(results['d_syn_final'], results['scan_x'], results['time'],
-               save_path="outputs/figures/bscan_inverted.png",
-               show=False, title='Synthetic B-scan (Inverted Model)')
+               title='Inverted B-scan',
+               save_path='outputs/figures/bscan_inverted.png', show=False)
 
-    # Residual
-    plot_residual_bscan(
-        results['d_obs'], results['d_syn_final'],
-        results['scan_x'], results['time'],
-        save_path="outputs/figures/residual_bscan.png",
-        show=False,
-    )
+    # Residual B-scan
+    plot_bscan(results['d_obs'] - results['d_syn_final'],
+               results['scan_x'], results['time'],
+               title='Residual B-scan',
+               save_path='outputs/figures/residual_bscan.png', show=False)
 
-    # --- Quantitative metrics ---
-    n = cfg.NPML
-    ssim = compute_ssim_map(
-        results['true_epsr'][n:-n, n:-n],
-        results['inverted_epsr'][n:-n, n:-n],
-    )
+    # Save all data
+    save_dict = {
+        'initial_epsr': results['initial_epsr'],
+        'inverted_epsr': results['inverted_epsr'],
+        'true_epsr': results['true_epsr'],
+        'misfit_history': results['misfit_history'],
+        'nrms_data': results['nrms_data'],
+        'nrms_model': results['nrms_model'],
+        'elapsed_time': results['elapsed_time'],
+    }
+    # Include geometry parameters if available (from geometry inversion)
+    for key in ('optimal_params', 'true_params', 'initial_params'):
+        if key in results:
+            save_dict[key] = results[key]
+    np.savez('outputs/data/inversion_results.npz', **save_dict)
+    print("  Saved: outputs/data/inversion_results.npz")
 
-    print("\n" + "=" * 60)
-    print("Inversion Results Summary")
-    print("=" * 60)
-    print(f"  Method: {args.method}")
-    print(f"  Iterations: {len(results['misfit_history'])}")
-    print(f"  Initial misfit: {results['misfit_history'][0]:.6e}")
-    print(f"  Final misfit: {results['misfit_history'][-1]:.6e}")
-    print(f"  Misfit reduction: {results['misfit_history'][0]/results['misfit_history'][-1]:.1f}x")
+    print(f"\nResults summary:")
+    print(f"  Misfit reduction: {results['misfit_history'][0]/max(results['misfit_history'][-1], 1e-30):.1f}x")
     print(f"  NRMS data error: {results['nrms_data']:.4f}")
     print(f"  NRMS model error: {results['nrms_model']:.4f}")
-    print(f"  SSIM (model): {ssim:.4f}")
-    print(f"  Elapsed time: {results['elapsed_time']:.1f} s")
-    print(f"\nOutputs saved to outputs/figures/")
-    print("=" * 60)
+    print(f"  Runtime: {results['elapsed_time']:.1f}s")
 
 
 if __name__ == "__main__":

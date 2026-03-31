@@ -28,6 +28,7 @@ class CPML:
     """CPML absorbing boundary for 2D TMz FDTD."""
 
     def __init__(self, Nz, Nx, npml, dt, dx, dz, eps0):
+        """Initialize CPML with graded polynomial profiles for all boundaries."""
         self.Nz = Nz
         self.Nx = Nx
         self.npml = npml
