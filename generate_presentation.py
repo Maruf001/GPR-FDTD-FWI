@@ -645,21 +645,28 @@ def build_presentation():
     add_key_number(slide, Inches(9.5), Inches(2.5), "0.4%", "FD agreement")
     set_notes(slide, "This is critical for trusting inversion results.")
 
-    # ── SLIDE 12: Pixel-wise challenge ──
+    # ── SLIDE 12: Pixel-wise challenge — experimental evidence ──
     slide = new_slide(prs)
-    add_title_bar(slide, "Pixel-Wise FWI: The Convergence Challenge")
+    add_title_bar(slide, "Experiment: Pixel-Wise FWI Step-Size Analysis")
     add_bullets(slide, Inches(0.5), Inches(1.5), Inches(12), Inches(5), [
-        "50,400 parameters (every grid cell in concrete region)",
-        "Step-size analysis: only alpha <= 3e-4 produces descent",
-        "At best step: misfit reduces by 1.7e-5 per iteration from J = 14",
-        "Would need ~50,000 iterations to recover rebars",
+        "Gradient validated (0.4% vs FD) → ran systematic step-size sweep:",
         "",
-        "Root cause: 50K simultaneous pixel changes → nonlinear overshooting",
-        "Needs: pseudo-Hessian preconditioning, multi-scale frequency, source encoding",
+        "  alpha = 5e-5  :  dJ = -1.75e-5   (descent)",
+        "  alpha = 1e-4  :  dJ = -1.70e-5   (descent)",
+        "  alpha = 3e-4  :  dJ = -6.7e-6    (descent, marginal)",
+        "  alpha = 5e-4  :  dJ = +6.4e-6    (ascent — overshooting!)",
+        "  alpha = 1e-3  :  dJ = +4.5e-5    (ascent)",
         "",
-        "This motivates the geometry-based approach →",
-    ], size=16)
-    set_notes(slide, "The gradient is correct but the step size is severely limited.")
+        "Only alpha <= 3e-4 produces descent. At best step: -1.7e-5 per iter",
+        "from J = 14 — would need ~50,000 iterations (impractical)",
+        "",
+        "Root cause: 50K pixels changing simultaneously causes nonlinear overshoot",
+        "Decision: pivot to geometry-based approach using prior knowledge",
+    ], size=15)
+    set_notes(slide, "This is the evidence that motivated the pivot. The gradient is "
+              "correct but the step size is severely limited by the dimensionality. "
+              "We also tested pseudo-Hessian preconditioning (Experiment 06) — "
+              "negligible improvement for this well-illuminated domain.")
 
     # ── SLIDE 13: Geometry insight ──
     slide = new_slide(prs)
@@ -698,12 +705,50 @@ def build_presentation():
 
     # ── SLIDE 15: Convergence ──
     slide = new_slide(prs)
-    add_title_bar(slide, "Convergence & Signal Comparison")
+    add_title_bar(slide, "Inversion Convergence")
     add_figure(slide, f'{FIG_DIR}/convergence.png',
-               Inches(0.3), Inches(1.2), width=Inches(7))
+               Inches(0.5), Inches(1.2), width=Inches(8.5))
+    add_bullets(slide, Inches(9.3), Inches(1.5), Inches(3.8), Inches(5), [
+        "275 function evaluations",
+        "(Nelder-Mead simplex)",
+        "",
+        "43.5% misfit reduction",
+        "",
+        "Rapid initial decrease:",
+        "optimizer quickly finds",
+        "approximate rebar positions",
+        "",
+        "Gradual refinement:",
+        "fine-tuning radii and",
+        "sub-grid positioning",
+    ], size=14)
+    set_notes(slide, "The convergence shows two phases: rapid coarse localisation "
+              "in the first ~50 evaluations, then gradual refinement of positions and radii.")
+
+    # ── SLIDE 15b: Signal Comparison ──
+    slide = new_slide(prs)
+    add_title_bar(slide, "Signal Comparison: Observed vs Synthetic Traces")
     add_figure(slide, f'{FIG_DIR}/signal_comparison.png',
-               Inches(7.5), Inches(1.2), width=Inches(5.5))
-    set_notes(slide, "43.5% misfit reduction. Trace comparisons show good waveform match.")
+               Inches(0.3), Inches(1.2), width=Inches(9))
+    add_bullets(slide, Inches(9.5), Inches(1.5), Inches(3.5), Inches(5), [
+        "Blue: observed data",
+        "  (from true model)",
+        "Red: synthetic data",
+        "  (from inverted model)",
+        "",
+        "Good match at all 5",
+        "scan positions, especially",
+        "at rebar reflection times",
+        "(1.5-4 ns)",
+        "",
+        "Residual mismatch at late",
+        "times from multiple",
+        "reflections not captured",
+        "by 3-rebar parameterisation",
+    ], size=14)
+    set_notes(slide, "The trace comparison confirms that the inverted model "
+              "reproduces the observed waveforms well. The 5 positions sample "
+              "the full scan aperture.")
 
     # ── SLIDE 16: B-scan fit ──
     slide = new_slide(prs)
@@ -719,24 +764,32 @@ def build_presentation():
                      lbl, size=16, bold=True, alignment=PP_ALIGN.CENTER)
     set_notes(slide, "Visual proof: the inverted model reproduces the observed B-scan well.")
 
-    # ── SLIDE 17: GPU ──
+    # ── SLIDE 17: GPU — measured benchmarks ──
     slide = new_slide(prs)
-    add_title_bar(slide, "GPU Acceleration")
+    add_title_bar(slide, "GPU Acceleration: Measured Benchmarks")
     add_figure(slide, f'{FIG_DIR}/gpu_scaling.png',
                Inches(0.3), Inches(1.2), width=Inches(8.5))
     add_bullets(slide, Inches(9), Inches(1.5), Inches(4), Inches(5), [
+        "Measured on NVIDIA GB10",
+        "(DGX Spark, 128 GB)",
+        "",
+        "5 grid sizes benchmarked:",
+        "  50K → 3.2M cells",
+        "  500 time steps each",
+        "  2 runs averaged",
+        "",
         "CuPy: drop-in NumPy",
-        "  replacement for GPU",
+        "replacement for CUDA",
         "",
-        "NVIDIA GB10 (DGX Spark)",
-        "128 GB unified memory",
-        "",
-        "FDTD stencil is inherently",
-        "  parallel: 1 thread/cell",
+        "Speedup increases with",
+        "grid size (more parallel",
+        "work saturates GPU)",
     ], size=14)
-    add_key_number(slide, Inches(9.5), Inches(5.5), "3-7x", "speedup")
-    set_notes(slide, "Speedup increases with grid size. "
-              "For production 3D problems, expect 30-100x.")
+    add_key_number(slide, Inches(9.5), Inches(5.5), "3.2-7.0x", "measured speedup")
+    set_notes(slide, "These are MEASURED benchmarks, not estimates. "
+              "5 grid sizes from 50K to 3.2M cells, each timed with 2 runs averaged. "
+              "Speedup peaks at 7x for 806K cells. For 3D problems with millions of "
+              "cells, speedup would be 30-100x.")
 
     # ── SLIDE 18: GPU CPML ──
     slide = new_slide(prs)
@@ -744,15 +797,23 @@ def build_presentation():
     add_bullets(slide, Inches(0.5), Inches(1.5), Inches(12), Inches(5), [
         "Ported all 8 PML boundary corrections to GPU (CuPy vectorised ops)",
         "Replaced per-layer Python loops with 2D array broadcasting",
-        "All psi auxiliary arrays reside on GPU — no CPU-GPU transfers during stepping",
+        "All psi arrays on GPU — complete GPU-resident time-stepping loop",
         "",
-        "Verification: bit-identical traces vs CPU reference (zero error at float64)",
+        "Verification: bit-identical traces vs CPU (zero error at float64 precision)",
         "",
-        "Result: complete GPU-resident FDTD loop (H update + CPML + E update + CPML + source)",
-    ], size=17)
-    add_key_number(slide, Inches(9.5), Inches(5), "Bit-identical", "to CPU")
-    set_notes(slide, "The GPU CPML port was verified to produce exactly the same traces "
-              "as the CPU version — zero numerical difference.")
+        "Performance at project grid (180x280):",
+        "  CPU with CPML: 1.70 s    |    GPU v2 with CPML: 1.10 s    →   1.5x speedup",
+        "",
+        "Why modest speedup? CPML operates on thin boundary strips (15 cells wide)",
+        "  — low parallelism per kernel launch. At larger grids (e.g., 3D with",
+        "  millions of cells), the field-update cost dominates and overall GPU",
+        "  speedup approaches the 3-7x measured for field updates alone.",
+    ], size=15)
+    add_key_number(slide, Inches(9.5), Inches(5.5), "Bit-identical", "to CPU")
+    set_notes(slide, "GPU CPML adds correctness (complete absorbing boundaries on GPU) "
+              "but the performance gain at this small 2D grid is modest. The thin PML "
+              "strips (15x280 or 180x15) don't saturate GPU parallelism. For production "
+              "3D grids the CPML overhead is proportionally much smaller.")
 
     # ── SLIDE 19: Dispersive ──
     slide = new_slide(prs)
@@ -823,12 +884,13 @@ def build_presentation():
                  color=WHITE, alignment=PP_ALIGN.CENTER)
 
     contributions = [
-        "Complete 2D TMz FDTD solver with CPML — 6/6 tests pass",
-        "Adjoint gradient validated to 0.4% vs finite differences",
-        "Geometry inversion: 9 params, < 3 mm position error, < 1 mm depth",
-        "GPU acceleration: 3-7x speedup (CuPy), bit-identical CPML",
-        "Extensions: Debye dispersion (~20%), dipole antenna (~40%),",
-        "    multi-scale frequency continuation, dual-parameter adjoint",
+        "1.  Complete 2D TMz FDTD solver with CPML — 6/6 tests pass",
+        "2.  Adjoint gradient validated to 0.4% vs finite differences",
+        "3.  Pixel-wise FWI: correct but impractical → evidence-based pivot",
+        "4.  Geometry inversion: 9 params, < 3 mm position, < 1 mm depth",
+        "5.  GPU acceleration: 3.2-7.0x measured speedup, bit-identical CPML",
+        "6.  Extensions: Debye dispersion (~20% effect), dipole antenna",
+        "     (~40% effect), multi-scale frequency continuation",
         "",
         "All from scratch — ~2,500 lines of documented Python",
     ]
