@@ -1,6 +1,6 @@
 # Parameter Justifications
 
-This document explains the physical reasoning behind every parameter choice in `config.py`. These are the kinds of questions an interviewer will ask.
+This document explains the physical reasoning behind every parameter choice in `config.py`.
 
 ---
 
@@ -91,9 +91,13 @@ This document explains the physical reasoning behind every parameter choice in `
 
 ### σ_max Derivation
 
-Theoretical optimal: σ_max = 0.8 × (m+1) / (dh × √(μr/εr))
+Theoretical optimal (Taflove): σ_max = 0.8 × (m+1) / (η₀ × dh)
 
-For our case (air boundary): σ_max ≈ 0.8 × 4 / (0.002 × 1) = 1600 S/m per unit length.
+where η₀ = √(μ₀/ε₀) ≈ 377 Ω is the free-space impedance.
+
+For our case: σ_max ≈ 0.8 × 4 / (377 × 0.002) ≈ 4.24 S/m.
+
+**Note**: An earlier version of this code omitted η₀ from the denominator, yielding σ_max ≈ 1600 — far too large and causing excessive PML reflections. The corrected formula matches the Roden & Gedney (2000) reference.
 
 ---
 
