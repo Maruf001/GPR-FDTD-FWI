@@ -10,7 +10,7 @@ from core.materials import MaterialModel
 import config as cfg
 
 
-def build_rebar_model():
+def build_rebar_model(rebars=None):
     """
     Construct the ground-truth model with air, concrete, and embedded rebars.
 
@@ -26,6 +26,12 @@ def build_rebar_model():
     model : MaterialModel
         Complete ground-truth model with all material properties set.
     """
+    if rebars is None:
+        rebars = [
+            (z_center, x_center, cfg.REBAR_RADIUS)
+            for z_center, x_center in cfg.REBAR_POSITIONS
+        ]
+
     model = MaterialModel(cfg.NZ, cfg.NX,
                           eps_r_bg=cfg.AIR_EPSR,
                           sigma_bg=cfg.AIR_SIGMA,
@@ -42,12 +48,12 @@ def build_rebar_model():
         sigma=cfg.CONCRETE_SIGMA,
     )
 
-    # Embed rebars as circular inclusions
-    for z_center, x_center in cfg.REBAR_POSITIONS:
+    # Embed rebars as circular inclusions.
+    for z_center, x_center, radius in rebars:
         model.add_circle(
             z_center_m=z_center,
             x_center_m=x_center,
-            radius_m=cfg.REBAR_RADIUS,
+            radius_m=radius,
             eps_r=cfg.REBAR_EPSR,
             sigma=cfg.REBAR_SIGMA,
             dz=cfg.DZ,
@@ -56,6 +62,20 @@ def build_rebar_model():
         )
 
     return model
+
+
+def build_single_rebar_model(x_center, z_center, radius):
+    """
+    Construct a ground-truth model with one circular rebar.
+
+    Parameters
+    ----------
+    x_center, z_center : float
+        Rebar center in physical coordinates [m].
+    radius : float
+        Rebar radius [m].
+    """
+    return build_rebar_model(rebars=[(z_center, x_center, radius)])
 
 
 def build_initial_model():

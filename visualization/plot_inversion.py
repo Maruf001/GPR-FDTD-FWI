@@ -11,7 +11,7 @@ import config as cfg
 
 
 def plot_inversion_comparison(initial_epsr, inverted_epsr, true_epsr,
-                              save_path=None, show=True):
+                              save_path=None, show=True, rebar_params=None):
     """
     Three-panel comparison: initial | inverted | ground truth.
 
@@ -19,6 +19,9 @@ def plot_inversion_comparison(initial_epsr, inverted_epsr, true_epsr,
     ----------
     initial_epsr, inverted_epsr, true_epsr : ndarray, shape (Nz, Nx)
         Relative permittivity arrays (full grid including PML).
+    rebar_params : list of (z, x, radius), optional
+        Rebar outlines to overlay in physical coordinates [m]. Defaults to the
+        configured three-rebar scene.
     """
     n = cfg.NPML
     fig, axes = plt.subplots(1, 3, figsize=(18, 5.5))
@@ -45,11 +48,16 @@ def plot_inversion_comparison(initial_epsr, inverted_epsr, true_epsr,
         ax.invert_yaxis()
         ax.set_aspect('equal')
 
-        # Overlay true rebar outlines
-        for z_c, x_c in cfg.REBAR_POSITIONS:
+        # Overlay true rebar outlines.
+        if rebar_params is None:
+            rebar_params = [
+                (z_c, x_c, cfg.REBAR_RADIUS)
+                for z_c, x_c in cfg.REBAR_POSITIONS
+            ]
+        for z_c, x_c, radius in rebar_params:
             circle = patches.Circle(
                 (x_c * 1000, z_c * 1000),
-                cfg.REBAR_RADIUS * 1000,
+                radius * 1000,
                 linewidth=2.0, edgecolor='red', facecolor='none',
                 linestyle='--',
             )

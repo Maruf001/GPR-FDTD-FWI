@@ -30,6 +30,9 @@ outputs/animations/*.gif
 outputs/animations/*.mp4
 outputs/data/*.npy
 outputs/data/*.npz
+outputs/.cache/
+outputs/.matplotlib/
+outputs/single_rebar*/
 
 # Jupyter
 .ipynb_checkpoints/
