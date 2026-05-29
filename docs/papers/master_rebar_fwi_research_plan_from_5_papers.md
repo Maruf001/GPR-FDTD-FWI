@@ -48,8 +48,11 @@ experiment or implementation stage.
 - [x] Stage 2A: compact exact/noise/source-mismatch replication matrix.
 - [x] Stage 2B: broader source-profiled replication across noise/source seeds.
 - [x] Stage 3A: exact wider-window geometry stress test.
-- [ ] Stage 3B: noisy wider-window geometry stress test.
-- [ ] Stage 4: extend accepted confidence reporting to multi-rebar cases.
+- [x] Stage 3B: noisy wider-window geometry stress test.
+- [x] Stage 4A: fixed-position multi-rebar common-radius confidence profile.
+- [x] Stage 4B: per-rebar radius identifiability in multi-rebar scene.
+- [x] Stage 4C-left: left-rebar x/z/r coupling under 10% noise.
+- [ ] Stage 4C-center/right: remaining one-rebar-at-a-time x/z/r coupling checks.
 - [ ] Days 11-14: robustness, replication, and handoff.
 
 ## Current Baseline
@@ -726,6 +729,167 @@ Run the same wider geometry window under 10% noise before moving to multi-rebar.
 Exact data rejects nearby wrong x/z cells, but the top-k list shows a deeper
 high-radius competitor around z=91 mm and r=6.8-7.0 mm that should be tested
 under noise.
+```
+
+### Stage 3B: Noisy Wider-Window Geometry Stress
+
+Status:
+
+```text
+passed noisy geometry-window gate
+```
+
+Output:
+
+```text
+outputs/experiments/062_source_profiled_geometry_window_noise10
+```
+
+Tracker:
+
+```text
+docs/experiments/33_geometry_window_stress.md
+```
+
+Result:
+
+| Case | Best x [mm] | Best z [mm] | Best r [mm] | Next r [mm] | Margin |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| nominal_noise10_seed13 | 250.0 | 90.0 | 6.0 | 6.2 | 5.236e-04 |
+| source_mismatch_noise10_seed13 | 250.0 | 90.0 | 6.0 | 6.2 | 6.715e-04 |
+
+Decision:
+
+```text
+Move to Stage 4 multi-rebar extension. Keep confidence reporting mandatory:
+under 10% noise, the correct radius wins in the wider window but margins are
+small relative to the noisy objective floor.
+```
+
+### Stage 4A: Multi-Rebar Common-Radius Profile
+
+Status:
+
+```text
+passed fixed-position common-radius gate
+```
+
+Implementation:
+
+```text
+run_multi_rebar_common_radius_profile.py
+tests/test_multi_rebar_common_radius_profile.py
+```
+
+Output:
+
+```text
+outputs/experiments/063_multi_rebar_common_radius_profile
+```
+
+Tracker:
+
+```text
+docs/experiments/34_multi_rebar_common_radius.md
+```
+
+Result:
+
+| Case | Best r [mm] | Next r [mm] | Margin |
+| --- | ---: | ---: | ---: |
+| nominal | 6.0 | 6.2 | 1.122e-03 |
+| noise10_seed13 | 6.0 | 6.2 | 9.930e-04 |
+| source_mismatch | 6.0 | 6.2 | 1.221e-03 |
+| source_mismatch_noise10_seed13 | 6.0 | 6.2 | 1.090e-03 |
+
+Decision:
+
+```text
+Proceed to per-rebar radius identifiability before full 9-parameter
+multi-rebar optimization. The common-radius result is strong, but it does not
+yet prove that individual rebar sizes are separable when neighboring rebars
+remain fixed.
+```
+
+### Stage 4B: Per-Rebar Radius Identifiability
+
+Status:
+
+```text
+passed fixed-position one-at-a-time radius gates, with weaker margins than the
+common-radius sweep
+```
+
+Outputs:
+
+```text
+outputs/experiments/064_multi_rebar_center_radius_profile
+outputs/experiments/065_multi_rebar_left_radius_profile
+outputs/experiments/066_multi_rebar_right_radius_profile
+```
+
+Tracker:
+
+```text
+docs/experiments/34_multi_rebar_common_radius.md
+```
+
+Margin summary:
+
+| Swept rebar | Nominal margin | 10% noise margin | Mismatch margin | Mismatch 10% noise margin |
+| --- | ---: | ---: | ---: | ---: |
+| left index 0 | 3.737e-04 | 2.263e-04 | 4.235e-04 | 3.117e-04 |
+| center index 1 | 4.145e-04 | 3.194e-04 | 4.591e-04 | 3.314e-04 |
+| right index 2 | 3.658e-04 | 4.766e-04 | 4.013e-04 | 5.033e-04 |
+
+Decision:
+
+```text
+Run a one-rebar-at-a-time local x/z/r coupling diagnostic before full
+multi-rebar optimization. Fixed-position per-rebar sizing is correct, but the
+smaller margins mean position/radius ambiguity could be important.
+```
+
+### Stage 4C-Left: Multi-Rebar Local X/Z/R Coupling
+
+Status:
+
+```text
+passed left-rebar local geometry gate under 10% noise
+```
+
+Implementation:
+
+```text
+run_multi_rebar_local_geometry_profile.py
+tests/test_multi_rebar_local_geometry_profile.py
+```
+
+Output:
+
+```text
+outputs/experiments/067_multi_rebar_left_local_geometry_noise10
+```
+
+Tracker:
+
+```text
+docs/experiments/35_multi_rebar_local_geometry_coupling.md
+```
+
+Result:
+
+| Case | Best x [mm] | Best z [mm] | Best r [mm] | Next r [mm] | Margin |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| noise10_seed13 | 150.0 | 90.0 | 6.0 | 6.2 | 2.263e-04 |
+| source_mismatch_noise10_seed13 | 150.0 | 90.0 | 6.0 | 6.2 | 3.117e-04 |
+
+Decision:
+
+```text
+Run center-rebar local x/z/r coupling next. The weakest fixed-position rebar
+passed, but the margins are small enough that a confidence layer remains
+mandatory before full multi-rebar optimization.
 ```
 
 ## Dynamic Branch Rules

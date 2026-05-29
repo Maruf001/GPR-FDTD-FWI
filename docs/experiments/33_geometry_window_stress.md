@@ -229,3 +229,96 @@ distinct-radius margin. If either case selects the deeper high-radius candidate,
 do not move to multi-rebar yet; first add window-size rules or confidence
 warnings.
 ```
+
+### 062_source_profiled_geometry_window_noise10
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_single_rebar_source_profiled_replication.py \
+  --backend gpu-cpml \
+  --grid-step-mm 1.0 \
+  --sources 5 \
+  --frequency-ghz 1.5 \
+  --replication-cases "nominal_noise10_seed13:1.0,0.0,1.0,0.10,13|source_mismatch_noise10_seed13:1.1,-50.0,1.1,0.10,13" \
+  --x-values-mm 248:252:1 \
+  --z-values-mm 88:92:1 \
+  --radius-values-mm 5.4:7.8:0.2 \
+  --source-frequency-scales 0.9,1.0,1.1 \
+  --source-time-shift-ps-values=-80,-50,-25,0,25,50,80 \
+  --progress-every 25 \
+  --run-name source_profiled_geometry_window_noise10
+```
+
+Output:
+
+```text
+outputs/experiments/062_source_profiled_geometry_window_noise10
+```
+
+Runtime and count:
+
+```text
+325 geometry candidates
+2 observed cases
+3 modeled source-frequency scales per candidate
+4833.14 s
+```
+
+Case summary:
+
+| Case | Best x [mm] | Best z [mm] | Best r [mm] | Next r [mm] | Margin | Source profile |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| nominal_noise10_seed13 | 250.0 | 90.0 | 6.0 | 6.2 | 5.236e-04 | fc=1.0, shift=0 ps, amp=1.001 |
+| source_mismatch_noise10_seed13 | 250.0 | 90.0 | 6.0 | 6.2 | 6.715e-04 | fc=1.1, shift=-50 ps, amp=1.106 |
+
+Top candidates:
+
+| Case | Rank | x [mm] | z [mm] | r [mm] | J |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| nominal_noise10_seed13 | 1 | 250.0 | 90.0 | 6.0 | 1.992e-01 |
+| nominal_noise10_seed13 | 2 | 250.0 | 90.0 | 6.2 | 1.997e-01 |
+| nominal_noise10_seed13 | 3 | 250.0 | 91.0 | 6.8 | 2.008e-01 |
+| nominal_noise10_seed13 | 4 | 250.0 | 91.0 | 7.0 | 2.009e-01 |
+| source_mismatch_noise10_seed13 | 1 | 250.0 | 90.0 | 6.0 | 2.197e-01 |
+| source_mismatch_noise10_seed13 | 2 | 250.0 | 90.0 | 6.2 | 2.204e-01 |
+| source_mismatch_noise10_seed13 | 3 | 250.0 | 91.0 | 6.8 | 2.210e-01 |
+| source_mismatch_noise10_seed13 | 4 | 250.0 | 91.0 | 7.0 | 2.212e-01 |
+
+Plot validation:
+
+```text
+source_profiled_replication_radius_profiles.png: 1651x937 px, dynamic range 255, std 30.491
+```
+
+Interpretation:
+
+```text
+Stage 3B passes. Even with 10% noise in the wider x/z/r window, both nominal
+and source-mismatched observations select x=250 mm, z=90 mm, r=6.0 mm. The
+deeper high-radius candidate at z=91 mm and r=6.8-7.0 mm stays below the true
+candidate.
+```
+
+Important reporting caveat:
+
+```text
+The noisy objectives are around 0.20-0.22, so the absolute distinct-radius
+margin is small relative to the noisy objective floor. Production reporting
+must include top-k candidates and the distinct-radius margin. A single radius
+number without confidence is not acceptable.
+```
+
+## Stage 3B Decision
+
+Stage 3B passes.
+
+Next action:
+
+```text
+Move to Stage 4 multi-rebar extension, but carry the Stage 3 confidence rule:
+every reported radius must include top-k candidates, best-vs-next distinct
+radius margin, and the fitted source profile. If multi-rebar ambiguity is
+larger than single-rebar ambiguity, pause and build a confidence/reporting
+layer before optimizing further.
+```

@@ -821,13 +821,16 @@ def build_abbreviations(prs):
         general, papers,
         exp_label="reference",
         notes_text=(
-            "This is intentionally a reference slide, not a slide to dwell on. "
-            "Mention that the rest of the deck uses these acronyms freely, and "
-            "audiences can jump back here if anything is unclear. The two "
-            "columns are organised by category: general FWI / GPR / FDTD terms "
-            "on the left, and paper-specific / W2 / OT-LS terms on the right. "
-            "carry_low_25 in particular is a name we coined for one of our "
-            "frequency-weighting schemes."
+            "This is a reference slide; we will not dwell on it. The rest "
+            "of the deck uses these acronyms freely, so jump back here if "
+            "anything is unclear. The left column has general FWI, GPR, "
+            "and FDTD terms. The right column has paper-specific and "
+            "numerical terms, including the five paper methods and the "
+            "two W2 hyperparameters. The name carry_low_25 is one we "
+            "coined for the frequency-weighting scheme that puts 25 "
+            "percent weight on the 1 GHz residual and full weight on "
+            "the 1.5 GHz residual; it shows up in the frequency-weighting "
+            "section later."
         ))
 
 
@@ -858,14 +861,18 @@ def build_jargon(prs):
         left, right,
         exp_label="reference",
         notes_text=(
-            "The two most important entries to land verbally are 'high-radius "
-            "basin' and 'depth-radius coupling' — these come up on most of the "
-            "later slides. 'Grid polish' is the carry-over from the first deck "
-            "but is so central to the story that it gets a slot here too. The "
-            "right column's entries are all features of the production "
-            "source-profiled polish later in the deck — they give the audience "
-            "a heads-up on what 'source profile' and 'distinct-radius margin' "
-            "will mean when those appear."
+            "Two entries on the left matter more than the others. "
+            "'High-radius basin' is the wrong local minimum at about "
+            "6.95 mm radius that Powell consistently finds — it will come "
+            "up on most of the later slides. 'Depth-radius coupling' is "
+            "the physical reason that basin exists: a deeper rebar trades "
+            "against a larger radius and produces an almost identical "
+            "waveform. The grid-polish entry is a carry-over from the "
+            "first deck but central enough to repeat here. The right "
+            "column lists features of the production source-profiled "
+            "polish later in the deck — when 'source profile' and "
+            "'distinct-radius margin' appear, the definitions are on "
+            "this slide."
         ))
 
 
@@ -927,15 +934,17 @@ def build_papers_intro(prs):
         top += card_h + gap
 
     set_notes(s,
-              "The framing is deliberate. We did not pick a paper and try to apply "
-              "it; we collected five distinct strategies for FWI failure modes and "
-              "tested each as a hypothesis. The pattern was the same every time: "
-              "build the smallest reusable piece of the paper's machinery, put it "
-              "through a controlled landscape gate, decide adoption based on what "
-              "the landscape says before any optimizer integration. That order "
-              "matters — if we had wired W2 into Powell first, we would have "
-              "burned compute to learn the same lesson the landscape test "
-              "delivered cheaply.")
+              "The framing of this whole arc is deliberate. We did not pick "
+              "a single paper and try to apply it; we collected five "
+              "distinct strategies for FWI failure modes and tested each "
+              "as a hypothesis. The pattern was the same every time: "
+              "build the smallest reusable piece of the paper's machinery, "
+              "put it through a controlled landscape gate, and only "
+              "decide whether to adopt it based on what the landscape "
+              "says — before any optimiser integration. That order "
+              "matters. If we had wired W2 into Powell first, we would "
+              "have burned compute to learn the same lesson the landscape "
+              "test delivered cheaply.")
 
 
 def build_papers_bridge(prs):
@@ -1074,17 +1083,23 @@ def build_papers_bridge(prs):
          size=10, italic=True, color=GRAY)
 
     set_notes(s,
-              "This is the roadmap. The deck order after this slide follows the "
-              "rows in this table top-to-bottom: rule out OT (kept as a "
-              "diagnostic), then bandwidth scheduling (kept as a seed builder), "
-              "then frequency weighting (kept), then W2 (rejected, with both "
-              "gates shown), then material (no parameters added), then the "
-              "wavelet-mismatch finding (the new contribution), then the "
-              "synthesis runner. The two-week summary tracker (doc 30) is the "
-              "source of these verdicts. Mention that the OT-LS paper is "
-              "actually used twice in our work — once for the cycle-skipping "
-              "hypothesis (ruled out) and once indirectly via the PEBDD "
-              "source-wavelet risk it shares.")
+              "This is the deck roadmap. The order of the rest of the "
+              "presentation follows the rows of this table top to bottom. "
+              "First we rule out OT as a radius solver and keep its "
+              "diagnostic. Then we test bandwidth scheduling and keep it "
+              "only as a seed builder. Then frequency weighting, where we "
+              "discover unweighted multi-frequency dilutes radius margin "
+              "and carry_low_25 is the best compromise. Then W2, where "
+              "we run two gates — the shift-convexity test passes, the "
+              "rebar landscape fails, and W2 gets rejected as a final "
+              "radius objective. Then material parameters, which turn out "
+              "not to explain the radius bias. Then the wavelet-mismatch "
+              "finding, which is the new contribution from this arc. And "
+              "finally the production runner that synthesises the "
+              "surviving ideas. The OT-LS paper actually appears twice — "
+              "once directly for the cycle-skipping hypothesis, and once "
+              "indirectly because it shares PEBDD's concern about source-"
+              "wavelet handling on field data.")
 
 
 def build_papers(prs):
@@ -1132,13 +1147,21 @@ def build_papers(prs):
         ),
         exp_label="paper 1 / WRI",
         notes_text=(
-            "When walking through this slide, the order to emphasize is: (1) the "
-            "WRI relaxation is a *structural* change to the optimization (penalty "
-            "instead of constraint), not just a different solver step; (2) the "
-            "cumulative-frequency idea is independent of WRI and is what we "
-            "actually adopted; (3) the deferral is conditional, not categorical "
-            "— if a future setup creates an initial-model failure that source "
-            "handling cannot fix, WRI moves back onto the table."
+            "Three points to land from this slide. First, the WRI "
+            "relaxation is a structural change to the optimisation — the "
+            "wave equation is no longer a hard constraint enforced "
+            "exactly each iteration, it is a penalty term, so the "
+            "wavefield can be slightly inconsistent with the model in "
+            "exchange for better basin behaviour. Second, the cumulative-"
+            "frequency idea is independent of WRI itself, and that is "
+            "the part we actually adopted — we added per-frequency "
+            "objective contributions and a frequency-weight CLI flag, "
+            "which is what makes the carry_low_25 scheme possible later "
+            "in the deck. Third, our deferral of full WRI is conditional, "
+            "not categorical. If a future setup creates an initial-model "
+            "failure that source handling cannot fix, WRI moves back "
+            "onto the table; the docs/experiments/28 tracker has the "
+            "design notes."
         ))
 
     slide_paper_quadrant(prs, 2,
@@ -1184,12 +1207,18 @@ def build_papers(prs):
         ),
         exp_label="paper 2 / PEBDD",
         notes_text=(
-            "The most important sentence to deliver: 'the differentiator from "
-            "older bandwidth methods is filtering both sides the same way'. This "
-            "is what made PEBDD survive on field data in the paper. Our adoption "
-            "is faithful to that detail; the schedule itself we re-derived from "
-            "actual residual spectra after seeing that the guessed bands did not "
-            "carry radius information."
+            "The single most important detail in PEBDD is that the same "
+            "band-pass filter is applied to both observed and modelled "
+            "traces inside the objective. Older bandwidth methods "
+            "filtered only the modelled side through the source wavelet, "
+            "and they did not survive on field data. PEBDD did. Our "
+            "adoption is faithful to that detail — the matched-filter "
+            "band-pass lives in inversion/trace_filters.py and is "
+            "applied identically to both d_obs and d_syn before the "
+            "residual is computed. The schedule itself we re-derived "
+            "from actual residual spectra after seeing that our first-"
+            "pass guessed bands did not carry radius information; that "
+            "story takes up the next several slides."
         ))
 
     slide_paper_quadrant(prs, 3,
@@ -1235,13 +1264,21 @@ def build_papers(prs):
         ),
         exp_label="paper 3 / OT-LS",
         notes_text=(
-            "Stress two design points the slide names but does not unpack: (1) "
-            "the trace fingerprint is the part that lets OT work on signed "
-            "oscillatory data without a heavy normalization; this is different "
-            "from the W2 / Softplus approach we will see next paper; (2) the "
-            "sparse-gradient idea (master points) is a regularization choice "
-            "with a side effect — it makes it cheaper to swap in new distance "
-            "measures because we are not derivative-tied to any one objective."
+            "Two design points on this slide deserve unpacking. First, "
+            "the trace fingerprint — converting each trace to a 2D "
+            "pseudo probability density over time and amplitude and "
+            "then taking marginals — is what lets optimal transport "
+            "work on signed oscillatory data without a heavy "
+            "normalisation. That is a different approach from the W2 / "
+            "Softplus method in the next paper, which transforms the "
+            "trace itself into a non-negative mass distribution. "
+            "Second, the sparse-gradient idea using random master "
+            "points away from the antennas is a regularisation choice "
+            "with a side benefit — gradients become independent of the "
+            "specific distance measure, so swapping in a new objective "
+            "does not require deriving a new adjoint. That property "
+            "makes the OT-LS framework unusually flexible for trying "
+            "objectives quickly."
         ))
 
     slide_paper_quadrant(prs, 4,
@@ -1291,15 +1328,19 @@ def build_papers(prs):
         ),
         exp_label="paper 4 / W2",
         notes_text=(
-            "When presenting, emphasize the two-gate structure of our test — we "
-            "did not just dismiss W2 from theoretical arguments. We replicated "
-            "the paper's positive claim (shift convexity) and then put the same "
-            "method on the actual rebar problem. The negative result on the "
-            "rebar landscape is *specific to single-rebar radius*, not a general "
-            "judgment on W2. Mention also that β (Softplus scale) and ε "
-            "(Sinkhorn entropy) are hyperparameters that need to be set, and "
-            "Sinkhorn cost grows with trace length — both are reasons to test "
-            "in a controlled landscape gate, not directly inside an optimizer."
+            "The two-gate structure of our W2 evaluation is important — "
+            "we did not dismiss W2 from theoretical arguments alone. We "
+            "replicated the paper's positive claim about shift convexity "
+            "on shifted Ricker pulses, and only then ran the same "
+            "machinery on the actual rebar landscape. The negative "
+            "result on the rebar landscape is specific to this single-"
+            "rebar radius problem; it is not a general judgement on "
+            "W2 for FWI. Two more things to keep in mind: β, the "
+            "Softplus scale, and ε, the Sinkhorn entropy regularisation, "
+            "are hyperparameters that must be chosen, and Sinkhorn cost "
+            "grows with trace length. Both of these are reasons to test "
+            "in a controlled landscape gate before wiring W2 into an "
+            "optimiser."
         ))
 
     slide_paper_quadrant(prs, 5,
@@ -1350,15 +1391,21 @@ def build_papers(prs):
         ),
         exp_label="paper 5 / IFWI",
         notes_text=(
-            "The deferral here is the most subtle in the deck. The risk is not "
-            "that IFWI does not work — it does. The risk is *what* it can be "
-            "made to fit. A free neural residual field around the rebar could "
-            "match data while leaving radius wrong; the radius error would be "
-            "absorbed into the field. The future-prototype design in tracker 29 "
-            "is intentionally constrained: explicit geometry stays primary, "
-            "the neural residual is small, smooth, regularised, and held-out "
-            "scan positions check generalisation. Mention this caveat if "
-            "anyone asks why we didn't just try it."
+            "The IFWI deferral is the most subtle one in the deck. The "
+            "risk is not that IFWI does not work — it does, in the "
+            "paper's own results. The risk is what it can be made to "
+            "fit. A free neural residual field around the rebar could "
+            "match observed data perfectly while leaving the radius "
+            "estimate wrong, because the radius error would be absorbed "
+            "into the residual field as a small material perturbation. "
+            "That would make our radius confidence number meaningless. "
+            "The future-prototype design in tracker 29 is intentionally "
+            "constrained for exactly this reason: explicit geometry "
+            "stays the primary unknown, the neural residual is small, "
+            "smooth, and regularised, and held-out scan positions "
+            "validate that the residual generalises rather than absorbs "
+            "errors. That constrained version is what we would build "
+            "first if we did revisit IFWI."
         ))
 
 
@@ -1499,21 +1546,25 @@ def build_ot_diagnostic(prs):
          size=11, color=CHARCOAL)
 
     set_notes(s,
-              "The slide intentionally shows the diagnostic outcome before the "
-              "decision, so the audience can see *why* we rule the OT branch "
-              "out rather than just reading the verdict. Key points to deliver: "
-              "(1) the OT-LS paper's whole motivation is cycle skipping at "
-              "scale, with NRCCC < 1.0 being the trigger to use OT; (2) our "
-              "wrong-radius candidates already have NRCCC = 1.0, so they are "
-              "in the LS-safe basin — the paper itself would say 'use LS here'; "
-              "(3) the wrong-radius rows have very slightly higher RCCC than "
-              "the polished true rows, but the absolute value (0.003 of a "
-              "period) is two orders of magnitude below the gate. The radius "
-              "issue is therefore an amplitude / detail issue, not a transport "
-              "issue. That observation drives the next section (PEBDD "
-              "bandwidth) and ultimately motivates the source-profiling work "
-              "that closes the deck. We keep the NRCCC diagnostic available "
-              "for field data where the basin-finding question is still open.")
+              "The result on this slide is what rules out the OT branch "
+              "for our specific problem. Three observations to land. "
+              "First, the OT-LS paper's whole motivation is cycle "
+              "skipping at scale — the trigger condition for using OT "
+              "is NRCCC less than 1, meaning some traces are out of "
+              "phase by more than half a period. Second, every one of "
+              "our wrong-radius candidates already sits at NRCCC equal "
+              "to 1, including under 5% and 10% noise; the paper itself "
+              "would say 'use least squares here'. Third, the wrong-"
+              "radius rows do have very slightly higher RCCC than the "
+              "polished true rows, but the absolute value — about "
+              "0.003 of a period — is two orders of magnitude below the "
+              "0.5 gate. So the radius issue is an amplitude and detail "
+              "issue, not a transport issue. That observation drives "
+              "the next section on PEBDD bandwidth and eventually "
+              "motivates the source-profiling work that closes the "
+              "deck. We keep the NRCCC diagnostic available because "
+              "field data may still have basin-finding problems that "
+              "this synthetic case does not.")
 
 
 def build_pebdd_first_pass(prs, fig_first_pass_radius):
@@ -1539,12 +1590,17 @@ def build_pebdd_first_pass(prs, fig_first_pass_radius):
                   ],
                   exp_label="exp 028–033",
                   notes_text=(
-                      "Bands chosen by inspection at this point: 0.2–0.8 → 0.2–1.1 "
-                      "→ 0.2–1.5 → full. Code lives in inversion/trace_filters.py. "
-                      "The CLI flag is --objective-bandpass-ghz LOW,HIGH with a "
-                      "taper width. Important storytelling point: the first-pass "
-                      "result is the reason the next slide (spectrum-driven "
-                      "design) happens at all."
+                      "At this stage the bands were chosen by inspection: "
+                      "0.2 to 0.8 GHz, then 0.2 to 1.1, then 0.2 to 1.5, "
+                      "then the full band. The matched band-pass filter "
+                      "lives in inversion/trace_filters.py and is "
+                      "exposed through the --objective-bandpass-ghz CLI "
+                      "flag with a taper width. The fact that this "
+                      "first-pass schedule did not move radius is what "
+                      "motivated the spectrum-driven design on the next "
+                      "few slides; we will see that the residual energy "
+                      "that actually distinguishes nearby radii does "
+                      "not live in the 0.2–0.8 GHz band at all."
                   ))
 
     slide_figure(prs,
@@ -1558,14 +1614,20 @@ def build_pebdd_first_pass(prs, fig_first_pass_radius):
                                "high-radius basin (r ≈ 6.95 mm) — the wrong local minimum it consistently finds."),
                  exp_label="exp 029–033",
                  notes_text=(
-                     "Walk through the bars in order. Initial seed at r=6.76. "
-                     "Stage 1 (low band) brings radius to 6.57 — a real "
-                     "improvement. Stage 2 (expansion) drifts back to 6.86. The "
-                     "full-band run from stage 1 without polish (exp 032) "
-                     "confirms the regression is caused by the full-band Powell "
-                     "objective itself, not by any particular stage. The two "
-                     "green bars are the only ones that land at truth: both used "
-                     "the polish stage."
+                     "The bars go in chronological order. The grey bar on "
+                     "the left is the initial seed at radius 6.76 mm. "
+                     "Stage 1 with the low band brings radius down to "
+                     "6.57 — that is a real improvement. Stage 2, which "
+                     "expands the band to 1.1 GHz, drifts back up to "
+                     "6.86. The red bar in the middle is the control: "
+                     "stage 1 seed followed by a full-band Powell run "
+                     "without polish — it returns to the same 6.955 mm "
+                     "wrong basin as the original first-arc Powell "
+                     "result, which tells us the regression is caused "
+                     "by the full-band Powell objective itself, not by "
+                     "any particular staging choice. The two green bars "
+                     "are the only ones that land at the true 6.0 mm, "
+                     "and both of them used the polish stage."
                  ))
 
     slide_figure(prs,
@@ -1577,12 +1639,17 @@ def build_pebdd_first_pass(prs, fig_first_pass_radius):
                                "The low band moved radius toward the truth but did not reach it."),
                  exp_label="exp 029",
                  notes_text=(
-                     "Filtered objective at the end was about 1.0e-4. Full-data "
-                     "NRMS is about 1.07%, which is fine — but the recovered "
-                     "model still has the rebar slightly off and not at the right "
-                     "radius. Mention here that the observed and synthetic traces "
-                     "are filtered the same way; this is the PEBDD detail that "
-                     "differentiates it from older bandwidth-expansion methods."
+                     "The filtered objective at the end of this stage is "
+                     "about 1e-4 and the full-data NRMS is about 1.07 "
+                     "percent — both small numbers. But the recovered "
+                     "model still has the rebar slightly off in depth "
+                     "and at the wrong radius. The PEBDD-faithful detail "
+                     "here is that the observed and synthetic traces are "
+                     "filtered through the same band-pass before the "
+                     "residual is computed; older bandwidth-expansion "
+                     "methods filtered only the modelled side through "
+                     "the source wavelet, and that is the difference "
+                     "that made PEBDD survive on field data."
                  ))
 
     slide_figure(prs,
@@ -1620,20 +1687,24 @@ def build_pebdd_first_pass(prs, fig_first_pass_radius):
                                "no-PEBDD path."),
                  exp_label="exp 031",
                  notes_text=(
-                     "Top polish candidates here: r = 6.0 mm (J = 0), r = 6.2 mm "
-                     "(J = 1.04e-3), r = 6.8 mm (J = 2.08e-3). Same ranking as "
-                     "the simpler single-frequency polish from the first arc. "
-                     "The implication is unambiguous: even with the multi-stage "
-                     "bandwidth schedule wrapped around it, the polish stage is "
-                     "what is doing the radius work. PEBDD has not added to "
-                     "radius accuracy; it has only added cost. This is the "
-                     "first hard evidence that PEBDD as written cannot solve "
-                     "radius on its own — and it sets up the spectrum-design "
-                     "section, which asks whether the band choices themselves "
-                     "were wrong. Important caveat to mention: this is the "
-                     "exact-synthetic case; under noise the conclusion is the "
-                     "same but the polish stage starts to need careful "
-                     "early-stop thresholds to avoid following noise."
+                     "The top polish candidates here are radius 6.0 mm "
+                     "with misfit zero, radius 6.2 with misfit 1.04e-3, "
+                     "and radius 6.8 with misfit 2.08e-3. That is "
+                     "exactly the same ranking the simpler single-"
+                     "frequency polish produced in the first deck. The "
+                     "implication is unambiguous: even with the multi-"
+                     "stage bandwidth schedule wrapped around it, the "
+                     "polish stage is what does the radius work. PEBDD "
+                     "as we have implemented it has not added to radius "
+                     "accuracy; it has only added compute cost. This is "
+                     "the first hard evidence that PEBDD on its own "
+                     "cannot solve radius, and it sets up the spectrum-"
+                     "design section that asks whether the band choices "
+                     "themselves were wrong. One caveat: this is the "
+                     "exact-synthetic case. Under noise the same "
+                     "conclusion holds, but the polish stage starts to "
+                     "need careful early-stop thresholds to avoid "
+                     "following noise instead of geometry."
                  ))
 
     slide_figure(prs,
@@ -1645,20 +1716,22 @@ def build_pebdd_first_pass(prs, fig_first_pass_radius):
                                "full-band Powell objective itself, not a specific staging choice."),
                  exp_label="exp 032",
                  notes_text=(
-                     "This slide is the diagnostic that isolates blame between "
-                     "two suspects: (a) the staged path itself (maybe stage 2 "
-                     "destabilised something), or (b) the full-band Powell "
-                     "objective (which has the depth-radius valley). If (a), "
-                     "removing polish would still leave us at a moderate "
-                     "radius. If (b), we should return to the original wrong "
-                     "basin. Result: we are back at r = 6.955 mm, identical to "
-                     "the original Powell result from the first arc. Verdict: "
-                     "(b) is the cause. This is the kind of controlled "
-                     "experiment that lets us reject one design hypothesis "
-                     "(staging is the problem) and keep another (the polish "
-                     "stage is doing the load-bearing work). It also justifies "
-                     "the 'stage 1 seed → polish only' variant on the next "
-                     "slide, which removes the full-band Powell step entirely."
+                     "This run isolates blame between two suspects. "
+                     "Either the staged path itself is unstable — maybe "
+                     "stage 2 destabilised something — or the full-band "
+                     "Powell objective is the cause because of the "
+                     "depth-radius valley we discussed earlier. If the "
+                     "staged path were at fault, removing the polish "
+                     "step would still leave us at a moderate radius. "
+                     "If the full-band objective were at fault, we would "
+                     "land back at the original wrong basin. The result "
+                     "is unambiguous: r = 6.955 mm, exactly the same as "
+                     "the original first-arc Powell result. The full-"
+                     "band Powell objective is the cause, not the "
+                     "staging. That conclusion lets us promote the "
+                     "'stage 1 seed → polish only' variant on the next "
+                     "slide, which removes the full-band Powell step "
+                     "entirely."
                  ))
 
     slide_figure(prs,
@@ -1670,12 +1743,14 @@ def build_pebdd_first_pass(prs, fig_first_pass_radius):
                                "is the cleanest staged path on exact data."),
                  exp_label="exp 033",
                  notes_text=(
-                     "This is the variant we promote: low-band Powell to land "
-                     "in the basin, then full-band polish to select radius. "
-                     "Faster than the full Powell + polish path because we skip "
-                     "the most expensive Powell stage. Caveat: works on exact "
-                     "data — under noise the low-band stage does not move radius "
-                     "much, as we will see next."
+                     "This is the variant we promote on exact data: low-band "
+                     "Powell to land in the right basin, then full-band "
+                     "polish to select radius. It is faster than the full "
+                     "Powell-plus-polish path because we skip the most "
+                     "expensive Powell stage. The caveat is that this only "
+                     "works on exact data — under noise the low-band stage "
+                     "does not move radius much, and the next slide shows "
+                     "the noise variant explicitly."
                  ))
 
     slide_text_table(prs,
@@ -1683,12 +1758,16 @@ def build_pebdd_first_pass(prs, fig_first_pass_radius):
                      "Experiments 034–037",
                      exp_label="exp 034–037",
                      notes_text=(
-                         "Two seeds (5% and 10% RMS). The low-band Powell stage "
-                         "stays near r = 7.0 mm — it does not move radius under "
-                         "noise. The polish stage is what recovers truth. So "
-                         "under noise the low-band stage is essentially a "
-                         "seed-builder, not a radius corrector, and the headline "
-                         "is the same as the exact-data case."
+                         "Two additive-noise seeds, 5 percent and 10 "
+                         "percent RMS. The low-band Powell stage stays "
+                         "near r = 7.0 mm in both cases — it does not "
+                         "move radius under noise. The polish stage is "
+                         "what recovers the true 6.0 mm. So under noise "
+                         "the low-band stage is a seed-builder, not a "
+                         "radius corrector, and the headline is the same "
+                         "as the exact-data case: bandwidth scheduling "
+                         "moves rough seeds into the right window, but "
+                         "the polish stage is the radius selector."
                      ),
                      intro_lines=[
                          "Under noise, the low-band Powell stage stops in the high-radius basin. The polish stage still recovers r = 6.0 mm.",
@@ -1728,11 +1807,13 @@ def build_cumulative_freq(prs):
                   ],
                   exp_label="exp 038–041",
                   notes_text=(
-                      "Two new pieces of code: per-frequency reporting in the "
-                      "summary JSON (so we can see which band a candidate's "
-                      "misfit came from) and a --frequency-weights CLI flag for "
-                      "weighted averaging. The slide is setup for the frequency-"
-                      "weighting matrix that comes later in the deck."
+                      "Two new pieces of plumbing were added here. First, "
+                      "per-frequency reporting in the summary JSON, so we "
+                      "can see which source band a candidate's misfit "
+                      "actually came from. Second, a --frequency-weights "
+                      "CLI flag for weighted averaging across frequencies. "
+                      "These two together set up the frequency-weighting "
+                      "matrix that we will see in the next section."
                   ))
 
     slide_figure(prs,
@@ -1745,15 +1826,18 @@ def build_cumulative_freq(prs):
                                "1.5 GHz evidence by roughly half."),
                  exp_label="exp 040",
                  notes_text=(
-                     "The model recovery looks the same as the earlier polish "
-                     "runs because the true model has zero misfit at both "
-                     "frequencies. The information that *should* worry us is in "
-                     "the margin numbers. r=6.2 has 1.0 GHz misfit 3.56e-5 vs "
-                     "1.5 GHz misfit 1.04e-3 — a roughly 30x ratio. Averaging "
-                     "the two equally drops the effective margin to ~5.4e-4 "
-                     "(roughly halfway). Take this point seriously when "
-                     "designing multi-frequency objectives — equal weighting "
-                     "is not neutral."
+                     "The recovered model panel looks the same as the "
+                     "earlier polish results because the true model has "
+                     "zero misfit at both frequencies. The interesting "
+                     "information is in the margin numbers. At r = 6.2 "
+                     "mm, the 1.0 GHz objective gives a misfit of "
+                     "3.56e-5, while the 1.5 GHz objective gives "
+                     "1.04e-3 — roughly a thirty-times ratio. When we "
+                     "average the two equally, the effective margin "
+                     "drops to about 5.4e-4, roughly halfway between. "
+                     "The conclusion to take away when designing multi-"
+                     "frequency objectives: equal weighting is not "
+                     "neutral. It dilutes the most informative frequency."
                  ))
 
 
@@ -1776,13 +1860,17 @@ def build_spectrum_design(prs, fig_src, fig_obs, fig_res):
                   ],
                   exp_label="exp 043–044",
                   notes_text=(
-                      "Implementation in inversion/spectrum_analysis.py and "
-                      "run_single_rebar_spectrum_design.py. The three "
-                      "spectra (source, observed, residual) are saved as a "
-                      "single CSV. The figures on the next three slides were "
-                      "re-rendered with x-axis cropped to 0–4 GHz; the original "
-                      "saved figures extend to ~250 GHz because the FDTD "
-                      "sampling rate is high, which made them hard to read."
+                      "The implementation lives in two files: "
+                      "inversion/spectrum_analysis.py for the core "
+                      "logic, and run_single_rebar_spectrum_design.py "
+                      "for the experiment runner. The three spectra — "
+                      "source, observed, and candidate residual — are "
+                      "all saved as a single CSV so we can re-render at "
+                      "any zoom level. The figures on the next three "
+                      "slides are re-rendered with the x-axis cropped to "
+                      "0–4 GHz, because the original saved figures "
+                      "extend to about 250 GHz Nyquist and the relevant "
+                      "content is invisible at that scale."
                   ))
 
     slide_figure(prs,
@@ -1794,18 +1882,20 @@ def build_spectrum_design(prs, fig_src, fig_obs, fig_res):
                                "(~250 GHz Nyquist) sets the figure's untrimmed extent."),
                  exp_label="exp 043",
                  notes_text=(
-                     "The runner reports the 5%–95% source-energy band as "
-                     "0.750–2.500 GHz, peak at 1.500 GHz (matching the nominal "
-                     "centre frequency of the Ricker pulse). The implication "
-                     "for the next two slides: anything we ask the inversion "
-                     "objective to fit above about 2.5 GHz is fitting noise or "
-                     "numerical content, not real source content. This is the "
-                     "upper limit that *any* PEBDD band design must respect. "
-                     "It also explains why the W2 / Sinkhorn experiments need "
-                     "downsampling along the time axis — the source band is "
-                     "narrow compared to the time-sampling rate, so most of "
-                     "the trace samples carry no source information and are "
-                     "pure simulator overhead."
+                     "The runner reports the 5-to-95 percent source-"
+                     "energy band as 0.75 to 2.5 GHz, with peak at "
+                     "1.5 GHz, which matches the nominal centre frequency "
+                     "of the Ricker pulse. This sets a hard upper limit "
+                     "for any band design that comes next: anything we "
+                     "ask the inversion objective to fit above about "
+                     "2.5 GHz is fitting noise or numerical content, "
+                     "not real source content. It also explains why the "
+                     "W2 / Sinkhorn experiments later in the deck need "
+                     "to downsample along the time axis — the source "
+                     "band is narrow compared to the trace sampling "
+                     "rate, so most of the trace samples carry no "
+                     "source information and are pure simulator "
+                     "overhead from Sinkhorn's perspective."
                  ))
 
     slide_figure(prs,
@@ -1817,12 +1907,19 @@ def build_spectrum_design(prs, fig_src, fig_obs, fig_res):
                                "relative to the source spectrum."),
                  exp_label="exp 043",
                  notes_text=(
-                     "The observed spectrum peak is at 0.75 GHz, not 1.5 GHz "
-                     "— this is the kind of detail that catches people off "
-                     "guard. Wave propagation, the air/concrete interface, "
-                     "rebar scattering, and the Tx–Rx geometry all reshape the "
-                     "energy distribution. It does not mean radius information "
-                     "lives at 0.75 GHz — that is what the next slide answers."
+                     "Notice that the observed spectrum peak is at "
+                     "0.75 GHz, not 1.5 GHz. That can surprise the "
+                     "audience: the source carrier is 1.5 GHz, but by "
+                     "the time the wave has propagated through air, "
+                     "crossed the air-concrete interface, scattered off "
+                     "the rebar, and returned through the Tx–Rx "
+                     "geometry, the energy distribution has shifted "
+                     "downward. The important caveat is that this does "
+                     "not mean the radius information lives at 0.75 "
+                     "GHz. The radius-discriminating part is in the "
+                     "residual, not in the observed trace itself — and "
+                     "the next slide shows the residual spectra "
+                     "explicitly."
                  ))
 
     slide_figure(prs,
@@ -1836,13 +1933,16 @@ def build_spectrum_design(prs, fig_src, fig_obs, fig_res):
                  footer="This is why the first-pass 0.2–0.8 GHz schedule could not fix radius.",
                  exp_label="exp 043",
                  notes_text=(
-                     "Numerical context the slide does not show: residual "
-                     "energy captured by candidate bands for the r=6.2 case is "
-                     "2.1% (0.2–0.8 GHz), 5.5% (0.35–1.10), 22.5% (0.35–1.50), "
-                     "60.4% (0.35–2.00), 89.7% (0.35–2.50). So the difference "
-                     "between r=6.0 and r=6.2 lives almost entirely above 1 GHz "
-                     "with peak near 2 GHz. This single chart is what justified "
-                     "the spectrum-derived schedule on the next slides."
+                     "The numerical context behind this chart: for the "
+                     "r = 6.2 mm near-radius candidate, the residual "
+                     "energy captured by progressively wider bands is "
+                     "2.1 percent in 0.2–0.8 GHz, 5.5 percent in 0.35–"
+                     "1.10, 22.5 percent in 0.35–1.50, 60.4 percent in "
+                     "0.35–2.00, and 89.7 percent in 0.35–2.50. So the "
+                     "difference between r = 6.0 and r = 6.2 lives "
+                     "almost entirely above 1 GHz, with the peak near "
+                     "2 GHz. This single chart is what justified the "
+                     "spectrum-derived schedule on the next slides."
                  ))
 
 
@@ -1863,12 +1963,15 @@ def build_faithful_pebdd(prs, fig_stage_progression):
                   ],
                   exp_label="exp 045",
                   notes_text=(
-                      "Runner: run_single_rebar_bandwidth_schedule.py. The stage "
-                      "outputs are organised as nested directories per stage "
-                      "(stage01_0.35_1.10GHz, etc.) inside the experiment dir, "
-                      "with a final_fullband_coarse_polish stage. The slide is "
-                      "the controlled comparison: same staged shape as the "
-                      "first pass, but with bands chosen by the spectrum tool."
+                      "The runner is run_single_rebar_bandwidth_schedule.py. "
+                      "Each stage's outputs are saved as a nested "
+                      "directory inside the experiment directory — "
+                      "stage01_0.35_1.10GHz, stage02_0.35_1.50GHz, and "
+                      "so on, ending with a final_fullband_coarse_polish "
+                      "stage. This run is the controlled comparison to "
+                      "the first-pass PEBDD: the same staged shape, but "
+                      "with bands chosen by the spectrum tool rather "
+                      "than by guesswork."
                   ))
 
     slide_figure(prs,
@@ -1880,14 +1983,16 @@ def build_faithful_pebdd(prs, fig_stage_progression):
                                "lands radius on truth."),
                  exp_label="exp 045",
                  notes_text=(
-                     "The Powell stages move slightly *away* from truth as the "
-                     "band widens (6.864 → 6.865 → 6.896 → 6.930). The right "
-                     "interpretation is that radius is *already* well-determined "
-                     "in the lower band, but the wider band reactivates the "
-                     "depth/radius valley. Polish is what removes the bias. The "
-                     "headline of this section is the same as the first-pass "
-                     "section: bandwidth scheduling helps seed-building, not "
-                     "radius selection."
+                     "The Powell stages move slightly away from truth as "
+                     "the band widens — from 6.864 in stage 1 up to "
+                     "6.930 in stage 4. The right interpretation is that "
+                     "radius is already as well determined as Powell can "
+                     "make it in the lowest band, and the wider bands "
+                     "reactivate the depth-radius valley rather than "
+                     "adding new constraints. Polish is what removes the "
+                     "bias. The headline of this section is the same as "
+                     "the first-pass section: bandwidth scheduling helps "
+                     "with seed building, not with radius selection."
                  ))
 
     slide_figure(prs,
@@ -1900,12 +2005,15 @@ def build_faithful_pebdd(prs, fig_stage_progression):
                                "r = 6.0 mm (J = 0), r = 6.2 mm (J = 1.04 × 10⁻³), r = 6.8 mm (J = 2.08 × 10⁻³)."),
                  exp_label="exp 045",
                  notes_text=(
-                     "NRMS model = 0 and NRMS data = 0. The polish margin "
-                     "(r=6.0 over r=6.2 ≈ 1.04e-3) is identical to the simpler "
-                     "polish from the first arc — meaning the bandwidth "
-                     "schedule did not change the radius evidence in the polish "
-                     "stage, it only ensured the polish started inside the "
-                     "right window."
+                     "Normalised root-mean-square misfit is zero on both "
+                     "the model and the data. The polish margin — the "
+                     "objective gap between the chosen r = 6.0 mm and "
+                     "the next-best r = 6.2 mm — is about 1.04e-3, "
+                     "identical to the simpler polish from the first "
+                     "arc. So the bandwidth schedule did not change the "
+                     "radius evidence the polish stage operates on; it "
+                     "only ensured the polish started inside the right "
+                     "(x, z) window."
                  ))
 
 
@@ -1932,12 +2040,14 @@ def build_frequency_weighting(prs, fig_freq_compare):
                   ],
                   exp_label="exp 046–049",
                   notes_text=(
-                      "Runner: run_single_rebar_frequency_weight_matrix.py. "
-                      "Weight schemes are specified as comma-separated lists "
-                      "like '0.25,1' meaning 25% weight on 1.0 GHz and full "
-                      "weight on 1.5 GHz. The runner reports the "
-                      "best-radius-vs-next-radius margin per scheme so the "
-                      "schemes can be ranked at a glance."
+                      "The runner is run_single_rebar_frequency_weight_"
+                      "matrix.py. Weight schemes are specified as comma-"
+                      "separated lists — for example, '0.25,1' means "
+                      "25 percent weight on the 1.0 GHz residual and "
+                      "full weight on the 1.5 GHz residual. The runner "
+                      "reports the best-radius-versus-next-radius "
+                      "margin per scheme, so the schemes can be ranked "
+                      "at a glance from a single output table."
                   ))
 
     slide_figure(prs,
@@ -1951,13 +2061,16 @@ def build_frequency_weighting(prs, fig_freq_compare):
                                "at r = 6.0 mm wins on radius discrimination; flatter curves are weaker."),
                  exp_label="exp 046",
                  notes_text=(
-                     "Margins at r=6.0 vs r=6.2: 3.56e-5 (low_only), 1.04e-3 "
-                     "(onepointfive_only), 5.36e-4 (unweighted), 8.37e-4 "
-                     "(carry_low_25), 7.03e-4 (carry_low_50). The pattern is "
-                     "intuitive in retrospect: 1.0 GHz is below the residual-"
-                     "energy band we saw in the spectrum design slide, so it "
-                     "carries little radius information; equal averaging just "
-                     "dilutes the useful evidence."
+                     "The distinct-radius margins between r = 6.0 and "
+                     "r = 6.2 are: 3.56e-5 for low_only, 1.04e-3 for "
+                     "onepointfive_only, 5.36e-4 for unweighted, 8.37e-4 "
+                     "for carry_low_25, and 7.03e-4 for carry_low_50. "
+                     "The pattern is intuitive once we have seen the "
+                     "spectrum-design slide: 1.0 GHz is below the "
+                     "residual-energy band that distinguishes nearby "
+                     "radii, so it carries little radius information, "
+                     "and equal averaging just dilutes the useful "
+                     "evidence from 1.5 GHz."
                  ))
 
     slide_figure(prs,
@@ -1971,13 +2084,17 @@ def build_frequency_weighting(prs, fig_freq_compare):
                                "3.1 × 10⁻⁵ (1.0 GHz only). Ranking is identical at 5%."),
                  exp_label="exp 047 + 049",
                  notes_text=(
-                     "The two panels are nearly identical, which is the point: "
-                     "the ranking is robust to the noise level we tested. "
-                     "Practical recommendation that comes out of this matrix: "
-                     "use 1.5 GHz-only LS for the *final* radius decision; "
-                     "carry_low_25 is the best compromise if a low-frequency "
-                     "carry is needed for basin continuity (e.g. for a poorer "
-                     "initial seed)."
+                     "The two panels are nearly identical, which is the "
+                     "point: the ranking is robust to the noise level. "
+                     "The practical recommendation from this whole "
+                     "matrix is: use 1.5 GHz-only least squares for the "
+                     "final radius decision; use carry_low_25 if a "
+                     "low-frequency contribution is needed for basin "
+                     "continuity — for example, when the initial seed "
+                     "is poorer and we still need some sensitivity to "
+                     "broad-scale features. Never use the unweighted "
+                     "equal average for radius selection; the margin "
+                     "loss is consistent across noise levels."
                  ))
 
 
@@ -2002,14 +2119,18 @@ def build_w2(prs):
                   ],
                   exp_label="exp 048",
                   notes_text=(
-                      "Module: inversion/trace_wasserstein.py. The Softplus "
-                      "scale β controls how strongly signed waveforms are "
-                      "transformed before normalisation; the Sinkhorn entropy "
-                      "regularisation ε trades accuracy for numerical "
-                      "stability. We test β ∈ {4, 8, 12} as a small sensitivity "
-                      "sweep. This is gate 1 because passing the trace shift "
-                      "test is necessary, but not sufficient, for W2 to be "
-                      "useful on the actual radius problem."
+                      "The W2 module lives in inversion/trace_wasserstein.py "
+                      "as a standalone object with unit tests. The "
+                      "Softplus scale β controls how strongly the signed "
+                      "waveform is transformed before being normalised "
+                      "to a mass distribution; the Sinkhorn entropy "
+                      "regularisation ε trades transport accuracy for "
+                      "numerical stability. We test three β values — 4, "
+                      "8, and 12 — as a small sensitivity sweep. We "
+                      "call this gate 1 because passing the trace-shift "
+                      "test is necessary but not sufficient for W2 to "
+                      "be useful on the actual radius problem; gate 2 "
+                      "is the rebar landscape three slides from now."
                   ))
 
     slide_figure(prs,
@@ -2023,12 +2144,17 @@ def build_w2(prs):
                                "(β = 4 / 8 / 12) — the larger β, the sharper the curvature near zero."),
                  exp_label="exp 048",
                  notes_text=(
-                     "The L2 panel hits zero only at shift = 0 but rises and "
-                     "falls again — the second 'mountain' is the cycle-skip "
-                     "trap. The W2 panel is U-shaped on both sides of zero "
-                     "for all β. β = 12 has the sharpest curvature near zero, "
-                     "which would matter for an optimiser; we use β = 8 in "
-                     "the rebar landscape on the next slide as a balance."
+                     "The L2 panel on the left hits zero only at the "
+                     "shift-equals-zero point, but it rises and then "
+                     "falls again on each side — that second mountain "
+                     "is the cycle-skip trap that misleads optimisers. "
+                     "The W2 panel on the right is U-shaped and "
+                     "monotonic on both sides of zero for all three β "
+                     "values. β = 12 has the sharpest curvature near "
+                     "the minimum, which would matter for an optimiser. "
+                     "We use β = 8 on the next slide for the rebar "
+                     "landscape as a balance between sharpness and "
+                     "numerical stability."
                  ))
 
     slide_framing(prs,
@@ -2050,13 +2176,16 @@ def build_w2(prs):
                   ],
                   exp_label="exp 050–051",
                   notes_text=(
-                      "Runner: run_single_rebar_w2_landscape.py. The downsample "
-                      "parameter is needed because Sinkhorn on the full trace "
-                      "length is expensive; ds=16 means we take every 16th "
-                      "sample. The story to deliver clearly: the W2 paper's "
-                      "claim about *shifts* genuinely holds (gate 1), but the "
-                      "*radius* problem is not a shift problem, so W2's "
-                      "advantage does not transfer."
+                      "The runner is run_single_rebar_w2_landscape.py. "
+                      "The downsample parameter is needed because "
+                      "Sinkhorn on the full trace length is expensive — "
+                      "ds = 16 means we take every sixteenth sample of "
+                      "the muted trace before computing W2. The key "
+                      "story to land here is that the W2 paper's claim "
+                      "about shifts genuinely holds — we just saw that "
+                      "in gate 1 — but the radius problem in our setup "
+                      "is not a shift problem, so W2's advantage does "
+                      "not transfer."
                   ))
 
     slide_figure(prs,
@@ -2072,14 +2201,18 @@ def build_w2(prs):
                  footer="Decision: reject W2 as the final radius objective. Keep it as a basin diagnostic for field data.",
                  exp_label="exp 050",
                  notes_text=(
-                     "Both panels share the same y-axis behaviour at r = 6.0 "
-                     "(zero misfit) but the LS plot has order-1e-3 wings while "
-                     "the W2 plot has order-1e-7 wings. The downsample = 8 "
-                     "version (exp 051) is qualitatively identical. The "
-                     "decision is to reject W2 as the final radius objective. "
-                     "We keep the module available because it may still be "
-                     "useful as a *basin* diagnostic for poor initial models "
-                     "or field data — a use case we have not tested yet."
+                     "Both panels reach zero at r = 6.0 mm, but the L2 "
+                     "plot on the left has wings on the order of 1e-3, "
+                     "while the W2 plot on the right has wings on the "
+                     "order of 1e-7. The downsample-equals-8 version "
+                     "in experiment 051 is qualitatively identical, so "
+                     "this is not a numerical artefact of how we set up "
+                     "Sinkhorn. The decision is to reject W2 as the "
+                     "final radius objective for this problem. We keep "
+                     "the module available because it may still be "
+                     "useful as a basin diagnostic for future poor "
+                     "initial models or field data, but for radius "
+                     "selection we stay with least squares."
                  ))
 
 
@@ -2102,15 +2235,22 @@ def build_material(prs):
                    ],
                    exp_label="exp 056",
                    notes_text=(
-                       "Runner: run_single_rebar_material_tradeoff.py. The top "
-                       "four candidates in the saved summary are: rank 1 r=6.0 "
-                       "εr=6.0 σ=1e7 J=0; rank 2 r=6.0 εr=6.0 σ=1e6 J=3.18e-10; "
-                       "rank 3 r=6.0 εr=6.0 σ=1e5 J=3.85e-8; rank 4 r=6.2 "
-                       "εr=6.0 any σ J=1.04e-3. The σ ladder is what shows the "
-                       "saturation — once σ is high enough for the rebar to "
-                       "behave like a perfect conductor, the exact value stops "
-                       "mattering. The εr saturation does not happen — the "
-                       "value is genuinely identified."
+                       "The runner is run_single_rebar_material_tradeoff.py. "
+                       "The top four candidates in the saved summary "
+                       "tell the whole story. Rank 1 is the true model: "
+                       "r = 6.0, εr = 6.0, σ = 1e7, misfit zero. Ranks "
+                       "2 and 3 are also r = 6.0 with εr = 6.0, but with "
+                       "σ values of 1e6 and 1e5 — and the misfit values "
+                       "are tiny, 3.18e-10 and 3.85e-8. That is the "
+                       "saturation: once σ is high enough for the rebar "
+                       "to behave as a perfect conductor, the exact "
+                       "value stops mattering. Rank 4 is r = 6.2 with "
+                       "the true εr, and the misfit is 1.04e-3 — the "
+                       "familiar radius margin. The εr value is "
+                       "genuinely identified; the σ value is saturated "
+                       "above 1e5 S/m. That tells us we do not need to "
+                       "introduce free material parameters into the "
+                       "radius optimiser at this stage."
                    ))
 
 
@@ -2140,13 +2280,17 @@ def build_wavelet_mismatch(prs):
                   ],
                   exp_label="exp 052–055",
                   notes_text=(
-                      "Runner: run_single_rebar_wavelet_mismatch.py. The "
-                      "modeled wavelet is held at the nominal 1.5 GHz Ricker; "
-                      "only the observed truth changes per case. This is the "
-                      "first experiment series where we let any *aspect* of "
-                      "the source be wrong. The fix unfolds across four "
-                      "slides — each adds one nuisance parameter to the "
-                      "objective and shows which mismatch cases recover."
+                      "The runner is run_single_rebar_wavelet_mismatch.py. "
+                      "The modelled source wavelet stays at the nominal "
+                      "1.5 GHz Ricker; only the observed truth changes "
+                      "from case to case. This is the first experiment "
+                      "series in the deck where we allow any aspect of "
+                      "the source to be wrong, and it is where the most "
+                      "important new finding of this arc comes from. "
+                      "The fix unfolds across four slides — each slide "
+                      "adds one nuisance parameter to the objective and "
+                      "shows which mismatch cases recover and which do "
+                      "not."
                   ))
 
     slide_figure(prs,
@@ -2161,15 +2305,19 @@ def build_wavelet_mismatch(prs):
                                "cases push the minimum to the lower (5.4 mm) or upper (7.8 mm) radius bound."),
                  exp_label="exp 052",
                  notes_text=(
-                     "Best radius per case: nominal 6.0 (✓), fc_low10 5.4 "
-                     "(grid bound), fc_high10 7.8 (grid bound), delay_+50 ps "
-                     "5.4, delay_-50 ps 7.8, amp_low10 6.0, amp_high10 7.0. "
-                     "The asymmetry is real: pegging to the *lower* bound "
-                     "corresponds to slowing the wavelet (later arrival, longer "
-                     "period), and to the *upper* bound corresponds to "
-                     "speeding it up. This is the kind of failure that would "
-                     "only show up after moving to real data — worth dwelling "
-                     "on as a motivation for the slides that follow."
+                     "The best-radius per case tells the story. Nominal "
+                     "recovers 6.0 mm, fc_low10 pegs to the lower grid "
+                     "bound at 5.4, fc_high10 pegs to the upper bound at "
+                     "7.8, delay_+50 ps goes to 5.4, delay_−50 ps goes "
+                     "to 7.8, amp_low10 stays at 6.0, and amp_high10 "
+                     "moves to 7.0. The asymmetry is real: pegging to "
+                     "the lower bound corresponds to a slower observed "
+                     "wavelet — later arrival, longer period — while "
+                     "pegging to the upper bound corresponds to a faster "
+                     "one. This is the kind of failure that would only "
+                     "show up after moving to real data. It is the "
+                     "motivation for the three nuisance-parameter slides "
+                     "that follow, which fix the cases one at a time."
                  ))
 
     slide_figure(prs,
@@ -2182,17 +2330,22 @@ def build_wavelet_mismatch(prs):
                                "fc / delay cases (centre-frequency and time-shift perturbations) are unchanged."),
                  exp_label="exp 053",
                  notes_text=(
-                     "Closed form: for each candidate, the optimal scalar "
-                     "amplitude is the standard inner-product / norm-squared "
-                     "ratio, ⟨d_obs, d_syn⟩ / ⟨d_syn, d_syn⟩. It is essentially "
-                     "free relative to the forward solve cost. The amp_high10 "
-                     "line (observed source ×1.1) now sits on top of the "
-                     "nominal line; the fc_low10, fc_high10, delay_+50, "
-                     "delay_-50 lines are unchanged because amplitude fitting "
-                     "cannot absorb phase or bandwidth differences. The "
-                     "presenter point: this is the smallest, cheapest nuisance "
-                     "parameter that meaningfully reduces source-mismatch bias "
-                     "— if you only have budget for one, do this one."
+                     "The optimal scalar amplitude for each candidate "
+                     "has a closed form — it is the standard inner-"
+                     "product over norm-squared ratio, the dot product "
+                     "of d_obs and d_syn divided by the dot product of "
+                     "d_syn with itself. That makes it essentially free "
+                     "compared to the cost of a forward solve. The "
+                     "amp_high10 line, where the observed source was "
+                     "scaled by 1.1, now sits on top of the nominal "
+                     "line. The fc_low10, fc_high10, delay_+50, and "
+                     "delay_-50 lines are unchanged because amplitude "
+                     "fitting cannot absorb phase or bandwidth "
+                     "differences. The takeaway is that amplitude is "
+                     "the smallest, cheapest nuisance parameter that "
+                     "meaningfully reduces source-mismatch bias — if "
+                     "the budget only allows one, this is the one to "
+                     "add."
                  ))
 
     slide_figure(prs,
@@ -2206,20 +2359,25 @@ def build_wavelet_mismatch(prs):
                                "frequency ×0.9 / ×1.1) — bandwidth mismatch is not yet absorbed."),
                  exp_label="exp 054",
                  notes_text=(
-                     "Time-shift grid here is {−80, −50, −25, 0, +25, +50, "
-                     "+80} ps. The shift is *global* per scan position (one "
-                     "value per (scan, candidate) pair), not a free per-trace "
-                     "parameter — that keeps the nuisance space small enough "
-                     "to enumerate. delay_±50 ps cases land back on r = 6.0 "
-                     "mm because a global +50 ps shift in the modelled trace "
-                     "fully absorbs a −50 ps observed mismatch. fc_low10 "
-                     "partially recovers (best r moves from the lower grid "
-                     "bound at 5.4 mm to r = 6.2 mm) because a time shift can "
-                     "partially compensate for a longer-period observed pulse, "
-                     "but fc_high10 still fails — bandwidth mismatch is "
-                     "fundamentally different from a pure time shift and "
-                     "needs its own nuisance parameter, which the next slide "
-                     "adds."
+                     "The time-shift grid is small on purpose — minus "
+                     "80, minus 50, minus 25, zero, plus 25, plus 50, "
+                     "plus 80 picoseconds. The shift is global per "
+                     "scan position, meaning one value per (scan, "
+                     "candidate) pair, not a free per-trace parameter; "
+                     "that keeps the nuisance space small enough to "
+                     "enumerate exhaustively. The delay-plus-50 and "
+                     "delay-minus-50 cases now land back at r = 6.0 mm "
+                     "because a global plus 50 picosecond shift in the "
+                     "modelled trace fully absorbs a minus 50 "
+                     "picosecond observed mismatch. The fc_low10 case "
+                     "partially recovers — the best radius moves from "
+                     "the lower grid bound at 5.4 mm up to 6.2 mm — "
+                     "because a time shift can partially compensate "
+                     "for a longer-period observed pulse, but "
+                     "fc_high10 still fails. Bandwidth mismatch is "
+                     "fundamentally different from a pure time shift "
+                     "and needs its own nuisance parameter, which the "
+                     "next slide adds."
                  ))
 
     slide_figure(prs,
@@ -2234,13 +2392,18 @@ def build_wavelet_mismatch(prs):
                  footer="This is the most important new contribution of this arc.",
                  exp_label="exp 055",
                  notes_text=(
-                     "Frequency-scale grid is small ({0.9, 1.0, 1.1}) on "
-                     "purpose: each value needs its own FDTD forward, so the "
-                     "grid is the expensive part. All seven cases recover "
-                     "r = 6.0 mm. Note that this is the diagnostic matrix — "
-                     "the production runner (next section) is what packages "
-                     "the three-piece source profile into a reusable polish "
-                     "stage."
+                     "The frequency-scale grid is small on purpose — "
+                     "just three values, 0.9, 1.0, and 1.1 — because "
+                     "each value needs its own FDTD forward solve, so "
+                     "the grid is the expensive part of the nuisance "
+                     "fit. All seven mismatch cases now land at r = "
+                     "6.0 mm. This slide is the diagnostic matrix that "
+                     "tells us the three-piece source profile — "
+                     "amplitude scalar, time-shift grid, and frequency-"
+                     "scale grid — is sufficient to absorb the kinds "
+                     "of mismatch we tested. The next section packages "
+                     "the same three pieces into a reusable production "
+                     "polish runner."
                  ))
 
 
@@ -2266,13 +2429,18 @@ def build_synthesis(prs):
                   ],
                   exp_label="exp 057–058",
                   notes_text=(
-                      "Module: inversion/source_profile.py. The runner is "
-                      "Stage 1 of the post-summary plan in tracker 31: it "
-                      "exists so Stage 2 (replication across noise and source-"
-                      "mismatch seeds) has a clean, validated entry point. The "
-                      "design call to make on the slide: confidence reporting "
-                      "(top-k + distinct-radius margin) is part of the runner "
-                      "interface, not a separate analysis step."
+                      "The source-profile module lives in "
+                      "inversion/source_profile.py and the runner is "
+                      "Stage 1 of the post-summary plan in tracker 31. "
+                      "It exists so that the next stage, which "
+                      "replicates results across noise and source-"
+                      "mismatch seeds, has a clean validated entry "
+                      "point. One design choice on this slide worth "
+                      "noting: the confidence reporting — top-k "
+                      "candidates plus distinct-radius margin — is "
+                      "part of the runner interface, not a separate "
+                      "analysis step. The pipeline does not produce a "
+                      "single point estimate; it produces a list."
                   ))
 
     slide_figure(prs,
@@ -2286,19 +2454,22 @@ def build_synthesis(prs):
                                "with objective gap 9.815 × 10⁻⁴."),
                  exp_label="exp 057",
                  notes_text=(
-                     "Nominal smoke run: 12 geometry candidates evaluated. The "
-                     "source-profile parameters land at exactly the nominal "
-                     "values (fc_scale = 1.0, shift = 0 ps, amp = 1.000), "
-                     "which is the right behaviour — the runner should *not* "
+                     "This is the nominal smoke run: 12 geometry "
+                     "candidates evaluated with no injected source "
+                     "mismatch. The source-profile parameters land at "
+                     "exactly the nominal values — frequency scale 1.0, "
+                     "shift 0 picoseconds, amplitude 1.000 — which is "
+                     "the right behaviour. The runner should not "
                      "introduce drift when there is no mismatch to fit. "
-                     "Distinct-radius margin (objective gap between best "
-                     "radius and best next-distinct radius) matches the "
-                     "earlier polish result (9.815 × 10⁻⁴). The implication: "
-                     "the production runner is conservative — it does not "
-                     "inflate margins or pull the source profile away from "
-                     "truth when no mismatch is present. That property is "
-                     "important because we want the runner to be safe to use "
-                     "as the default final stage, not just an opt-in audit."
+                     "The distinct-radius margin — the objective gap "
+                     "between the best radius and the best next-distinct "
+                     "radius — matches the earlier polish result at "
+                     "about 9.815e-4. The runner is conservative: it "
+                     "does not inflate margins or pull the source "
+                     "profile away from truth when no mismatch is "
+                     "present. That property is important because we "
+                     "want this runner to be safe to use as the default "
+                     "final stage, not just as an opt-in audit step."
                  ))
 
     slide_figure(prs,
@@ -2312,16 +2483,198 @@ def build_synthesis(prs):
                                "to next radius r = 6.2 mm) is 1.146 × 10⁻³."),
                  exp_label="exp 058",
                  notes_text=(
-                     "52 geometry candidates × 3 modeled source-frequency "
-                     "scales each. The recovered source profile matches the "
-                     "injected one exactly: fc_scale = 1.1, shift = -50 ps, "
-                     "amp = 1.100. This is the headline result of the arc: "
-                     "the production runner recovers both the geometry and "
-                     "the injected nuisance source parameters together. "
-                     "Sub-ranks show a few r = 6.2 candidates also preferring "
-                     "a -25 ps shift, which is exactly the kind of competing "
-                     "explanation top-k reporting is meant to surface."
+                     "This run evaluates 52 geometry candidates with "
+                     "three modelled source-frequency scales each. The "
+                     "observed source was deliberately mismatched in "
+                     "three ways at once — centre frequency scaled by "
+                     "1.1, time shifted by minus 50 picoseconds, and "
+                     "amplitude scaled by 1.1. The recovered source "
+                     "profile matches the injected one exactly: fc "
+                     "scale 1.1, shift minus 50 picoseconds, amplitude "
+                     "1.100. This is the headline result of the whole "
+                     "arc — the production runner recovers both the "
+                     "geometry and the injected nuisance source "
+                     "parameters at the same time. Looking at the "
+                     "sub-ranks, a few r = 6.2 mm candidates also "
+                     "prefer a minus 25 picosecond shift, which is "
+                     "exactly the kind of competing explanation top-k "
+                     "reporting is meant to surface."
                  ))
+
+
+def build_verdict(prs):
+    """Concluding verdict: what each paper's method gave us, and what we rejected."""
+    s = new_slide(prs)
+    title_bar(s,
+              "Verdict by paper — what worked and what did not",
+              "Concrete adoption / rejection per paper, with the experiment that justifies it",
+              exp_label="conclusion")
+
+    headers = ["Paper / method", "What worked  ✓",
+               "What did not work / deferred  ✗"]
+    rows = [
+        ("Paper 1 — WRI\n(Feng et al. 2022)",
+         "Cumulative-frequency philosophy adopted as time-domain weighted LS.  "
+         "carry_low_25 (25% × 1.0 GHz + 1.0 × 1.5 GHz) preserves ~80% of the "
+         "1.5 GHz-only radius margin while keeping a low-frequency contribution.\n"
+         "[exp 046–049]",
+         "Full WRI solver itself — would require a new frequency-domain "
+         "Helmholtz/Maxwell operator, complex sparse solves, and a new adjoint. "
+         "Deferred; the current radius bias is already explained by source "
+         "handling.\n[doc 28]"),
+
+        ("Paper 2 — PEBDD\n(Zhou et al. 2021)",
+         "Matched-filter trace band-pass (same filter on observed and synthetic) "
+         "as the seed-builder stage. Spectrum-design tool to choose band edges "
+         "from real residual spectra rather than guesses.\n[exp 028–045]",
+         "PEBDD did not fix radius on its own. Every Powell stage stopped in the "
+         "high-radius basin (r ≈ 6.86–6.93 mm). The polish stage was still the "
+         "radius selector. Use PEBDD as a seed-builder only.\n[exp 031, 045]"),
+
+        ("Paper 3 — OT-LS\n(Hunziker et al. 2025)",
+         "NRCCC trace-shift diagnostic implemented and saved in every run "
+         "summary. Useful as a safety check for future field-data and "
+         "poor-initial-model scenarios.\n[exp 024–027]",
+         "OT objective inside the optimiser was ruled out. Every wrong-radius "
+         "candidate, including under 10% noise, already had NRCCC = 1.0 — the "
+         "radius problem is not cycle skipping. OT brings no benefit here.\n"
+         "[exp 024–026]"),
+
+        ("Paper 4 — W2\n(Lu et al. 2024)",
+         "Standalone Softplus / Sinkhorn W2 module with tests, used as a "
+         "landscape gate. Paper's shift-convexity claim reproduced on shifted "
+         "Ricker pulses (gate 1 passed).\n[exp 048]",
+         "W2 as the final radius objective. On the rebar landscape the margin "
+         "collapsed from 1.04 × 10⁻³ (LS) to 1.06 × 10⁻⁷ (W2) — Softplus "
+         "removes the amplitude content radius depends on. Rejected.\n"
+         "[exp 050, 051]"),
+
+        ("Paper 5 — IFWI\n(Sun et al. 2025)",
+         "Frequency-principle thinking — smooth structure before detail — "
+         "already implicit in our staged pipeline (coarse → fine → polish).\n"
+         "[design]",
+         "Full neural implicit field — flexible neural residual would risk "
+         "absorbing radius bias into a 'background correction', making radius "
+         "less meaningful, not more. Deferred to multi-rebar / field data.\n"
+         "[doc 29]"),
+
+        ("Additional finding\n(beyond the 5 papers)",
+         "Source-wavelet profiling — per-candidate amplitude scalar + global "
+         "time-shift + centre-frequency scale grid. Recovers radius even when "
+         "the modelled source differs from the observed one (all seven mismatch "
+         "cases land at r = 6.0 mm).\n[exp 052–055, productionised in 057, 058]",
+         "Fixed-source LS alone — bias to the radius grid bound under modest fc "
+         "or time-zero mismatch. Cannot be relied on for field data without "
+         "the source profile.\n[exp 052]"),
+    ]
+
+    n_rows = len(rows) + 1
+    table_shape = s.shapes.add_table(
+        n_rows, 3,
+        Inches(0.40), Inches(1.40),
+        Inches(12.55), Inches(5.70),
+    )
+    tbl = table_shape.table
+
+    widths = [2.40, 5.10, 5.05]
+    for i, w in enumerate(widths):
+        tbl.columns[i].width = Inches(w)
+
+    tbl.rows[0].height = Inches(0.40)
+    for r in range(1, n_rows):
+        tbl.rows[r].height = Inches(0.88)
+
+    for c_idx, h in enumerate(headers):
+        cell = tbl.cell(0, c_idx)
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = NAVY
+        para = cell.text_frame.paragraphs[0]
+        para.text = h
+        para.alignment = PP_ALIGN.LEFT
+        run = para.runs[0]
+        run.font.size = Pt(12)
+        run.font.bold = True
+        run.font.color.rgb = WHITE
+        run.font.name = FONT
+        cell.margin_left = Inches(0.08)
+        cell.margin_right = Inches(0.05)
+        cell.margin_top = Inches(0.04)
+        cell.margin_bottom = Inches(0.04)
+
+    for r_idx, (label, worked, didnt) in enumerate(rows, start=1):
+        # Label cell
+        cell = tbl.cell(r_idx, 0)
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = LIGHT_BG
+        tf = cell.text_frame
+        tf.word_wrap = True
+        para = tf.paragraphs[0]
+        para.text = label
+        run = para.runs[0]
+        run.font.size = Pt(11)
+        run.font.bold = True
+        run.font.color.rgb = NAVY
+        run.font.name = FONT
+        cell.margin_left = Inches(0.08)
+        cell.margin_right = Inches(0.05)
+        cell.margin_top = Inches(0.05)
+        cell.margin_bottom = Inches(0.05)
+
+        # "Worked" cell — green-tinted
+        cell = tbl.cell(r_idx, 1)
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = PALE_GREEN
+        tf = cell.text_frame
+        tf.word_wrap = True
+        para = tf.paragraphs[0]
+        para.text = worked
+        run = para.runs[0]
+        run.font.size = Pt(10)
+        run.font.color.rgb = CHARCOAL
+        run.font.name = FONT
+        cell.margin_left = Inches(0.10)
+        cell.margin_right = Inches(0.08)
+        cell.margin_top = Inches(0.05)
+        cell.margin_bottom = Inches(0.05)
+
+        # "Did not work" cell — red-tinted
+        cell = tbl.cell(r_idx, 2)
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = PALE_RED
+        tf = cell.text_frame
+        tf.word_wrap = True
+        para = tf.paragraphs[0]
+        para.text = didnt
+        run = para.runs[0]
+        run.font.size = Pt(10)
+        run.font.color.rgb = CHARCOAL
+        run.font.name = FONT
+        cell.margin_left = Inches(0.10)
+        cell.margin_right = Inches(0.08)
+        cell.margin_top = Inches(0.05)
+        cell.margin_bottom = Inches(0.05)
+
+    set_notes(s,
+              "This is the single-slide summary of the whole arc, "
+              "organised by paper. The headline sits in the bottom row "
+              "— the additional finding that was not in any of the "
+              "five papers: source-wavelet profiling with a small "
+              "structured nuisance fit per candidate. That is the most "
+              "important new contribution of this arc, and it is the "
+              "recipe the recommended pipeline is built around. Above "
+              "that, the five papers each gave us something we kept — "
+              "frequency weighting from WRI, the matched-filter band-"
+              "pass from PEBDD, the trace-shift diagnostic from OT-LS, "
+              "the W2 module as a landscape gate, and the frequency-"
+              "principle staging idea from IFWI. Each paper also had a "
+              "piece we ruled out for this specific problem, and each "
+              "rejection is justified by a specific experiment number "
+              "in the table. Two of the rejections are conditional, "
+              "not categorical. WRI moves back onto the table if a "
+              "future setup creates an initial-model failure source "
+              "handling cannot fix. IFWI moves back onto the table "
+              "when explicit nuisance parameters become insufficient "
+              "for multi-rebar or field data.")
 
 
 def build_deferred_and_next(prs):
@@ -2347,14 +2700,19 @@ def build_deferred_and_next(prs):
                           ],
                           exp_label="docs 28 + 29",
                           notes_text=(
-                              "Both deferrals are conditional, not categorical. "
-                              "WRI becomes worth revisiting if a future use case "
-                              "creates a poor initial model where time-domain "
-                              "FDTD optimisation reliably fails. IFWI becomes "
-                              "worth revisiting when explicit nuisance "
-                              "parameters can no longer absorb material / "
-                              "background residuals — likely either with multi-"
-                              "rebar geometry or field data."
+                              "Both deferrals are conditional, not "
+                              "categorical. WRI becomes worth "
+                              "revisiting if a future use case creates "
+                              "a poor initial model where time-domain "
+                              "FDTD optimisation reliably fails. IFWI "
+                              "becomes worth revisiting when explicit "
+                              "nuisance parameters can no longer "
+                              "absorb material or background "
+                              "residuals — most likely with multi-"
+                              "rebar geometry or field data. Both "
+                              "tracker documents lay out a constrained "
+                              "design for a future prototype if "
+                              "either of those conditions is met."
                           ))
 
     slide_two_column_text(prs,
@@ -2378,27 +2736,32 @@ def build_deferred_and_next(prs):
                           exp_label="tracker 30 summary",
                           notes_text=(
                               "The five-step pipeline is the production "
-                              "recipe distilled from this whole arc. Steps to "
-                              "land verbally: (1) use the existing staged / "
-                              "PEBDD path only to bring x and z into the "
-                              "right basin — don't expect it to fix radius; "
-                              "(2) evaluate the final radius with 1.5 GHz "
-                              "only or carry_low_25 (25% × 1.0 GHz + 1.0 × "
-                              "1.5 GHz) — never unweighted multi-frequency, "
-                              "which dilutes margin; (3) the radius decision "
-                              "is a local grid polish (small enumeration over "
-                              "(z, r)), not Powell — continuous Powell sits "
-                              "in the depth-radius valley; (4) per-candidate "
-                              "source profile (amplitude + time-shift + "
-                              "fc-scale) is mandatory before trusting any "
-                              "radius decision on data where the source may "
-                              "differ from nominal; (5) confidence is the "
-                              "distinct-radius margin and the top-k candidate "
-                              "list, not a single point estimate. The 'not "
-                              "doing' column is just as important — each item "
-                              "is a specific branch we tested and chose not "
-                              "to spend the next iteration on (with reasons "
-                              "documented in the relevant tracker docs)."
+                              "recipe distilled from this whole arc. "
+                              "Walking through the steps: first, use "
+                              "the existing staged or PEBDD path only "
+                              "to bring x and z into the right basin — "
+                              "we should not expect it to fix radius. "
+                              "Second, evaluate the final radius with "
+                              "1.5 GHz-only or carry_low_25 — never "
+                              "use unweighted multi-frequency, because "
+                              "it dilutes margin. Third, the radius "
+                              "decision is a local grid polish — a "
+                              "small enumeration over (z, r) — not "
+                              "Powell; continuous Powell sits in the "
+                              "depth-radius valley. Fourth, a per-"
+                              "candidate source profile combining "
+                              "amplitude, time-shift, and frequency-"
+                              "scale is mandatory before trusting any "
+                              "radius decision on data where the "
+                              "source may differ from nominal. Fifth, "
+                              "confidence is the distinct-radius "
+                              "margin and the top-k candidate list, "
+                              "not a single point estimate. The right "
+                              "column matters just as much — each "
+                              "'not doing' item is a specific branch "
+                              "we tested and chose not to spend the "
+                              "next iteration on, with reasons in the "
+                              "relevant tracker documents."
                           ))
 
     slide_two_column_text(prs,
@@ -2418,13 +2781,16 @@ def build_deferred_and_next(prs):
                           ],
                           exp_label="post-058 plan",
                           notes_text=(
-                              "Closing slide. The deliberate choice here is to "
-                              "stay narrow: a focused replication matrix and a "
-                              "scaling-out path, rather than another menu of "
-                              "new branches. The hyperbola baseline is "
-                              "intentionally non-FWI — having an independent "
-                              "method makes the FWI result credible at field-"
-                              "data validation time."
+                              "This is the closing slide. The choice "
+                              "here is deliberate: stay narrow, with a "
+                              "focused replication matrix and a "
+                              "scaling-out path, rather than opening "
+                              "another menu of new research branches. "
+                              "The hyperbola baseline on the right is "
+                              "intentionally non-FWI — having an "
+                              "independent method available makes the "
+                              "FWI result credible when we get to "
+                              "field-data validation."
                           ))
 
 
@@ -2501,6 +2867,7 @@ def build():
     build_material(prs)
     build_wavelet_mismatch(prs)
     build_synthesis(prs)
+    build_verdict(prs)
     build_deferred_and_next(prs)
 
     prs.save(PPTX_PATH)
