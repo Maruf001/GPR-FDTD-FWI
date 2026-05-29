@@ -47,7 +47,8 @@ experiment or implementation stage.
 - [x] Stage 1: source-profiled local radius polish runner and smoke gates.
 - [x] Stage 2A: compact exact/noise/source-mismatch replication matrix.
 - [x] Stage 2B: broader source-profiled replication across noise/source seeds.
-- [ ] Stage 3: stress accepted polish with offset x/z/r seeds.
+- [x] Stage 3A: exact wider-window geometry stress test.
+- [ ] Stage 3B: noisy wider-window geometry stress test.
 - [ ] Stage 4: extend accepted confidence reporting to multi-rebar cases.
 - [ ] Days 11-14: robustness, replication, and handoff.
 
@@ -689,6 +690,42 @@ Decision:
 Move to Stage 3 x/z/r local-window stress tests. The source-profiled polish is
 stable across the tested exact, noisy, and source-mismatched synthetic cases at
 the fixed local x/z window.
+```
+
+### Stage 3A: Exact Wider-Window Geometry Stress
+
+Status:
+
+```text
+passed exact geometry-window gate
+```
+
+Output:
+
+```text
+outputs/experiments/061_source_profiled_geometry_window_exact_mismatch
+```
+
+Tracker:
+
+```text
+docs/experiments/33_geometry_window_stress.md
+```
+
+Result:
+
+| Case | Best x [mm] | Best z [mm] | Best r [mm] | Next r [mm] | Margin |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| nominal | 250.0 | 90.0 | 6.0 | 6.2 | 9.815e-04 |
+| source_mismatch | 250.0 | 90.0 | 6.0 | 6.2 | 1.146e-03 |
+
+Decision:
+
+```text
+Run the same wider geometry window under 10% noise before moving to multi-rebar.
+Exact data rejects nearby wrong x/z cells, but the top-k list shows a deeper
+high-radius competitor around z=91 mm and r=6.8-7.0 mm that should be tested
+under noise.
 ```
 
 ## Dynamic Branch Rules
