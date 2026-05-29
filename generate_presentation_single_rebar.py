@@ -239,70 +239,75 @@ def set_notes(slide, notes):
 
 
 def fig_pipeline_architecture():
-    """Three-stage staged solver, with role of each stage."""
-    fig, ax = plt.subplots(1, 1, figsize=(13, 4.6))
+    """Three-stage staged solver, with role of each stage. Cleaner layout."""
+    fig, ax = plt.subplots(1, 1, figsize=(13, 4.8))
     ax.set_xlim(0, 13)
-    ax.set_ylim(0, 4.5)
+    ax.set_ylim(0, 5.0)
     ax.axis("off")
 
-    # Forward + data block at the top
+    # Forward-model bar across the top — two lines of text fit comfortably
     fwd_box = FancyBboxPatch(
-        (3.5, 3.4), 6, 0.9,
-        boxstyle="round,pad=0.10",
+        (0.4, 3.50), 12.2, 1.20,
+        boxstyle="round,pad=0.05",
         facecolor="#E3F2FD", edgecolor="#2C5F7C", linewidth=2.0,
     )
     ax.add_patch(fwd_box)
-    ax.text(6.5, 3.85,
-            "GPU FDTD forward model  (Yee 2D TMz + CPML, batched B-scan)",
-            ha="center", va="center", fontsize=12, fontweight="bold", color="#1A2332")
+    ax.text(6.5, 4.30,
+            "GPU FDTD forward model",
+            ha="center", va="center", fontsize=15, fontweight="bold",
+            color="#1A2332")
+    ax.text(6.5, 3.80,
+            "Yee 2D TMz Maxwell solver  ·  CPML boundaries  ·  batched B-scan"
+            "  ·  shared by all three stages",
+            ha="center", va="center", fontsize=11, color="#2C3E50",
+            style="italic")
 
-    # Three pipeline boxes
+    # Three pipeline boxes underneath
     stages = [
-        ("Stage 1\nCoarse global search",
-         "2 mm grid\nDifferential evolution\nFinds the basin",
+        ("STAGE 1", "Coarse global search",
+         "2 mm grid  ·  Differential evolution\nFinds the (x, z, r) basin",
          "#FDF1E0", "#E8913A"),
-        ("Stage 2\nFine continuous refinement",
-         "1 mm grid\nPowell local search\nLocks x and z",
+        ("STAGE 2", "Fine continuous refinement",
+         "1 mm grid  ·  Powell local search\nLocks x and z; biases radius high",
          "#E6F5EC", "#27AE60"),
-        ("Stage 3\nDeterministic grid polish",
-         "1 mm grid\nLocal z and r grid\nRemoves radius bias",
+        ("STAGE 3", "Deterministic grid polish",
+         "1 mm grid  ·  Local (z, r) enumeration\nRemoves the radius bias",
          "#EBF5FB", "#2C5F7C"),
     ]
-    x_centers = [2.3, 6.5, 10.7]
-    box_w, box_h = 3.4, 2.1
-    for cx, (title, body, fc, ec) in zip(x_centers, stages):
+    x_centers = [2.30, 6.50, 10.70]
+    box_w, box_h = 3.70, 2.40
+    bottom = 0.30
+    for cx, (label, subtitle, body, fc, ec) in zip(x_centers, stages):
         left = cx - box_w / 2
-        bottom = 0.3
         rect = FancyBboxPatch(
             (left, bottom), box_w, box_h,
-            boxstyle="round,pad=0.12",
+            boxstyle="round,pad=0.08",
             facecolor=fc, edgecolor=ec, linewidth=2.0,
         )
         ax.add_patch(rect)
-        ax.text(cx, bottom + box_h - 0.45, title,
+        # Section label (small, coloured to match border)
+        ax.text(cx, bottom + box_h - 0.40, label,
+                ha="center", va="center", fontsize=11,
+                fontweight="bold", color=ec)
+        # Role
+        ax.text(cx, bottom + box_h - 0.95, subtitle,
                 ha="center", va="center", fontsize=13,
                 fontweight="bold", color="#1A2332")
+        # Body
         ax.text(cx, bottom + 0.55, body,
                 ha="center", va="center", fontsize=11, color="#2C3E50")
 
-    # Arrows between stages
+    # Forward arrows between stages (clean, single arrow each)
     for i in range(2):
-        x_start = x_centers[i] + box_w / 2 + 0.1
-        x_end = x_centers[i + 1] - box_w / 2 - 0.1
+        x_start = x_centers[i] + box_w / 2 + 0.06
+        x_end = x_centers[i + 1] - box_w / 2 - 0.06
         ax.annotate(
-            "", xy=(x_end, 1.4), xytext=(x_start, 1.4),
-            arrowprops=dict(arrowstyle="-|>", color="#2C5F7C", lw=2.2),
+            "", xy=(x_end, bottom + box_h / 2),
+            xytext=(x_start, bottom + box_h / 2),
+            arrowprops=dict(arrowstyle="-|>", color="#2C5F7C", lw=2.5),
         )
-
-    # Each stage queries the same forward model; show three thin arrows
-    for cx in x_centers:
-        ax.annotate(
-            "", xy=(cx, 2.45), xytext=(cx, 3.35),
-            arrowprops=dict(arrowstyle="-|>", color="#7F8C8D", lw=1.4,
-                            linestyle="dashed"),
-        )
-    ax.text(6.5, 3.05, "shared forward model",
-            ha="center", fontsize=10, color="#7F8C8D", style="italic")
+        ax.text((x_start + x_end) / 2, bottom + box_h / 2 + 0.20, "seed",
+                ha="center", fontsize=10, color="#7F8C8D", style="italic")
 
     out = os.path.join(FIG_DIR, "pipeline_architecture.png")
     plt.tight_layout()
@@ -503,6 +508,21 @@ def slide_title(prs):
              "GPR-FDTD-FWI  •  DGX Spark  •  2026",
              size=12, color=GRAY)
     add_slide_number(slide)
+    set_notes(slide,
+              "This deck is about recovering the position, depth, and radius of a "
+              "single rebar in concrete from a ground-penetrating radar B-scan. "
+              "Everything is synthetic — observed data and candidate data come "
+              "from the same wave-equation solver, so any failure we see is in "
+              "the inverse pipeline, not the physics. The story has three pieces. "
+              "First, the forward model is a GPU-accelerated 2D finite-difference "
+              "time-domain solver with absorbing boundaries, batched across scan "
+              "positions. Second, the inversion is a staged solver — coarse "
+              "global search, then fine continuous refinement, then a "
+              "deterministic local grid polish. Third, the result is exact "
+              "recovery on clean data, and the polished radius stays correct "
+              "under additive noise up to ten percent. Where the radius starts "
+              "becoming ambiguous, the pipeline reports a top-k list rather "
+              "than a single point estimate.")
 
 
 def slide_problem(prs):
@@ -548,9 +568,20 @@ def slide_problem(prs):
              size=13, color=CHARCOAL, alignment=PP_ALIGN.CENTER)
 
     set_notes(slide,
-              "The unknowns are intentionally tiny. We're not estimating a full image — we are "
-              "estimating three numbers from a B-scan. That keeps the inverse problem clean enough "
-              "to diagnose identifiability.")
+              "The unknowns are intentionally tiny. We are not estimating a full "
+              "subsurface image — only three numbers from a B-scan: lateral "
+              "position, depth, and radius of one circular rebar. That keeps the "
+              "inverse problem clean enough to diagnose identifiability. The "
+              "twin-experiment design — observed and candidate B-scans come from "
+              "the same forward operator — means any wrong answer must come from "
+              "the inverse pipeline. The identifiability hierarchy on the left "
+              "is consistent with the GPR-FWI literature: lateral position is "
+              "set by the hyperbola apex, depth is set by the moveout once "
+              "velocity is known, and radius is the weakly identified quantity "
+              "that couples to nuisance parameters and to the grid. The true "
+              "model on the right is what the observed B-scan is synthesised "
+              "from; the initial guess is deliberately offset so the optimiser "
+              "has real work to do.")
 
 
 def slide_pipeline_arch(prs, fig_path):
@@ -564,9 +595,20 @@ def slide_pipeline_arch(prs, fig_path):
              "what changes is the resolution and the search strategy.",
              size=13, italic=True, color=GRAY)
     set_notes(slide,
-              "Stage 1 finds the basin globally on a cheap grid. Stage 2 refines continuously on "
-              "the production grid. Stage 3 is deterministic and small, and is the part that "
-              "actually closes the radius gap by accepting that the geometry is rasterized.")
+              "The same forward model sits at the top, used by all three "
+              "stages — what changes from stage to stage is the search "
+              "strategy and the grid resolution. Stage one is a coarse global "
+              "search on a 2 mm grid using differential evolution. Its job is "
+              "to find the right basin in (x, z, r); it does not need to be "
+              "accurate. Stage two takes that seed and runs a fine continuous "
+              "local search on the production 1 mm grid using SciPy's "
+              "derivative-free Powell optimiser. It locks in lateral position "
+              "and depth, but it consistently biases the radius slightly high "
+              "because of a depth–radius coupling we will see in a moment. "
+              "Stage three is a deterministic small grid search over depth "
+              "and radius on the 1 mm grid. It is the step that closes the "
+              "radius gap by accepting that the rasterised geometry is "
+              "piecewise constant in physical coordinates.")
 
 
 def slide_forward(prs):
@@ -590,9 +632,20 @@ def slide_forward(prs):
     add_caption(slide, Inches(7.7), Inches(5.9), Inches(5.4),
                 "Synthetic 'observed' B-scan: rebar hyperbola near 2 ns, 5 scan positions, 1.5 GHz.")
     set_notes(slide,
-              "The forward model is the same one used in the previous geometry-inversion runs. "
-              "The presentation point is that the GPU batched solver makes one objective "
-              "evaluation as cheap as a single FDTD run for moderate scan counts.")
+              "The forward model is a 2D transverse-magnetic finite-difference "
+              "time-domain solver on a Yee staggered grid, with convolutional "
+              "perfectly matched layer boundaries to absorb outgoing waves. It "
+              "runs on the GPU through CuPy. The important property for "
+              "inversion runtime is that the batched B-scan path advances "
+              "every scan position in one GPU launch, so a single objective "
+              "evaluation costs roughly the same as a single forward solve. "
+              "Every change to the solver is parity-tested against the CPU "
+              "reference for both the single-trace and the batched paths, so "
+              "GPU regressions are caught early. Every inversion or "
+              "diagnostic run writes a manifest with the exact command, git "
+              "commit, backend, and summary path, so the experiment log is "
+              "reproducible. On the right is one observed B-scan with five "
+              "scan positions; the rebar hyperbola sits near 2 nanoseconds.")
 
 
 def slide_radius_hard(prs, sweep_pair_path):
@@ -613,9 +666,20 @@ def slide_radius_hard(prs, sweep_pair_path):
              "discretization. Multi-frequency stacking did not fix it; a finer grid did.",
              size=14, color=AMBER, bold=True)
     set_notes(slide,
-              "Both axes are log-J. On the 2 mm grid the optimizer literally cannot distinguish "
-              "r=4.5, 5.0, 5.5 because the cell mask is identical. On the 1 mm grid we recover "
-              "a V-shape with the true radius at the bottom.")
+              "Both panels show the inversion objective as a function of "
+              "radius, on a log scale. The only thing that changes between "
+              "the left and right panels is the grid step of the forward "
+              "model. On the 2 mm grid, the radius values 4.5, 5.0, and 5.5 "
+              "all sit on a flat plateau because the circular rebar "
+              "rasterises to the same set of cells for all three — the "
+              "optimiser literally cannot distinguish them. The 1 mm grid "
+              "breaks those plateaus and gives us a clean V-shape with the "
+              "true 6.0 mm radius at the bottom. The implication is "
+              "important: radius identifiability in this code is dominated "
+              "by geometry discretisation. We tried multi-frequency "
+              "stacking first; it did not fix the plateau. A finer grid "
+              "did. That is why the production pipeline runs at 1 mm even "
+              "though the seed stage uses 2 mm for speed.")
 
 
 def slide_coupling(prs):
@@ -653,9 +717,20 @@ def slide_coupling(prs):
                     "Adding scan positions narrows the valley but does not move its radius minimum. The fix has to come from the search strategy, not from more data.",
                 ], size=15)
     set_notes(slide,
-              "This is the central technical insight. Radius bias is not 'optimizer failure', "
-              "it is a real coupling between depth and radius in the waveform objective near the "
-              "minimum. The remedy is the grid polish in stage 3.")
+              "This is the central technical insight of the deck. The continuous "
+              "Powell optimiser stops at radius about 6.8 mm and depth about "
+              "0.65 mm deeper than truth, with a small but non-zero misfit. "
+              "When we fix x and z and profile radius alone, the right answer "
+              "is 6.0 mm exactly. When we fix x and the wrong depth and "
+              "profile radius, we get the same 6.8 mm Powell found. So a "
+              "deeper rebar trades against a larger radius and produces a "
+              "near-identical waveform — the objective near the optimum is "
+              "an elongated valley, not a clean basin. Adding more scan "
+              "positions narrows the valley but does not move its radius "
+              "minimum, because the trade-off is intrinsic to the physics at "
+              "the wavelengths we are using. The remedy cannot come from "
+              "more data; it has to come from the search strategy. That is "
+              "what motivates stage 3.")
 
 
 def slide_grid_polish(prs):
@@ -693,9 +768,22 @@ def slide_grid_polish(prs):
              "x = 250.0 mm   z = 89.75 mm\nr = 6.00 mm   J = 0",
              size=14, color=CHARCOAL, alignment=PP_ALIGN.CENTER)
     set_notes(slide,
-              "Polish is the single most important step for radius in this pipeline. The 0.25 mm "
-              "z difference is a hard-grid equivalence — multiple sub-mm z values produce the "
-              "same rasterized circle.")
+              "The grid polish is the single most important step for radius "
+              "in this pipeline. It is conceptually simple: take Powell's "
+              "approximate answer, build a small list of nearby (depth, "
+              "radius) candidates on an absolute millimetre grid, run the "
+              "forward solver on each, and pick the best. The default is a "
+              "40-candidate coarse grid with depth step 0.5 mm and radius "
+              "step 0.2 mm; an 160-candidate fine preset exists for audit "
+              "runs. The polish also keeps the top few candidates, not just "
+              "the winner, so the margin between the chosen geometry and "
+              "its closest competitor is auditable. On the right, Powell "
+              "hands off radius 6.96 mm with a small but non-zero misfit. "
+              "After polish, we land at radius 6.00 mm with misfit zero. "
+              "The depth reads 89.75 mm rather than 90.00 mm because at "
+              "this 1 mm grid resolution the rasterised circle is identical "
+              "for several sub-millimetre depth values — that is a "
+              "representation detail, not a result detail.")
 
 
 def slide_final_model(prs):
@@ -721,9 +809,20 @@ def slide_final_model(prs):
                     "0  /  0", color=GREEN, width=Inches(3.8))
 
     set_notes(slide,
-              "z reads 89.75 because the 1 mm hard-grid circle is identical at z=89.75 and "
-              "z=90.0 — both produce the same material mask and the same B-scan. That is a "
-              "representation detail, not a science result.")
+              "This is the exact-synthetic final result. The three model "
+              "panels are the initial guess on the left, the recovered "
+              "model in the middle, and the ground truth on the right. The "
+              "rebar appears as a small high-permittivity inclusion in the "
+              "concrete; the recovered and ground-truth panels are visually "
+              "identical because, on the 1 mm grid, they are the same "
+              "model. The metric tiles below confirm: lateral position 250 "
+              "mm exactly, depth 89.75 mm (which is the same rasterised "
+              "cell as 90 mm), radius 6.0 mm exactly, normalised root mean "
+              "square misfit zero for both the model and the data. The "
+              "depth reads 89.75 rather than 90.00 because at 1 mm grid "
+              "resolution several sub-millimetre depth values produce the "
+              "same rasterised circle. That is a representation detail, "
+              "not a science result.")
 
 
 def slide_bscan_compare(prs):
@@ -748,8 +847,18 @@ def slide_bscan_compare(prs):
              "not just a close fit; on the 1 mm grid it is the same model.",
              size=14, italic=True, color=CHARCOAL)
     set_notes(slide,
-              "Both panels show the same direct-wave band and rebar diffraction. Zero misfit is "
-              "the strongest possible synthetic-recovery signal.")
+              "These are the two B-scans side by side: observed on the "
+              "left, recovered from the inverted geometry on the right. "
+              "Both show the same direct-wave band at the top, the same "
+              "rebar diffraction hyperbola near 2 nanoseconds, and the "
+              "same trailing reverberations. The two panels are not just "
+              "visually similar — the trace-by-trace difference is below "
+              "the floating-point floor, so the normalised data misfit is "
+              "exactly zero. This is the strongest possible synthetic "
+              "recovery signal: on the 1 mm grid, the recovered model is "
+              "the same model as the truth, not just a close fit. The "
+              "value of showing both panels is mostly to make the "
+              "zero-misfit statement visible to the audience.")
 
 
 def slide_noise(prs, fig_path):
@@ -764,8 +873,19 @@ def slide_noise(prs, fig_path):
              "rasterized geometry is unchanged.",
              size=14, color=CHARCOAL)
     set_notes(slide,
-              "The point isn't that the misfit is small; it is that the recovered geometry "
-              "doesn't move. The data residual is fully explained by the noise we added.")
+              "The point of this slide is not that the data misfit is "
+              "small — under noise the misfit cannot be smaller than the "
+              "noise floor. The point is that the recovered geometry does "
+              "not move. Across two noise seeds and four noise levels — "
+              "exact, one percent, five percent, and ten percent additive "
+              "trace-RMS noise — the polished radius is exactly 6.0 mm in "
+              "every case. The data-misfit bars on the right rise linearly "
+              "with the injected noise level, exactly as they should: the "
+              "residual is now fully explained by the noise we added, not "
+              "by a bad model. The model-misfit row stays at zero "
+              "throughout because the rasterised geometry the polish "
+              "selects is unchanged. This is what makes the polish stage "
+              "worth defending under realistic conditions.")
 
 
 def slide_margin(prs, fig_path):
@@ -780,9 +900,20 @@ def slide_margin(prs, fig_path):
              "and use the top-k candidates list directly.",
              size=14, color=CHARCOAL)
     set_notes(slide,
-              "This slide is the calibration of where the pipeline starts to lose discrimination. "
-              "It also justifies why we save top-k candidates and why noisy field data should not "
-              "use --polish-stop-misfit 0.")
+              "This slide calibrates where the pipeline starts to lose "
+              "radius discrimination. The eight bars are the top eight "
+              "polish candidates at ten percent additive noise, sorted by "
+              "their objective values. The true 6.0 mm radius still wins "
+              "in two equivalent depth cells, but the margin against the "
+              "next-distinct radius — 6.2 mm — is only about 5.6e-4. "
+              "That is a real margin, but it is small enough that beyond "
+              "this noise level we should not trust a single point "
+              "estimate. The pipeline's recommended behaviour at this "
+              "regime is to report the top-k candidates plus the distinct-"
+              "radius margin and let the user decide how to interpret. It "
+              "also tells us not to use the zero-misfit early-stop option "
+              "on noisy data, because the true model cannot reach zero "
+              "misfit when noise is present.")
 
 
 def slide_landscape(prs):
@@ -806,6 +937,20 @@ def slide_landscape(prs):
              "but the z–radius slice shows the elongated valley that causes continuous optimizers "
              "to stop slightly off-radius. That valley is exactly what the grid polish steps over.",
              size=14, color=CHARCOAL)
+    set_notes(slide,
+              "These two panels are direct diagnostics of the inversion "
+              "objective landscape — not optimisation runs, just the "
+              "objective evaluated on a grid of candidates. The left panel "
+              "fixes the radius at the true value and sweeps x and z; the "
+              "dark minimum sits exactly at the true position and the "
+              "landscape is smoothly convex around it. The right panel "
+              "fixes x at the true value and sweeps z and radius; here we "
+              "see the elongated diagonal valley where deeper-and-larger "
+              "and shallower-and-smaller candidates all fit the data "
+              "almost equally well. That valley is the geometric origin of "
+              "the radius bias we have been discussing. The polish stage "
+              "works because it enumerates discrete cells across this "
+              "valley rather than following a gradient down it.")
 
 
 def slide_next(prs):
@@ -839,6 +984,24 @@ def slide_next(prs):
              "numbered-run convention, and grid-polish stage transfer directly. The work is "
              "in the search strategy and in mapping which parameters the data actually supports.",
              size=14, color=CHARCOAL)
+    set_notes(slide,
+              "The three forward directions all lift one assumption of the "
+              "current twin experiment. Multi-rebar re-introduces two or "
+              "three rebars; the polish stage and identifiability hierarchy "
+              "carry over, but the global search stage gets harder because "
+              "the basin landscape becomes multi-modal. Nuisance parameters "
+              "means letting concrete permittivity, conductivity, time-zero, "
+              "and source wavelet float — this is the realism gap that "
+              "shows up in the FWI literature, and radius identifiability "
+              "depends on calibrating it. Field-style validation adds a "
+              "hyperbola-fitting and migration baseline so we can quantify "
+              "what full-waveform inversion buys over simpler methods, and "
+              "lets us cross-check the forward model against an "
+              "independent solver. The pipeline pieces that transfer "
+              "directly are the forward model, the numbered-run convention, "
+              "and the grid-polish stage. The new work is in the search "
+              "strategy and in mapping which parameters the observed data "
+              "actually constrains.")
 
 
 # -----------------------------------------------------------------------------
