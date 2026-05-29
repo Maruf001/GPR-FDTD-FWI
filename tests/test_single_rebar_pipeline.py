@@ -49,6 +49,8 @@ def test_single_rebar_objective_prefers_truth():
     assert np.isfinite(j_wrong)
     assert j_true < 1e-12
     assert j_wrong > j_true
+    assert set(engine.last_misfit_by_frequency) == {cfg.F_CENTER}
+    assert abs(engine.last_misfit_by_frequency[cfg.F_CENTER] - j_wrong) < 1e-12
 
 
 if __name__ == "__main__":

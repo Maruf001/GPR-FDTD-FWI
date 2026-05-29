@@ -10,7 +10,7 @@ from core.materials import MaterialModel
 import config as cfg
 
 
-def build_rebar_model(rebars=None):
+def build_rebar_model(rebars=None, geometry_mode="hard", subcell_samples=5):
     """
     Construct the ground-truth model with air, concrete, and embedded rebars.
 
@@ -50,21 +50,36 @@ def build_rebar_model(rebars=None):
 
     # Embed rebars as circular inclusions.
     for z_center, x_center, radius in rebars:
-        model.add_circle(
-            z_center_m=z_center,
-            x_center_m=x_center,
-            radius_m=radius,
-            eps_r=cfg.REBAR_EPSR,
-            sigma=cfg.REBAR_SIGMA,
-            dz=cfg.DZ,
-            dx=cfg.DX,
-            npml=cfg.NPML,
-        )
+        if geometry_mode == "hard":
+            model.add_circle(
+                z_center_m=z_center,
+                x_center_m=x_center,
+                radius_m=radius,
+                eps_r=cfg.REBAR_EPSR,
+                sigma=cfg.REBAR_SIGMA,
+                dz=cfg.DZ,
+                dx=cfg.DX,
+                npml=cfg.NPML,
+            )
+        elif geometry_mode == "subcell":
+            model.add_circle_subcell(
+                z_center_m=z_center,
+                x_center_m=x_center,
+                radius_m=radius,
+                eps_r=cfg.REBAR_EPSR,
+                sigma=cfg.REBAR_SIGMA,
+                dz=cfg.DZ,
+                dx=cfg.DX,
+                npml=cfg.NPML,
+                samples=subcell_samples,
+            )
+        else:
+            raise ValueError(f"Unsupported geometry_mode: {geometry_mode}")
 
     return model
 
 
-def build_single_rebar_model(x_center, z_center, radius):
+def build_single_rebar_model(x_center, z_center, radius, geometry_mode="hard", subcell_samples=5):
     """
     Construct a ground-truth model with one circular rebar.
 
@@ -75,7 +90,11 @@ def build_single_rebar_model(x_center, z_center, radius):
     radius : float
         Rebar radius [m].
     """
-    return build_rebar_model(rebars=[(z_center, x_center, radius)])
+    return build_rebar_model(
+        rebars=[(z_center, x_center, radius)],
+        geometry_mode=geometry_mode,
+        subcell_samples=subcell_samples,
+    )
 
 
 def build_initial_model():

@@ -85,6 +85,53 @@ class MaterialModel:
                     self.sigma[iz, ix] = sigma
                     self.mu_r[iz, ix] = mu_r
 
+    def add_circle_subcell(self, z_center_m, x_center_m, radius_m, eps_r, sigma,
+                           dz, dx, npml, samples=5, mu_r=1.0):
+        """
+        Blend material properties using sub-cell circular area fractions.
+
+        This avoids radius plateaus from hard node rasterization. Each grid
+        sample represents the control volume around an Ez node. The material
+        epsilon and permeability are linearly blended between the current
+        background value and the inclusion value according to the fraction of
+        sub-samples inside the circle. Conductivity is blended in log-space so
+        a partial steel cell does not immediately behave like a full steel
+        cell.
+        """
+        if samples < 1:
+            raise ValueError("samples must be >= 1")
+        samples = int(samples)
+
+        iz_c = int(np.round(z_center_m / dz)) + npml
+        ix_c = int(np.round(x_center_m / dx)) + npml
+        ir_z = int(np.ceil(radius_m / dz)) + 2
+        ir_x = int(np.ceil(radius_m / dx)) + 2
+
+        offsets_z = (np.arange(samples, dtype=np.float64) + 0.5) / samples - 0.5
+        offsets_x = (np.arange(samples, dtype=np.float64) + 0.5) / samples - 0.5
+        zz, xx = np.meshgrid(offsets_z * dz, offsets_x * dx, indexing="ij")
+        n_total = float(samples * samples)
+
+        for iz in range(max(0, iz_c - ir_z), min(self.Nz, iz_c + ir_z + 1)):
+            z_node = (iz - npml) * dz
+            for ix in range(max(0, ix_c - ir_x), min(self.Nx, ix_c + ir_x + 1)):
+                x_node = (ix - npml) * dx
+                dist2 = (z_node + zz - z_center_m) ** 2 + (x_node + xx - x_center_m) ** 2
+                fraction = np.count_nonzero(dist2 <= radius_m**2) / n_total
+                if fraction <= 0.0:
+                    continue
+                self.epsilon_r[iz, ix] = (
+                    (1.0 - fraction) * self.epsilon_r[iz, ix] + fraction * eps_r
+                )
+                sigma_bg = max(float(self.sigma[iz, ix]), 1e-12)
+                sigma_inc = max(float(sigma), 1e-12)
+                self.sigma[iz, ix] = np.exp(
+                    (1.0 - fraction) * np.log(sigma_bg) + fraction * np.log(sigma_inc)
+                )
+                self.mu_r[iz, ix] = (
+                    (1.0 - fraction) * self.mu_r[iz, ix] + fraction * mu_r
+                )
+
     def get_update_coefficients(self, dt, eps0):
         """
         Compute FDTD electric field update coefficients Ca and Cb.

@@ -33,6 +33,7 @@ outputs/data/*.npz
 outputs/.cache/
 outputs/.matplotlib/
 outputs/single_rebar*/
+outputs/experiments/
 
 # Jupyter
 .ipynb_checkpoints/

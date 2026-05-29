@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import time as timer
 
 import numpy as np
-from scipy.optimize import Bounds, minimize
+from scipy.optimize import Bounds, differential_evolution, minimize
 
 import config as cfg
 from core.fdtd import FDTDSimulator
@@ -19,6 +19,8 @@ from core.source import generate_time_array, ricker_wavelet
 from core.utils import pos_to_index
 from inversion.adjoint import _build_mute_window
 from inversion.objective import compute_normalized_rms
+from inversion.trace_distances import trace_shift_diagnostics
+from inversion.trace_filters import apply_bandpass_traces
 
 
 @dataclass(frozen=True)
@@ -101,9 +103,38 @@ def _build_scan_positions(scan_step, n_sources):
     return positions, scan_x
 
 
-def build_model_from_single_params(params):
+def build_model_from_single_params(params, geometry_mode="hard", subcell_samples=5):
     params = SingleRebarParams.from_array(params)
-    return build_single_rebar_model(params.x, params.z, params.radius)
+    return build_single_rebar_model(
+        params.x,
+        params.z,
+        params.radius,
+        geometry_mode=geometry_mode,
+        subcell_samples=subcell_samples,
+    )
+
+
+def _quantized_axis_mm(center_mm, half_window_mm, step_mm, lower_mm, upper_mm):
+    """Build an absolute millimeter grid clipped to bounds."""
+    if step_mm <= 0.0:
+        raise ValueError("polish step must be positive")
+    if half_window_mm < 0.0:
+        raise ValueError("polish half-window must be non-negative")
+
+    if half_window_mm == 0.0:
+        value = np.round(center_mm / step_mm) * step_mm
+        return np.array([np.clip(value, lower_mm, upper_mm)], dtype=np.float64)
+
+    lo = max(lower_mm, center_mm - half_window_mm)
+    hi = min(upper_mm, center_mm + half_window_mm)
+    lo_index = int(np.ceil(lo / step_mm - 1e-9))
+    hi_index = int(np.floor(hi / step_mm + 1e-9))
+    if hi_index < lo_index:
+        value = np.round(center_mm / step_mm) * step_mm
+        return np.array([np.clip(value, lower_mm, upper_mm)], dtype=np.float64)
+
+    values = np.arange(lo_index, hi_index + 1, dtype=np.float64) * step_mm
+    return values[(values >= lower_mm - 1e-9) & (values <= upper_mm + 1e-9)]
 
 
 class SingleRebarInversionEngine:
@@ -122,12 +153,42 @@ class SingleRebarInversionEngine:
             n_sources=9,
             scan_step=None,
             backend="cpu",
+            parameter_bounds=None,
+            geometry_mode="hard",
+            subcell_samples=5,
+            observed_noise_rms_fraction=0.0,
+            noise_seed=0,
+            objective_bandpass_hz=None,
+            objective_bandpass_taper_hz=0.0,
+            frequency_weights=None,
             log_every=5):
         self.true_params = true_params or default_single_rebar_truth()
         self.initial_params = initial_params or default_single_rebar_initial_guess()
         self.frequencies = tuple(frequencies or (cfg.F_CENTER,))
+        weights = np.ones(len(self.frequencies), dtype=np.float64)
+        if frequency_weights is not None:
+            weights = np.asarray(frequency_weights, dtype=np.float64)
+            if weights.shape != (len(self.frequencies),):
+                raise ValueError("frequency_weights must match the frequency count")
+            if np.any(weights < 0.0) or not np.any(weights > 0.0):
+                raise ValueError("frequency_weights must be non-negative with at least one positive value")
+        self.frequency_weights = weights
+        self.frequency_weights_by_frequency = {
+            f: float(weight)
+            for f, weight in zip(self.frequencies, self.frequency_weights)
+        }
+        self.frequency_weight_sum = float(np.sum(self.frequency_weights))
         self.scan_step = scan_step or cfg.INVERSION_SCAN_STEP
         self.backend = _resolve_backend(backend)
+        self.parameter_bounds_override = parameter_bounds
+        if geometry_mode not in ("hard", "subcell"):
+            raise ValueError(f"Unsupported geometry_mode: {geometry_mode}")
+        self.geometry_mode = geometry_mode
+        self.subcell_samples = int(subcell_samples)
+        self.observed_noise_rms_fraction = float(observed_noise_rms_fraction)
+        self.noise_seed = int(noise_seed)
+        self.objective_bandpass_hz = objective_bandpass_hz
+        self.objective_bandpass_taper_hz = float(objective_bandpass_taper_hz)
         self.log_every = log_every
 
         self.scan_positions, self.scan_x = _build_scan_positions(
@@ -137,43 +198,128 @@ class SingleRebarInversionEngine:
         self.mute = _build_mute_window(cfg.NT, cfg.DT)
         self.eval_count = 0
         self.misfit_history = []
+        self.best_misfit = np.inf
+        self.best_params = None
+        self.last_misfit_by_frequency = {}
+        self.best_misfit_by_frequency = {}
+        self.observed_noise_stats = {}
 
         print("Building one-rebar observed data set...")
         print(f"  True: {self.true_params.as_mm()}")
         print(f"  Initial: {self.initial_params.as_mm()}")
         print(f"  Sources: {len(self.scan_positions)}")
         print(f"  Frequencies GHz: {[f / 1e9 for f in self.frequencies]}")
+        if not np.allclose(self.frequency_weights, self.frequency_weights[0]):
+            print(f"  Frequency weights: {self.frequency_weights.tolist()}")
         print(f"  Backend: {self.backend}")
+        print(f"  Geometry mode: {self.geometry_mode}")
+        if self.observed_noise_rms_fraction > 0.0:
+            print(
+                f"  Observed noise: RMS fraction={self.observed_noise_rms_fraction}, "
+                f"seed={self.noise_seed}"
+            )
+        if self.objective_bandpass_hz is not None:
+            low_hz, high_hz = self.objective_bandpass_hz
+            print(
+                "  Objective bandpass: "
+                f"{low_hz / 1e9:.3f}-{high_hz / 1e9:.3f} GHz, "
+                f"taper={self.objective_bandpass_taper_hz / 1e9:.3f} GHz"
+            )
 
         self.true_model = build_single_rebar_model(
             self.true_params.x,
             self.true_params.z,
             self.true_params.radius,
+            geometry_mode=self.geometry_mode,
+            subcell_samples=self.subcell_samples,
         )
         self.initial_model = build_single_rebar_model(
             self.initial_params.x,
             self.initial_params.z,
             self.initial_params.radius,
+            geometry_mode=self.geometry_mode,
+            subcell_samples=self.subcell_samples,
         )
 
         self.wavelets = {
             f: ricker_wavelet(self.time, f)
             for f in self.frequencies
         }
-        self.d_obs_by_frequency = {
+        self.d_obs_clean_by_frequency = {
             f: self._simulate_bscan(self.true_model, self.wavelets[f])
+            for f in self.frequencies
+        }
+        self.d_obs_by_frequency = self._add_observed_noise(self.d_obs_clean_by_frequency)
+        self.d_obs_objective_by_frequency = {
+            f: self._apply_objective_filter(self.d_obs_by_frequency[f])
             for f in self.frequencies
         }
         self.obs_norm_by_frequency = {
             f: max(
-                0.5 * np.sum((self.d_obs_by_frequency[f] * self.mute[:, None]) ** 2),
+                0.5 * np.sum((self.d_obs_objective_by_frequency[f] * self.mute[:, None]) ** 2),
                 1e-30,
             )
             for f in self.frequencies
         }
 
+    def _apply_objective_filter(self, traces):
+        if self.objective_bandpass_hz is None:
+            return np.asarray(traces, dtype=np.float64)
+        low_hz, high_hz = self.objective_bandpass_hz
+        return apply_bandpass_traces(
+            traces,
+            cfg.DT,
+            low_hz=low_hz,
+            high_hz=high_hz,
+            taper_hz=self.objective_bandpass_taper_hz,
+        )
+
+    def _add_observed_noise(self, clean_by_frequency):
+        if self.observed_noise_rms_fraction <= 0.0:
+            return {f: data.copy() for f, data in clean_by_frequency.items()}
+
+        rng = np.random.default_rng(self.noise_seed)
+        noisy_by_frequency = {}
+        self.observed_noise_stats = {}
+        for f in self.frequencies:
+            clean = clean_by_frequency[f]
+            rms = float(np.sqrt(np.mean(clean ** 2)))
+            noise_std = self.observed_noise_rms_fraction * rms
+            noise = rng.normal(loc=0.0, scale=noise_std, size=clean.shape)
+            noisy_by_frequency[f] = clean + noise
+            self.observed_noise_stats[f] = {
+                "clean_rms": rms,
+                "noise_std": float(noise_std),
+                "actual_noise_rms": float(np.sqrt(np.mean(noise ** 2))),
+            }
+        return noisy_by_frequency
+
+    @staticmethod
+    def _format_frequency_map(values_by_frequency):
+        return {
+            f"{f / 1e9:.6g}GHz": float(value)
+            for f, value in values_by_frequency.items()
+        }
+
+    def _objective_misfit_by_frequency(self, d_syn_by_frequency):
+        misfit_by_frequency = {}
+        for f in self.frequencies:
+            d_syn_objective = self._apply_objective_filter(d_syn_by_frequency[f])
+            residual = (d_syn_objective - self.d_obs_objective_by_frequency[f]) * self.mute[:, None]
+            misfit_by_frequency[f] = (
+                0.5 * np.sum(residual ** 2) / self.obs_norm_by_frequency[f]
+            )
+        return misfit_by_frequency
+
     def parameter_bounds(self):
         """Return physical bounds for [x, z, radius]."""
+        if self.parameter_bounds_override is not None:
+            lower, upper = self.parameter_bounds_override
+            return Bounds(
+                np.asarray(lower, dtype=np.float64),
+                np.asarray(upper, dtype=np.float64),
+            )
+
         lower = np.array([
             cfg.SCAN_START_X,
             cfg.CONCRETE_TOP + 0.010,
@@ -204,9 +350,11 @@ class SingleRebarInversionEngine:
         return FDTDSimulatorGPU_v2(model, cfg)
 
     def _simulate_bscan(self, model, wavelet):
-        bscan = np.zeros((cfg.NT, len(self.scan_positions)), dtype=np.float64)
         sim = self._make_simulator(model)
+        if self.backend == "gpu-cpml" and hasattr(sim, "run_batch"):
+            return sim.run_batch(wavelet, self.scan_positions)["bscan"]
 
+        bscan = np.zeros((cfg.NT, len(self.scan_positions)), dtype=np.float64)
         for i, (src_iz, src_ix, rec_iz, rec_ix) in enumerate(self.scan_positions):
             result = sim.run(wavelet, src_iz, src_ix, rec_iz, rec_ix)
             bscan[:, i] = result["trace"]
@@ -220,16 +368,30 @@ class SingleRebarInversionEngine:
         if not self._params_inside_model(values):
             return 1.0e6
 
-        model = build_model_from_single_params(values)
+        model = build_model_from_single_params(
+            values,
+            geometry_mode=self.geometry_mode,
+            subcell_samples=self.subcell_samples,
+        )
 
-        total = 0.0
+        d_syn_by_frequency = {}
         for f in self.frequencies:
-            d_syn = self._simulate_bscan(model, self.wavelets[f])
-            residual = (d_syn - self.d_obs_by_frequency[f]) * self.mute[:, None]
-            total += 0.5 * np.sum(residual ** 2) / self.obs_norm_by_frequency[f]
+            d_syn_by_frequency[f] = self._simulate_bscan(model, self.wavelets[f])
 
-        misfit = total / len(self.frequencies)
+        misfit_by_frequency = self._objective_misfit_by_frequency(d_syn_by_frequency)
+        total = 0.0
+        for f, weight in self.frequency_weights_by_frequency.items():
+            total += weight * misfit_by_frequency[f]
+        misfit = total / self.frequency_weight_sum
+        self.last_misfit_by_frequency = {
+            f: float(value)
+            for f, value in misfit_by_frequency.items()
+        }
         self.misfit_history.append(misfit)
+        if misfit < self.best_misfit:
+            self.best_misfit = float(misfit)
+            self.best_params = values.copy()
+            self.best_misfit_by_frequency = dict(self.last_misfit_by_frequency)
 
         if self.eval_count <= 3 or self.eval_count % self.log_every == 0:
             params = SingleRebarParams.from_array(values)
@@ -242,36 +404,210 @@ class SingleRebarInversionEngine:
 
         return misfit
 
-    def run(self, max_iter=20, max_evals=None):
+    def _local_grid_polish(self, seed_values, bounds, polish_config):
+        seed = SingleRebarParams.from_array(seed_values)
+        lower_mm = bounds.lb * 1000.0
+        upper_mm = bounds.ub * 1000.0
+
+        x_values_mm = _quantized_axis_mm(
+            seed.x * 1000.0,
+            polish_config["x_half_window_mm"],
+            polish_config["x_step_mm"],
+            lower_mm[0],
+            upper_mm[0],
+        )
+        z_values_mm = _quantized_axis_mm(
+            seed.z * 1000.0,
+            polish_config["z_half_window_mm"],
+            polish_config["z_step_mm"],
+            lower_mm[1],
+            upper_mm[1],
+        )
+        radius_values_mm = _quantized_axis_mm(
+            seed.radius * 1000.0,
+            polish_config["radius_half_window_mm"],
+            polish_config["radius_step_mm"],
+            lower_mm[2],
+            upper_mm[2],
+        )
+
+        total = len(x_values_mm) * len(z_values_mm) * len(radius_values_mm)
+        progress_every = int(polish_config.get("progress_every", 25))
+        print("\nStarting local grid polish...")
+        print(f"  Seed: {seed.as_mm()}")
+        print(f"  x candidates mm: {x_values_mm.tolist()}")
+        print(f"  z candidates mm: {z_values_mm.tolist()}")
+        print(f"  radius candidates mm: {radius_values_mm.tolist()}")
+        print(f"  Grid evaluations: {total}")
+
+        best_value = np.inf
+        best_params = None
+        count = 0
+        stop_misfit = polish_config.get("stop_misfit")
+        top_k = max(0, int(polish_config.get("top_k", 8)))
+        top_candidates = []
+        stopped_early = False
+        started = timer.time()
+        for x_mm in x_values_mm:
+            if stopped_early:
+                break
+            for z_mm in z_values_mm:
+                if stopped_early:
+                    break
+                for radius_mm in radius_values_mm:
+                    params = SingleRebarParams(
+                        x=x_mm / 1000.0,
+                        z=z_mm / 1000.0,
+                        radius=radius_mm / 1000.0,
+                    )
+                    value = float(self.objective(params.as_array()))
+                    count += 1
+                    if top_k:
+                        misfit_by_frequency = getattr(self, "last_misfit_by_frequency", {})
+                        top_candidates.append({
+                            "misfit": value,
+                            "misfit_by_frequency": SingleRebarInversionEngine._format_frequency_map(
+                                misfit_by_frequency
+                            ),
+                            "params": params.as_mm(),
+                        })
+                        top_candidates.sort(key=lambda item: item["misfit"])
+                        del top_candidates[top_k:]
+                    if value < best_value:
+                        best_value = value
+                        best_params = params
+                        print(
+                            f"  Polish best: J={best_value:.6e}, "
+                            f"x={x_mm:.3f} mm, z={z_mm:.3f} mm, r={radius_mm:.3f} mm"
+                        )
+                        if stop_misfit is not None and best_value <= stop_misfit:
+                            stopped_early = True
+                            print(
+                                "  Stopping local grid polish early: "
+                                f"J={best_value:.6e} <= {stop_misfit:.6e}"
+                            )
+                            break
+                    if progress_every and count % progress_every == 0:
+                        elapsed = timer.time() - started
+                        print(f"  Polish grid: {count}/{total}, elapsed={elapsed:.1f} s")
+
+        elapsed = timer.time() - started
+        config = {}
+        for key, value in polish_config.items():
+            if value is None or key in ("progress_every", "stop_misfit", "top_k"):
+                continue
+            if isinstance(value, str):
+                config[key] = value
+            else:
+                config[key] = float(value)
+        config["progress_every"] = progress_every
+        config["top_k"] = top_k
+        if stop_misfit is not None:
+            config["stop_misfit"] = float(stop_misfit)
+        return {
+            "enabled": True,
+            "seed_params": seed.as_mm(),
+            "best_params": best_params.as_mm(),
+            "best_misfit": float(best_value),
+            "elapsed_time_s": float(elapsed),
+            "evaluations": int(count),
+            "stopped_early": bool(stopped_early),
+            "axes_mm": {
+                "x": [float(value) for value in x_values_mm],
+                "z": [float(value) for value in z_values_mm],
+                "radius": [float(value) for value in radius_values_mm],
+            },
+            "top_candidates": top_candidates,
+            "config": config,
+        }
+
+    def run(self, max_iter=20, max_evals=None, optimizer="powell", de_popsize=5,
+            de_seed=7, de_polish=False, grid_polish=None):
         bounds = self.parameter_bounds()
         x0 = self.initial_params.as_array()
         max_evals = max_evals or max(30, max_iter * 12)
 
         print("\nStarting one-rebar geometry inversion...")
+        print(f"  Optimizer: {optimizer}")
         print(f"  Max iterations: {max_iter}")
         print(f"  Max evaluations: {max_evals}")
 
         t_start = timer.time()
-        opt_result = minimize(
-            self.objective,
-            x0,
-            method="Powell",
-            bounds=bounds,
-            options={
-                "maxiter": max_iter,
-                "maxfev": max_evals,
-                "xtol": cfg.DX / 2.0,
-                "ftol": 1e-5,
-                "disp": True,
-            },
-        )
-        elapsed = timer.time() - t_start
+        if optimizer == "powell":
+            opt_result = minimize(
+                self.objective,
+                x0,
+                method="Powell",
+                bounds=bounds,
+                options={
+                    "maxiter": max_iter,
+                    "maxfev": max_evals,
+                    "xtol": cfg.DX / 2.0,
+                    "ftol": 1e-5,
+                    "disp": True,
+                },
+            )
+        elif optimizer == "differential-evolution":
+            de_max_iter = max_iter
+            if max_evals is not None:
+                ndim = len(x0)
+                de_max_iter = max(1, int(max_evals // (de_popsize * ndim) - 1))
+            approx_evals = (de_max_iter + 1) * de_popsize * len(x0)
+            print(f"  DE popsize: {de_popsize}")
+            print(f"  DE max iterations: {de_max_iter}")
+            print(f"  DE approximate evaluations: {approx_evals}")
+            opt_result = differential_evolution(
+                self.objective,
+                list(zip(bounds.lb, bounds.ub)),
+                maxiter=de_max_iter,
+                popsize=de_popsize,
+                tol=1e-5,
+                atol=0.0,
+                polish=de_polish,
+                seed=de_seed,
+                x0=x0,
+                updating="immediate",
+                workers=1,
+                disp=True,
+            )
+        else:
+            raise ValueError(f"Unsupported optimizer: {optimizer}")
+        optimizer_elapsed = timer.time() - t_start
 
-        optimal_params = SingleRebarParams.from_array(opt_result.x)
+        selected_values = np.asarray(opt_result.x, dtype=np.float64)
+        selected_misfit = float(getattr(opt_result, "fun", np.inf))
+        if self.best_params is not None and self.best_misfit < selected_misfit:
+            print(
+                "  Using best evaluated candidate instead of optimizer final: "
+                f"J_best={self.best_misfit:.6e}, J_final={selected_misfit:.6e}"
+            )
+            selected_values = self.best_params.copy()
+            selected_misfit = self.best_misfit
+
+        grid_polish_result = None
+        if grid_polish is not None:
+            grid_polish_result = self._local_grid_polish(selected_values, bounds, grid_polish)
+            if grid_polish_result["best_misfit"] <= selected_misfit:
+                print(
+                    "  Using local grid polish candidate: "
+                    f"J_polish={grid_polish_result['best_misfit']:.6e}, "
+                    f"J_selected={selected_misfit:.6e}"
+                )
+                best = grid_polish_result["best_params"]
+                selected_values = np.array([
+                    best["x_mm"] / 1000.0,
+                    best["z_mm"] / 1000.0,
+                    best["radius_mm"] / 1000.0,
+                ], dtype=np.float64)
+                selected_misfit = grid_polish_result["best_misfit"]
+
+        optimal_params = SingleRebarParams.from_array(selected_values)
         inverted_model = build_single_rebar_model(
             optimal_params.x,
             optimal_params.z,
             optimal_params.radius,
+            geometry_mode=self.geometry_mode,
+            subcell_samples=self.subcell_samples,
         )
 
         d_syn_final_by_frequency = {
@@ -286,6 +622,23 @@ class SingleRebarInversionEngine:
             )
             for f in self.frequencies
         }
+        trace_shift_by_frequency = {
+            f: trace_shift_diagnostics(
+                self.d_obs_by_frequency[f],
+                d_syn_final_by_frequency[f],
+                cfg.DT,
+                mute=self.mute,
+                dominant_frequency=f,
+            )
+            for f in self.frequencies
+        }
+        objective_misfit_by_frequency = self._objective_misfit_by_frequency(
+            d_syn_final_by_frequency
+        )
+        objective_misfit_average = sum(
+            self.frequency_weights_by_frequency[f] * objective_misfit_by_frequency[f]
+            for f in self.frequencies
+        ) / self.frequency_weight_sum
         n = cfg.NPML
         nrms_model = compute_normalized_rms(
             self.true_model.epsilon_r[n:-n, n:-n],
@@ -293,7 +646,11 @@ class SingleRebarInversionEngine:
         )
 
         print("\nOne-rebar inversion complete.")
-        print(f"  Runtime: {elapsed:.1f} s")
+        total_elapsed = timer.time() - t_start
+        print(f"  Runtime: {total_elapsed:.1f} s")
+        if grid_polish_result is not None:
+            print(f"  Optimizer runtime: {optimizer_elapsed:.1f} s")
+            print(f"  Grid polish runtime: {grid_polish_result['elapsed_time_s']:.1f} s")
         print(f"  Evaluations: {self.eval_count}")
         print(f"  Success: {opt_result.success} ({opt_result.message})")
         print(f"  Recovered: {optimal_params.as_mm()}")
@@ -306,6 +663,7 @@ class SingleRebarInversionEngine:
             "inverted_epsr": inverted_model.epsilon_r,
             "true_epsr": self.true_model.epsilon_r,
             "d_obs": self.d_obs_by_frequency[primary_frequency],
+            "d_obs_clean_by_frequency": self.d_obs_clean_by_frequency,
             "d_syn_final": d_syn_final_by_frequency[primary_frequency],
             "d_obs_by_frequency": self.d_obs_by_frequency,
             "d_syn_final_by_frequency": d_syn_final_by_frequency,
@@ -314,11 +672,40 @@ class SingleRebarInversionEngine:
             "misfit_history": np.array(self.misfit_history),
             "initial_params": self.initial_params.as_array(),
             "optimal_params": optimal_params.as_array(),
+            "optimizer_final_params": np.asarray(opt_result.x, dtype=np.float64),
+            "best_misfit": selected_misfit,
             "true_params": self.true_params.as_array(),
             "frequencies": np.array(self.frequencies),
             "nrms_data_by_frequency": nrms_data_by_frequency,
             "nrms_model": nrms_model,
-            "elapsed_time": elapsed,
+            "objective_misfit_by_frequency": objective_misfit_by_frequency,
+            "objective_misfit_average": objective_misfit_average,
+            "objective_frequency_weights": self.frequency_weights_by_frequency,
+            "trace_shift_by_frequency": trace_shift_by_frequency,
+            "elapsed_time": total_elapsed,
+            "optimizer_elapsed_time": optimizer_elapsed,
             "optimizer_success": bool(opt_result.success),
+            "parameter_bounds": np.vstack([bounds.lb, bounds.ub]),
+            "optimizer": optimizer,
+            "geometry_mode": self.geometry_mode,
+            "subcell_samples": self.subcell_samples,
+            "objective_bandpass": None if self.objective_bandpass_hz is None else {
+                "low_hz": float(self.objective_bandpass_hz[0]),
+                "high_hz": float(self.objective_bandpass_hz[1]),
+                "taper_hz": float(self.objective_bandpass_taper_hz),
+            },
+            "observed_noise": {
+                "rms_fraction": self.observed_noise_rms_fraction,
+                "seed": self.noise_seed,
+                "stats_by_frequency": {
+                    f: self.observed_noise_stats.get(f, {
+                        "clean_rms": float(np.sqrt(np.mean(self.d_obs_clean_by_frequency[f] ** 2))),
+                        "noise_std": 0.0,
+                        "actual_noise_rms": 0.0,
+                    })
+                    for f in self.frequencies
+                },
+            },
+            "grid_polish": grid_polish_result,
             "optimizer_message": str(opt_result.message),
         }

@@ -7,6 +7,7 @@ on the x-axis and two-way travel time on the y-axis.
 import numpy as np
 import matplotlib.pyplot as plt
 import config as cfg
+from visualization.plot_style import safe_symmetric_limits, save_validated_figure, scan_extent_mm_ns
 
 
 def plot_bscan(bscan, scan_x, time, save_path=None, show=True,
@@ -31,28 +32,43 @@ def plot_bscan(bscan, scan_x, time, save_path=None, show=True,
     title : str
         Plot title.
     """
-    fig, ax = plt.subplots(1, 1, figsize=(10, 7))
+    bscan = np.asarray(bscan, dtype=np.float64)
+    if bscan.ndim != 2:
+        raise ValueError("bscan must have shape (nt, n_scans)")
 
-    # Convert to mm and ns
-    x_mm = scan_x * 1000
-    t_ns = time * 1e9
+    fig, ax = plt.subplots(1, 1, figsize=(10, 7), constrained_layout=True)
 
-    vmax = clip_pct * np.max(np.abs(bscan))
+    extent = scan_extent_mm_ns(scan_x, time)
+    if clip_pct is None:
+        vmin, vmax = safe_symmetric_limits(bscan, percentile=99.0)
+    else:
+        max_abs = float(np.max(np.abs(bscan))) if bscan.size else 0.0
+        if max_abs == 0.0:
+            vmin, vmax = safe_symmetric_limits(bscan)
+        else:
+            vmax = max(float(clip_pct) * max_abs, 1e-12)
+            vmin = -vmax
 
-    im = ax.pcolormesh(x_mm, t_ns, bscan, cmap='RdBu_r',
-                       shading='auto', vmin=-vmax, vmax=vmax)
+    im = ax.imshow(
+        bscan,
+        cmap='RdBu_r',
+        aspect='auto',
+        interpolation='nearest',
+        extent=extent,
+        vmin=vmin,
+        vmax=vmax,
+    )
 
     ax.set_xlabel('Scan position x [mm]', fontsize=12)
     ax.set_ylabel('Two-way travel time [ns]', fontsize=12)
     ax.set_title(title, fontsize=14, fontweight='bold')
-    ax.invert_yaxis()
+    ax.set_ylim(float(np.asarray(time)[-1] * 1e9), float(np.asarray(time)[0] * 1e9))
 
     cbar = fig.colorbar(im, ax=ax, label='Amplitude', shrink=0.9)
     cbar.ax.tick_params(labelsize=10)
 
-    plt.tight_layout()
     if save_path:
-        fig.savefig(save_path, dpi=150, bbox_inches='tight')
+        save_validated_figure(fig, save_path)
     if show:
         plt.show()
     else:

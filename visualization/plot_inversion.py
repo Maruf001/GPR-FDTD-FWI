@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import config as cfg
+from visualization.plot_style import save_validated_figure
 
 
 def plot_inversion_comparison(initial_epsr, inverted_epsr, true_epsr,
@@ -24,7 +25,10 @@ def plot_inversion_comparison(initial_epsr, inverted_epsr, true_epsr,
         configured three-rebar scene.
     """
     n = cfg.NPML
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5.5))
+    fig = plt.figure(figsize=(18, 5.5), constrained_layout=True)
+    grid = fig.add_gridspec(1, 4, width_ratios=[1.0, 1.0, 1.0, 0.045], wspace=0.16)
+    axes = [fig.add_subplot(grid[0, index]) for index in range(3)]
+    cax = fig.add_subplot(grid[0, 3])
 
     datasets = [
         (initial_epsr[n:-n, n:-n], 'Initial Model\n(homogeneous concrete)'),
@@ -40,13 +44,19 @@ def plot_inversion_comparison(initial_epsr, inverted_epsr, true_epsr,
     vmax = min(vmax, 10.0)
 
     for ax, (data, title) in zip(axes, datasets):
-        im = ax.pcolormesh(x_mm, z_mm, data, cmap='viridis',
-                           shading='auto', vmin=vmin, vmax=vmax)
+        extent = [float(x_mm[0]), float(x_mm[-1]), float(z_mm[-1]), float(z_mm[0])]
+        im = ax.imshow(
+            data,
+            cmap='viridis',
+            interpolation='nearest',
+            extent=extent,
+            aspect='equal',
+            vmin=vmin,
+            vmax=vmax,
+        )
         ax.set_xlabel('x [mm]', fontsize=11)
         ax.set_ylabel('z [mm]', fontsize=11)
         ax.set_title(title, fontsize=12, fontweight='bold')
-        ax.invert_yaxis()
-        ax.set_aspect('equal')
 
         # Overlay true rebar outlines.
         if rebar_params is None:
@@ -63,13 +73,12 @@ def plot_inversion_comparison(initial_epsr, inverted_epsr, true_epsr,
             )
             ax.add_patch(circle)
 
-    fig.colorbar(im, ax=axes, label=r'$\varepsilon_r$', shrink=0.85)
+    fig.colorbar(im, cax=cax, label=r'$\varepsilon_r$')
     fig.suptitle('Full-Waveform Inversion: Permittivity Recovery',
-                 fontsize=15, fontweight='bold', y=1.02)
+                 fontsize=15, fontweight='bold')
 
-    plt.tight_layout()
     if save_path:
-        fig.savefig(save_path, dpi=150, bbox_inches='tight')
+        save_validated_figure(fig, save_path)
     if show:
         plt.show()
     else:
@@ -86,41 +95,51 @@ def plot_convergence(misfit_history, save_path=None, show=True):
     misfit_history : list of float
         Misfit value at each iteration.
     """
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+    misfit_history = np.asarray(misfit_history, dtype=np.float64)
+    if misfit_history.ndim != 1 or misfit_history.size == 0:
+        raise ValueError("misfit_history must be a non-empty 1D array")
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.8), constrained_layout=True)
 
     iters = np.arange(1, len(misfit_history) + 1)
+    plot_values = np.maximum(misfit_history, 1e-30)
 
     # Left: log-scale misfit
-    ax1.semilogy(iters, misfit_history, 'b-o', markersize=5, linewidth=1.5)
+    ax1.semilogy(iters, plot_values, 'b-o', markersize=4, linewidth=1.4)
     ax1.set_xlabel('Function evaluation', fontsize=12)
     ax1.set_ylabel('Misfit J', fontsize=12)
     ax1.set_title('Convergence (log scale)', fontsize=13, fontweight='bold')
     ax1.grid(True, alpha=0.3)
-    ax1.annotate(f'Initial: {misfit_history[0]:.3e}',
-                 xy=(1, misfit_history[0]),
-                 xytext=(max(3, len(misfit_history)*0.15), misfit_history[0]*0.7),
-                 fontsize=10, arrowprops=dict(arrowstyle='->', color='gray'))
-    ax1.annotate(f'Final: {misfit_history[-1]:.3e}',
-                 xy=(len(misfit_history), misfit_history[-1]),
-                 xytext=(max(1, len(misfit_history)*0.6), misfit_history[-1]*3),
-                 fontsize=10, arrowprops=dict(arrowstyle='->', color='gray'))
+    ax1.text(
+        0.03,
+        0.97,
+        f"initial {misfit_history[0]:.3e}\nfinal {misfit_history[-1]:.3e}",
+        transform=ax1.transAxes,
+        va='top',
+        ha='left',
+        fontsize=9,
+        bbox=dict(boxstyle='round,pad=0.25', facecolor='white', edgecolor='0.8', alpha=0.9),
+    )
 
     # Right: normalized reduction
-    normalized = np.array(misfit_history) / misfit_history[0]
-    ax2.plot(iters, normalized * 100, 'r-s', markersize=4, linewidth=1.5)
+    if abs(misfit_history[0]) > 1e-30:
+        normalized = misfit_history / misfit_history[0]
+        reduction_text = f"{(1.0 - misfit_history[-1] / misfit_history[0]) * 100.0:.1f}% reduction"
+    else:
+        normalized = np.zeros_like(misfit_history)
+        reduction_text = "reduction n/a"
+    ax2.plot(iters, normalized * 100, 'r-s', markersize=4, linewidth=1.4)
     ax2.set_xlabel('Function evaluation', fontsize=12)
     ax2.set_ylabel('Misfit (% of initial)', fontsize=12)
     ax2.set_title('Relative Misfit Reduction', fontsize=13, fontweight='bold')
     ax2.grid(True, alpha=0.3)
-    reduction = (1 - misfit_history[-1] / misfit_history[0]) * 100
-    ax2.text(0.95, 0.95, f'{reduction:.1f}% reduction',
+    ax2.text(0.97, 0.95, reduction_text,
              transform=ax2.transAxes, fontsize=12, fontweight='bold',
              va='top', ha='right',
              bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.8))
 
-    plt.tight_layout()
     if save_path:
-        fig.savefig(save_path, dpi=150, bbox_inches='tight')
+        save_validated_figure(fig, save_path)
     if show:
         plt.show()
     else:
