@@ -115,8 +115,13 @@ def build_variable_radius_model(
     )
 
 
-def build_scan_positions(scan_step, n_sources):
+def build_scan_positions(scan_step, n_sources, tx_rx_offset_m=None):
     """Build scan positions compatible with the single-rebar GPU CPML engine."""
+    if tx_rx_offset_m is None:
+        tx_rx_offset_m = cfg.TX_RX_OFFSET
+    tx_rx_offset_m = float(tx_rx_offset_m)
+    if tx_rx_offset_m < 0.0:
+        raise ValueError("tx_rx_offset_m must be non-negative")
     scan_x_all = np.arange(cfg.SCAN_START_X, cfg.SCAN_END_X + 1e-10, scan_step)
     if n_sources is not None and n_sources < len(scan_x_all):
         idx = np.linspace(0, len(scan_x_all) - 1, n_sources, dtype=int)
@@ -130,7 +135,7 @@ def build_scan_positions(scan_step, n_sources):
     positions = []
     for x_pos in scan_x:
         src_ix = pos_to_index(x_pos, cfg.DX, cfg.NPML)
-        rec_ix = pos_to_index(x_pos + cfg.TX_RX_OFFSET, cfg.DX, cfg.NPML)
+        rec_ix = pos_to_index(x_pos + tx_rx_offset_m, cfg.DX, cfg.NPML)
         rec_ix = min(rec_ix, cfg.NX - cfg.NPML - 1)
         positions.append((src_iz, src_ix, rec_iz, rec_ix))
     return positions, scan_x

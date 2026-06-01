@@ -29,6 +29,11 @@ from core.run_outputs import allocate_output_dir, write_run_manifest  # noqa: E4
 from core.source import generate_time_array, ricker_wavelet  # noqa: E402
 from inversion.adjoint import _build_mute_window  # noqa: E402
 from inversion.frequency_weighting import radius_margin_from_ranked  # noqa: E402
+from inversion.objective_variants import (  # noqa: E402
+    apply_objective_variant,
+    objective_variant_window,
+    parse_objective_variants,
+)
 from inversion.source_profile import source_profiled_ls  # noqa: E402
 from run_multi_rebar_common_radius_profile import (  # noqa: E402
     build_observed_cases,
@@ -48,6 +53,40 @@ DEFAULT_CASES = (
     "noise10_seed13:1.0,0.0,1.0,0.10,13|"
     "source_mismatch_noise10_seed13:1.1,-50.0,1.1,0.10,13"
 )
+DEFAULT_OBJECTIVE_VARIANTS = "base:1.0,7.0,0.3,none,none,0.0"
+
+
+def parse_vector_mm(text):
+    """Parse comma values or ranges while preserving vector order/duplicates."""
+    values = []
+    for item in str(text).split(","):
+        item = item.strip()
+        if not item:
+            continue
+        if ":" in item:
+            parts = [float(part.strip()) for part in item.split(":") if part.strip()]
+            if len(parts) != 3:
+                raise argparse.ArgumentTypeError("ranges must use min:max:step")
+            start, stop, step = parts
+            if step <= 0.0 or start > stop:
+                raise argparse.ArgumentTypeError("range requires positive step and start <= stop")
+            count = int(np.floor((stop - start) / step + 1e-9)) + 1
+            values.extend(round(float(start + step * idx), 10) for idx in range(count))
+        else:
+            values.append(round(float(item), 10))
+    if not values:
+        raise argparse.ArgumentTypeError("at least one value is required")
+    return values
+
+
+def truth_radius_values_for_run(common_radius_mm, radius_values_mm, target_count):
+    """Resolve common or per-target truth radii for the synthetic observed model."""
+    if radius_values_mm is None:
+        return [float(common_radius_mm)] * int(target_count)
+    values = [float(value) for value in radius_values_mm]
+    if len(values) != int(target_count):
+        raise ValueError("truth radius values must match truth x/z value count")
+    return values
 
 
 def candidate_rebar_arrays(
@@ -59,13 +98,36 @@ def candidate_rebar_arrays(
         target_z_mm,
         target_radius_mm):
     """Return x/z/r arrays for one target-rebar local geometry candidate."""
+    base_radii_mm = [float(truth_radius_mm)] * len(base_x_mm)
+    return candidate_rebar_arrays_from_base(
+        base_x_mm,
+        base_z_mm,
+        base_radii_mm,
+        target_index,
+        target_x_mm,
+        target_z_mm,
+        target_radius_mm,
+    )
+
+
+def candidate_rebar_arrays_from_base(
+        base_x_mm,
+        base_z_mm,
+        base_radii_mm,
+        target_index,
+        target_x_mm,
+        target_z_mm,
+        target_radius_mm):
+    """Return x/z/r arrays while preserving non-target current radii."""
     if len(base_x_mm) != len(base_z_mm):
         raise ValueError("base x and z lists must have the same length")
+    if len(base_x_mm) != len(base_radii_mm):
+        raise ValueError("base x, z, and radius lists must have the same length")
     if target_index < 0 or target_index >= len(base_x_mm):
         raise ValueError("target_index must be a valid zero-based rebar index")
     x_values = [float(value) for value in base_x_mm]
     z_values = [float(value) for value in base_z_mm]
-    radii = [float(truth_radius_mm)] * len(x_values)
+    radii = [float(value) for value in base_radii_mm]
     x_values[int(target_index)] = float(target_x_mm)
     z_values[int(target_index)] = float(target_z_mm)
     radii[int(target_index)] = float(target_radius_mm)
@@ -92,10 +154,16 @@ def build_variable_geometry_model(
     )
 
 
-def rank_case(candidates, case_label, top_k=None):
+def _candidate_case_result(candidate, case_label, objective_label=None):
+    if objective_label is not None and "objective_results" in candidate:
+        return candidate["objective_results"][case_label][objective_label]
+    return candidate["case_results"][case_label]
+
+
+def rank_case(candidates, case_label, top_k=None, objective_label=None):
     ranked = []
     for candidate in candidates:
-        result = candidate["case_results"][case_label]
+        result = _candidate_case_result(candidate, case_label, objective_label)
         ranked.append({
             "misfit": float(result["misfit"]),
             "params": dict(candidate["params"]),
@@ -107,11 +175,11 @@ def rank_case(candidates, case_label, top_k=None):
     return ranked[:max(0, int(top_k))]
 
 
-def best_curve_by_radius(candidates, case_label):
+def best_curve_by_radius(candidates, case_label, objective_label=None):
     best = {}
     for candidate in candidates:
         radius = float(candidate["params"]["radius_mm"])
-        result = candidate["case_results"][case_label]
+        result = _candidate_case_result(candidate, case_label, objective_label)
         current = best.get(radius)
         if current is None or result["misfit"] < current["misfit"]:
             best[radius] = {
@@ -132,6 +200,7 @@ def evaluate_local_geometry_grid(
         target_x_values_mm,
         target_z_values_mm,
         target_radius_values_mm,
+        base_radii_mm,
         frequency_hz,
         modeled_frequency_scales,
         time_shift_values_s,
@@ -142,11 +211,28 @@ def evaluate_local_geometry_grid(
         geometry_mode="hard",
         subcell_samples=5,
         fit_amplitude=True,
+        objective_variants=None,
         progress_every=25):
-    observed_objective_by_case = {
-        label: np.asarray(observed, dtype=np.float64)
-        for label, observed in observed_by_case.items()
-    }
+    variants = list(objective_variants or [])
+    observed_objective_by_case = {}
+    variant_mute_by_label = {}
+    if variants:
+        variant_mute_by_label = {
+            variant.label: objective_variant_window(variant, len(time_values), cfg.DT)
+            for variant in variants
+        }
+        for label, observed in observed_by_case.items():
+            observed_objective_by_case[label] = {
+                variant.label: apply_objective_variant(observed, variant, cfg.DT)
+                for variant in variants
+            }
+    else:
+        observed_objective_by_case = {
+            label: np.asarray(observed, dtype=np.float64)
+            for label, observed in observed_by_case.items()
+        }
+    if base_radii_mm is None:
+        base_radii_mm = [float(truth_radius_mm)] * len(base_x_mm)
     candidates = []
     total = len(target_x_values_mm) * len(target_z_values_mm) * len(target_radius_values_mm)
     started = time.time()
@@ -154,10 +240,10 @@ def evaluate_local_geometry_grid(
     for x_mm in target_x_values_mm:
         for z_mm in target_z_values_mm:
             for radius_mm in target_radius_values_mm:
-                x_values, z_values, radii = candidate_rebar_arrays(
+                x_values, z_values, radii = candidate_rebar_arrays_from_base(
                     base_x_mm,
                     base_z_mm,
-                    truth_radius_mm,
+                    base_radii_mm,
                     target_index,
                     x_mm,
                     z_mm,
@@ -181,20 +267,48 @@ def evaluate_local_geometry_grid(
                     )
 
                 case_results = {}
-                for label, observed in observed_objective_by_case.items():
-                    profile = source_profiled_ls(
-                        observed,
-                        synthetic_by_scale,
-                        mute,
-                        cfg.DT,
-                        time_shift_values_s=time_shift_values_s,
-                        fit_amplitude=fit_amplitude,
-                    )
-                    case_results[label] = {
-                        "misfit": float(profile.misfit),
-                        "source_profile": profile.as_dict(),
+                objective_results = {}
+                if variants:
+                    synthetic_by_variant = {
+                        variant.label: {
+                            scale: apply_objective_variant(synthetic, variant, cfg.DT)
+                            for scale, synthetic in synthetic_by_scale.items()
+                        }
+                        for variant in variants
                     }
-                candidates.append({
+                    primary_label = variants[0].label
+                    for label, observed_by_variant in observed_objective_by_case.items():
+                        objective_results[label] = {}
+                        for variant in variants:
+                            profile = source_profiled_ls(
+                                observed_by_variant[variant.label],
+                                synthetic_by_variant[variant.label],
+                                variant_mute_by_label[variant.label],
+                                cfg.DT,
+                                time_shift_values_s=time_shift_values_s,
+                                fit_amplitude=fit_amplitude,
+                            )
+                            objective_results[label][variant.label] = {
+                                "misfit": float(profile.misfit),
+                                "source_profile": profile.as_dict(),
+                            }
+                        case_results[label] = objective_results[label][primary_label]
+                else:
+                    for label, observed in observed_objective_by_case.items():
+                        profile = source_profiled_ls(
+                            observed,
+                            synthetic_by_scale,
+                            mute,
+                            cfg.DT,
+                            time_shift_values_s=time_shift_values_s,
+                            fit_amplitude=fit_amplitude,
+                        )
+                        case_results[label] = {
+                            "misfit": float(profile.misfit),
+                            "source_profile": profile.as_dict(),
+                        }
+
+                candidate = {
                     "params": {
                         "x_mm": float(x_mm),
                         "z_mm": float(z_mm),
@@ -205,12 +319,33 @@ def evaluate_local_geometry_grid(
                         "radii_mm": [float(value) for value in radii],
                     },
                     "case_results": case_results,
-                })
+                }
+                if variants:
+                    candidate["objective_results"] = objective_results
+                candidates.append(candidate)
                 count += 1
                 if progress_every and (count == 1 or count % int(progress_every) == 0):
                     elapsed = time.time() - started
                     print(f"  Multi-rebar local geometry profile: {count}/{total}, elapsed={elapsed:.1f} s")
     return candidates
+
+
+def build_objective_results(candidates, case_labels, objective_labels, top_k):
+    results = {}
+    for label in case_labels:
+        results[label] = {}
+        for objective_label in objective_labels:
+            ranked = rank_case(candidates, label, objective_label=objective_label)
+            results[label][objective_label] = {
+                "margin": radius_margin_from_ranked(ranked),
+                "top_candidates": ranked[:top_k],
+                "best_curve_by_radius": best_curve_by_radius(
+                    candidates,
+                    label,
+                    objective_label=objective_label,
+                ),
+            }
+    return results
 
 
 def write_candidate_csv(path, candidates, case_labels):
@@ -287,6 +422,88 @@ def write_case_summary_csv(path, results):
             })
 
 
+def write_objective_summary_csv(path, objective_results):
+    fieldnames = [
+        "case_label",
+        "objective_label",
+        "best_x_mm",
+        "best_z_mm",
+        "best_radius_mm",
+        "next_radius_mm",
+        "radius_margin_abs",
+        "radius_margin_rel",
+        "best_misfit",
+        "best_source_frequency_scale",
+        "best_source_time_shift_ps",
+        "best_source_amplitude_scale",
+    ]
+    with open(path, "w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for case_label, by_objective in objective_results.items():
+            for objective_label, result in by_objective.items():
+                best = result["top_candidates"][0]
+                params = best["params"]
+                profile = best["source_profile"]
+                margin = result["margin"]
+                writer.writerow({
+                    "case_label": case_label,
+                    "objective_label": objective_label,
+                    "best_x_mm": params["x_mm"],
+                    "best_z_mm": params["z_mm"],
+                    "best_radius_mm": margin["best_radius_mm"],
+                    "next_radius_mm": margin["next_radius_mm"],
+                    "radius_margin_abs": margin["radius_margin_abs"],
+                    "radius_margin_rel": margin["radius_margin_rel"],
+                    "best_misfit": margin["best_radius_misfit"],
+                    "best_source_frequency_scale": profile["frequency_scale"],
+                    "best_source_time_shift_ps": profile["time_shift_ps"],
+                    "best_source_amplitude_scale": profile["amplitude_scale"],
+                })
+
+
+def write_objective_candidate_csv(path, candidates, case_labels, objective_labels):
+    fieldnames = [
+        "case_label",
+        "objective_label",
+        "misfit",
+        "target_index",
+        "x_mm",
+        "z_mm",
+        "radius_mm",
+        "x_values_mm",
+        "z_values_mm",
+        "radii_mm",
+        "source_frequency_scale",
+        "source_time_shift_ps",
+        "source_amplitude_scale",
+    ]
+    with open(path, "w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for candidate in candidates:
+            params = candidate["params"]
+            for case_label in case_labels:
+                for objective_label in objective_labels:
+                    result = _candidate_case_result(candidate, case_label, objective_label)
+                    profile = result["source_profile"]
+                    writer.writerow({
+                        "case_label": case_label,
+                        "objective_label": objective_label,
+                        "misfit": result["misfit"],
+                        "target_index": params["target_index"],
+                        "x_mm": params["x_mm"],
+                        "z_mm": params["z_mm"],
+                        "radius_mm": params["radius_mm"],
+                        "x_values_mm": json.dumps(params["x_values_mm"]),
+                        "z_values_mm": json.dumps(params["z_values_mm"]),
+                        "radii_mm": json.dumps(params["radii_mm"]),
+                        "source_frequency_scale": profile["frequency_scale"],
+                        "source_time_shift_ps": profile["time_shift_ps"],
+                        "source_amplitude_scale": profile["amplitude_scale"],
+                    })
+
+
 def plot_radius_profiles(results, save_path):
     fig, ax = plt.subplots(figsize=(9.4, 5.3), constrained_layout=True)
     for label, result in results.items():
@@ -303,15 +520,54 @@ def plot_radius_profiles(results, save_path):
     plt.close(fig)
 
 
+def plot_objective_variant_radius_profiles(objective_results, save_path):
+    case_labels = list(objective_results)
+    if not case_labels:
+        return None
+    fig, axes = plt.subplots(
+        len(case_labels),
+        1,
+        figsize=(10.8, max(4.0, 3.6 * len(case_labels))),
+        constrained_layout=True,
+        squeeze=False,
+    )
+    for row, case_label in enumerate(case_labels):
+        ax = axes[row, 0]
+        for objective_label, result in objective_results[case_label].items():
+            curve = result["best_curve_by_radius"]
+            radii = [item["radius_mm"] for item in curve]
+            values = [item["misfit"] for item in curve]
+            ax.plot(
+                radii,
+                values,
+                marker="o",
+                linewidth=1.4,
+                markersize=3.4,
+                label=objective_label,
+            )
+        ax.set_title(case_label, fontsize=11, fontweight="bold")
+        ax.set_xlabel("Target rebar radius [mm]")
+        ax.set_ylabel("Best objective over x/z/source")
+        ax.grid(True, alpha=0.25)
+        ax.legend(loc="best", fontsize=8, ncols=2)
+    fig.suptitle("Radius Evidence By Objective Variant", fontsize=13, fontweight="bold")
+    save_validated_figure(fig, save_path)
+    plt.close(fig)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--backend", choices=["cpu", "gpu-cpml"], default="gpu-cpml")
     parser.add_argument("--grid-step-mm", type=float, default=1.0)
     parser.add_argument("--sources", type=int, default=5)
     parser.add_argument("--frequency-ghz", type=float, default=1.5)
-    parser.add_argument("--rebar-x-values-mm", type=parse_values_mm, default=default_rebar_x_values_mm())
-    parser.add_argument("--rebar-z-values-mm", type=parse_values_mm, default=default_rebar_z_values_mm())
+    parser.add_argument("--rebar-x-values-mm", type=parse_vector_mm, default=default_rebar_x_values_mm())
+    parser.add_argument("--rebar-z-values-mm", type=parse_vector_mm, default=default_rebar_z_values_mm())
+    parser.add_argument("--rebar-radius-values-mm", type=parse_vector_mm, default=None)
+    parser.add_argument("--truth-x-values-mm", type=parse_vector_mm, default=None)
+    parser.add_argument("--truth-z-values-mm", type=parse_vector_mm, default=None)
     parser.add_argument("--truth-radius-mm", type=float, default=cfg.REBAR_RADIUS * 1000.0)
+    parser.add_argument("--truth-radius-values-mm", type=parse_vector_mm, default=None)
     parser.add_argument("--target-rebar-index", type=int, default=0)
     parser.add_argument("--target-x-values-mm", type=parse_values_mm, default=parse_values_mm("148:152:1"))
     parser.add_argument("--target-z-values-mm", type=parse_values_mm, default=parse_values_mm("88:92:1"))
@@ -319,6 +575,7 @@ def main():
     parser.add_argument("--replication-cases", type=parse_replication_cases, default=parse_replication_cases(DEFAULT_CASES))
     parser.add_argument("--source-frequency-scales", type=parse_positive_values, default=parse_positive_values("0.9,1.0,1.1"))
     parser.add_argument("--source-time-shift-ps-values", type=parse_shift_values_ps, default=parse_shift_values_ps("-80,-50,-25,0,25,50,80"))
+    parser.add_argument("--objective-variants", type=parse_objective_variants, default=parse_objective_variants(DEFAULT_OBJECTIVE_VARIANTS))
     parser.set_defaults(fit_amplitude=True)
     parser.add_argument("--no-fit-amplitude", dest="fit_amplitude", action="store_false")
     parser.add_argument("--top-k", type=int, default=12)
@@ -330,6 +587,27 @@ def main():
     args = parser.parse_args()
 
     _override_grid(args.grid_step_mm)
+    base_radii_mm = (
+        [args.truth_radius_mm] * len(args.rebar_x_values_mm)
+        if args.rebar_radius_values_mm is None
+        else args.rebar_radius_values_mm
+    )
+    if len(base_radii_mm) != len(args.rebar_x_values_mm):
+        raise ValueError("rebar radius list must match the rebar x/z list length")
+    truth_x_values_mm = (
+        args.rebar_x_values_mm
+        if args.truth_x_values_mm is None
+        else args.truth_x_values_mm
+    )
+    truth_z_values_mm = (
+        args.rebar_z_values_mm
+        if args.truth_z_values_mm is None
+        else args.truth_z_values_mm
+    )
+    if len(truth_x_values_mm) != len(truth_z_values_mm):
+        raise ValueError("truth x and z lists must have the same length")
+    if len(truth_x_values_mm) != len(args.rebar_x_values_mm):
+        raise ValueError("truth and candidate rebar lists must have the same length")
     candidate_rebar_arrays(
         args.rebar_x_values_mm,
         args.rebar_z_values_mm,
@@ -351,10 +629,14 @@ def main():
     time_values = generate_time_array(cfg.NT, cfg.DT)
     mute = _build_mute_window(cfg.NT, cfg.DT)
     scan_positions, scan_x = build_scan_positions(cfg.INVERSION_SCAN_STEP, args.sources)
-    truth_radii = [args.truth_radius_mm] * len(args.rebar_x_values_mm)
+    truth_radii = truth_radius_values_for_run(
+        args.truth_radius_mm,
+        args.truth_radius_values_mm,
+        len(truth_x_values_mm),
+    )
     true_model = build_variable_geometry_model(
-        args.rebar_x_values_mm,
-        args.rebar_z_values_mm,
+        truth_x_values_mm,
+        truth_z_values_mm,
         truth_radii,
         geometry_mode=args.geometry_mode,
         subcell_samples=args.subcell_samples,
@@ -378,6 +660,7 @@ def main():
         args.target_x_values_mm,
         args.target_z_values_mm,
         args.target_radius_values_mm,
+        base_radii_mm,
         frequency_hz,
         args.source_frequency_scales,
         [value * 1e-12 for value in args.source_time_shift_ps_values],
@@ -388,26 +671,40 @@ def main():
         geometry_mode=args.geometry_mode,
         subcell_samples=args.subcell_samples,
         fit_amplitude=args.fit_amplitude,
+        objective_variants=args.objective_variants,
         progress_every=args.progress_every,
     )
     elapsed = time.time() - started
 
     case_labels = [case["label"] for case in args.replication_cases]
+    objective_labels = [variant.label for variant in args.objective_variants]
+    objective_results = build_objective_results(
+        candidates,
+        case_labels,
+        objective_labels,
+        args.top_k,
+    )
     results = {}
     for label in case_labels:
-        ranked = rank_case(candidates, label)
-        results[label] = {
-            "margin": radius_margin_from_ranked(ranked),
-            "top_candidates": ranked[:args.top_k],
-            "best_curve_by_radius": best_curve_by_radius(candidates, label),
-        }
+        results[label] = objective_results[label][objective_labels[0]]
 
     candidate_csv = os.path.join(data_dir, "multi_rebar_local_geometry_candidates.csv")
     case_summary_csv = os.path.join(data_dir, "multi_rebar_local_geometry_case_summary.csv")
+    objective_candidate_csv = os.path.join(data_dir, "multi_rebar_local_geometry_objective_candidates.csv")
+    objective_summary_csv = os.path.join(data_dir, "multi_rebar_local_geometry_objective_summary.csv")
     plot_path = os.path.join(figures_dir, "multi_rebar_local_geometry_radius_profiles.png")
+    objective_plot_path = os.path.join(figures_dir, "multi_rebar_objective_variant_radius_profiles.png")
     write_candidate_csv(candidate_csv, candidates, case_labels)
     write_case_summary_csv(case_summary_csv, results)
+    write_objective_candidate_csv(
+        objective_candidate_csv,
+        candidates,
+        case_labels,
+        objective_labels,
+    )
+    write_objective_summary_csv(objective_summary_csv, objective_results)
     plot_radius_profiles(results, plot_path)
+    plot_objective_variant_radius_profiles(objective_results, objective_plot_path)
 
     summary = {
         "run_name": args.run_name,
@@ -417,7 +714,11 @@ def main():
         "frequency_ghz": args.frequency_ghz,
         "rebar_x_values_mm": args.rebar_x_values_mm,
         "rebar_z_values_mm": args.rebar_z_values_mm,
+        "rebar_radius_values_mm": base_radii_mm,
+        "truth_x_values_mm": truth_x_values_mm,
+        "truth_z_values_mm": truth_z_values_mm,
         "truth_radius_mm": args.truth_radius_mm,
+        "truth_radius_values_mm": truth_radii,
         "target_rebar_index": args.target_rebar_index,
         "target_x_values_mm": args.target_x_values_mm,
         "target_z_values_mm": args.target_z_values_mm,
@@ -429,14 +730,20 @@ def main():
             "time_shift_ps_values": args.source_time_shift_ps_values,
             "fit_amplitude": bool(args.fit_amplitude),
         },
+        "objective_variants": [variant.as_dict() for variant in args.objective_variants],
+        "primary_objective_label": objective_labels[0],
         "elapsed_time_s": float(elapsed),
         "candidate_count": len(candidates),
         "case_count": len(case_labels),
         "results": results,
+        "objective_results": objective_results,
         "paths": {
             "candidate_csv": candidate_csv,
             "case_summary_csv": case_summary_csv,
+            "objective_candidate_csv": objective_candidate_csv,
+            "objective_summary_csv": objective_summary_csv,
             "radius_profiles_plot": plot_path,
+            "objective_variant_radius_profiles_plot": objective_plot_path,
         },
     }
     summary_path = os.path.join(data_dir, "multi_rebar_local_geometry_summary.json")
@@ -450,7 +757,10 @@ def main():
             "summary_path": summary_path,
             "candidate_csv": candidate_csv,
             "case_summary_csv": case_summary_csv,
+            "objective_candidate_csv": objective_candidate_csv,
+            "objective_summary_csv": objective_summary_csv,
             "radius_profiles_plot": plot_path,
+            "objective_variant_radius_profiles_plot": objective_plot_path,
         },
     )
     for label, result in results.items():

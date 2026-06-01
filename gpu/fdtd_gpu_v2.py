@@ -275,7 +275,7 @@ class FDTDSimulatorGPU_v2:
         return {'bscan': cp.asnumpy(trace)}
 
     def run(self, source_waveform, src_iz, src_ix, rec_iz, rec_ix,
-            save_all_fields=False):
+            save_fields_every=0, save_all_fields=False):
         """
         Run forward simulation on GPU with CPML.
 
@@ -284,16 +284,19 @@ class FDTDSimulatorGPU_v2:
         source_waveform : ndarray, shape (nt,)
         src_iz, src_ix : int — source grid position
         rec_iz, rec_ix : int — receiver grid position
+        save_fields_every : int
+            If > 0, store CPU Ez snapshots every N steps for animation.
         save_all_fields : bool
             If True, store Ez at every time step (for adjoint method).
 
         Returns
         -------
-        dict with 'trace' and optionally 'fields'.
+        dict with 'trace' and optionally 'snapshots' and 'fields'.
         """
         nt = len(source_waveform)
         source_waveform = np.asarray(source_waveform, dtype=np.float64)
         trace_gpu = cp.empty(nt, dtype=cp.float64)
+        snapshots = []
         fields = [] if save_all_fields else None
 
         self.reset_fields()
@@ -301,10 +304,12 @@ class FDTDSimulatorGPU_v2:
         for n in range(nt):
             self.step(source_waveform[n], src_iz, src_ix)
             trace_gpu[n] = self.Ez[rec_iz, rec_ix]
+            if save_fields_every and save_fields_every > 0 and n % int(save_fields_every) == 0:
+                snapshots.append((n, cp.asnumpy(self.Ez.copy())))
             if save_all_fields:
                 fields.append(cp.asnumpy(self.Ez.copy()))
 
-        result = {'trace': cp.asnumpy(trace_gpu)}
+        result = {'trace': cp.asnumpy(trace_gpu), 'snapshots': snapshots}
         if save_all_fields:
             result['fields'] = fields
         return result

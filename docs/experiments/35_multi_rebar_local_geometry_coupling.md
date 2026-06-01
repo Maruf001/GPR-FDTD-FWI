@@ -207,3 +207,183 @@ Run the same local x/z/r coupling matrix for the center rebar. If center also
 passes, the remaining right-rebar test can be treated as a symmetry/edge check
 or deferred behind confidence-layer implementation.
 ```
+
+### 068_multi_rebar_center_local_geometry_noise10
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_multi_rebar_local_geometry_profile.py \
+  --backend gpu-cpml \
+  --grid-step-mm 1.0 \
+  --sources 5 \
+  --frequency-ghz 1.5 \
+  --target-rebar-index 1 \
+  --target-x-values-mm 248:252:1 \
+  --target-z-values-mm 88:92:1 \
+  --target-radius-values-mm 5.4:7.8:0.2 \
+  --source-frequency-scales 0.9,1.0,1.1 \
+  --source-time-shift-ps-values=-80,-50,-25,0,25,50,80 \
+  --progress-every 25 \
+  --run-name multi_rebar_center_local_geometry_noise10
+```
+
+Output:
+
+```text
+outputs/experiments/068_multi_rebar_center_local_geometry_noise10
+```
+
+Runtime and count:
+
+```text
+325 target x/z/r candidates
+2 observed cases
+3 modeled source-frequency scales per candidate
+5084.74 s
+```
+
+Case summary:
+
+| Case | Best x [mm] | Best z [mm] | Best r [mm] | Next r [mm] | Margin | Source profile |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| noise10_seed13 | 250.0 | 90.0 | 6.0 | 6.2 | 3.194e-04 | fc=1.0, shift=0 ps, amp=0.998 |
+| source_mismatch_noise10_seed13 | 250.0 | 90.0 | 6.0 | 6.2 | 3.314e-04 | fc=1.1, shift=-50 ps, amp=1.100 |
+
+Top candidates:
+
+| Case | Rank | x [mm] | z [mm] | r [mm] | J |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| noise10_seed13 | 1 | 250.0 | 90.0 | 6.0 | 8.040e-02 |
+| noise10_seed13 | 2 | 250.0 | 90.0 | 6.2 | 8.072e-02 |
+| noise10_seed13 | 3 | 250.0 | 89.0 | 5.4 | 8.144e-02 |
+| noise10_seed13 | 4 | 250.0 | 89.0 | 5.6 | 8.144e-02 |
+| source_mismatch_noise10_seed13 | 1 | 250.0 | 90.0 | 6.0 | 8.947e-02 |
+| source_mismatch_noise10_seed13 | 2 | 250.0 | 90.0 | 6.2 | 8.980e-02 |
+| source_mismatch_noise10_seed13 | 3 | 250.0 | 91.0 | 6.8 | 9.051e-02 |
+| source_mismatch_noise10_seed13 | 4 | 250.0 | 91.0 | 7.0 | 9.090e-02 |
+
+Plot validation:
+
+```text
+multi_rebar_local_geometry_radius_profiles.png: 1617x920 px, dynamic range 255, std 32.243
+```
+
+Interpretation:
+
+```text
+The center-rebar local x/z/r coupling test passes. Despite having neighboring
+rebars on both sides, the best target geometry remains x=250 mm, z=90 mm,
+r=6.0 mm under both noisy cases.
+```
+
+Interim decision:
+
+```text
+Run the right-rebar local x/z/r coupling check to complete Stage 4C. If it also
+passes, the next work item should be a confidence/reporting layer before any
+full 9-parameter optimizer is promoted.
+```
+
+### 069_multi_rebar_right_local_geometry_noise10
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_multi_rebar_local_geometry_profile.py \
+  --backend gpu-cpml \
+  --grid-step-mm 1.0 \
+  --sources 5 \
+  --frequency-ghz 1.5 \
+  --target-rebar-index 2 \
+  --target-x-values-mm 348:352:1 \
+  --target-z-values-mm 88:92:1 \
+  --target-radius-values-mm 5.4:7.8:0.2 \
+  --source-frequency-scales 0.9,1.0,1.1 \
+  --source-time-shift-ps-values=-80,-50,-25,0,25,50,80 \
+  --progress-every 25 \
+  --run-name multi_rebar_right_local_geometry_noise10
+```
+
+Output:
+
+```text
+outputs/experiments/069_multi_rebar_right_local_geometry_noise10
+```
+
+Runtime and count:
+
+```text
+325 target x/z/r candidates
+2 observed cases
+3 modeled source-frequency scales per candidate
+5199.9 s
+```
+
+GPU check:
+
+```text
+NVIDIA GB10, FNO Python process active, GPU utilization about 87% during run.
+```
+
+Case summary:
+
+| Case | Best x [mm] | Best z [mm] | Best r [mm] | Next r [mm] | Margin | Source profile |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| noise10_seed13 | 350.0 | 90.0 | 6.0 | 6.2 | 4.766e-04 | fc=1.0, shift=0 ps, amp=0.998 |
+| source_mismatch_noise10_seed13 | 350.0 | 90.0 | 6.0 | 6.2 | 5.033e-04 | fc=1.1, shift=-50 ps, amp=1.100 |
+
+Top candidates:
+
+| Case | Rank | x [mm] | z [mm] | r [mm] | J |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| noise10_seed13 | 1 | 350.0 | 90.0 | 6.0 | 8.040e-02 |
+| noise10_seed13 | 2 | 350.0 | 90.0 | 6.2 | 8.088e-02 |
+| noise10_seed13 | 3 | 350.0 | 91.0 | 6.8 | 8.111e-02 |
+| noise10_seed13 | 4 | 350.0 | 91.0 | 6.6 | 8.150e-02 |
+| source_mismatch_noise10_seed13 | 1 | 350.0 | 90.0 | 6.0 | 8.947e-02 |
+| source_mismatch_noise10_seed13 | 2 | 350.0 | 90.0 | 6.2 | 8.997e-02 |
+| source_mismatch_noise10_seed13 | 3 | 350.0 | 91.0 | 6.8 | 9.044e-02 |
+| source_mismatch_noise10_seed13 | 4 | 350.0 | 91.0 | 7.0 | 9.087e-02 |
+
+Plot validation:
+
+```text
+multi_rebar_local_geometry_radius_profiles.png: 1617x920 px, dynamic range 255, std 32.194
+```
+
+Interpretation:
+
+```text
+The right-rebar local x/z/r coupling test passes. The best target geometry
+stays at the true x=350 mm, z=90 mm, r=6.0 mm under nominal 10% noise and
+source-mismatched 10% noise.
+```
+
+## Stage 4C Final Decision
+
+All three rebars passed the local one-rebar-at-a-time x/z/r coupling check in
+the 3-rebar scene:
+
+| Target | Best x [mm] | Best z [mm] | Best r [mm] | Weakest 10% noise margin |
+| --- | ---: | ---: | ---: | ---: |
+| left index 0 | 150.0 | 90.0 | 6.0 | 2.263e-04 |
+| center index 1 | 250.0 | 90.0 | 6.0 | 3.194e-04 |
+| right index 2 | 350.0 | 90.0 | 6.0 | 4.766e-04 |
+
+Decision:
+
+```text
+Stage 4C passes. Local per-rebar geometry/radius evidence survives 10% noise
+and source mismatch when other rebars are fixed at truth.
+```
+
+Next action:
+
+```text
+Build a confidence/reporting layer before promoting any full 9-parameter
+multi-rebar optimizer. The correct candidates win, but the per-rebar radius
+margins are small relative to the noisy objective floor, so production output
+must expose top-k ambiguity, best-vs-next-radius margin, relative margin, and
+source-profile selection.
+```
