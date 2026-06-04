@@ -7,6 +7,7 @@ import argparse
 import csv
 import json
 import os
+import shlex
 import sys
 from pathlib import Path
 
@@ -50,6 +51,20 @@ def parse_case_spec(text):
         "joint_json": parts[4],
         "focused_refinement_json": parts[5] if len(parts) == 6 else None,
     }
+
+
+def format_case_spec(case_spec):
+    """Return the CLI case spec string for a parsed case dictionary."""
+    parts = [
+        case_spec["label"],
+        case_spec["detection_json"],
+        case_spec["location_json"],
+        case_spec["focused_json"],
+        case_spec["joint_json"],
+    ]
+    if case_spec.get("focused_refinement_json"):
+        parts.append(case_spec["focused_refinement_json"])
+    return "|".join(str(part) for part in parts)
 
 
 def vector_abs_errors(values, truth):
@@ -332,6 +347,97 @@ def stage_rows(case_summary):
     return rows
 
 
+def manifest_path_for_artifact(path):
+    """Return the likely run manifest for a data artifact path."""
+    artifact = Path(path)
+    if artifact.parent.name == "data":
+        return artifact.parent.parent / "run_manifest.json"
+    return artifact.parent / "run_manifest.json"
+
+
+def load_manifest_for_artifact(path):
+    """Load the run manifest associated with an artifact, if present."""
+    manifest_path = manifest_path_for_artifact(path)
+    if not manifest_path.exists():
+        return str(manifest_path), None
+    return str(manifest_path), load_json(manifest_path)
+
+
+def build_summary_command(run_name, case_specs, outdir=None):
+    """Build the staged summary command represented by this report."""
+    command = [
+        sys.executable,
+        "run_variable_radius_staged_pipeline_summary.py",
+        "--run-name",
+        run_name,
+    ]
+    if outdir:
+        command.extend(["--outdir", str(outdir)])
+    for case_spec in case_specs:
+        command.extend(["--case", format_case_spec(case_spec)])
+    return command
+
+
+def build_replay_plan(case_summaries, summary_command):
+    """Build an ordered dry-run replay plan from stage run manifests."""
+    stage_keys = [
+        ("detection", "detection_json"),
+        ("location_only", "location_json"),
+        ("focused_target2", "focused_json"),
+        ("focused_target2_refined", "focused_refinement_json"),
+        ("joint_radius", "joint_json"),
+    ]
+    stages = []
+    seen_artifacts = set()
+    for case_summary in case_summaries:
+        for stage_name, artifact_key in stage_keys:
+            artifact_json = case_summary.get(artifact_key)
+            if not artifact_json or artifact_json in seen_artifacts:
+                continue
+            seen_artifacts.add(artifact_json)
+            manifest_path, manifest = load_manifest_for_artifact(artifact_json)
+            command = None if manifest is None else manifest.get("command")
+            stages.append({
+                "case": case_summary["label"],
+                "stage": stage_name,
+                "artifact_json": artifact_json,
+                "manifest_path": manifest_path,
+                "manifest_found": manifest is not None,
+                "run_kind": None if manifest is None else manifest.get("run_kind"),
+                "command": command,
+                "command_available": bool(command),
+            })
+    return {
+        "mode": "dry_run_replay_plan",
+        "stage_count": len(stages),
+        "command_available_count": sum(1 for stage in stages if stage["command_available"]),
+        "stages": stages,
+        "summary_command": summary_command,
+    }
+
+
+def write_replay_commands(path, replay_plan):
+    """Write shell-quoted replay commands for manual staged rerun planning."""
+    lines = [
+        "# Staged variable-radius replay command plan.",
+        "# This file is intentionally non-executable.",
+        "# Review output directory arguments before launching heavy GPU stages.",
+        "",
+    ]
+    for stage in replay_plan["stages"]:
+        label = f"{stage['case']} {stage['stage']}"
+        lines.append(f"# Stage: {label}")
+        if stage.get("command"):
+            lines.append(" ".join(shlex.quote(str(part)) for part in stage["command"]))
+        else:
+            lines.append(f"# Command unavailable; inspect {stage['manifest_path']}")
+        lines.append("")
+    lines.append("# Summary/report stage")
+    lines.append(" ".join(shlex.quote(str(part)) for part in replay_plan["summary_command"]))
+    lines.append("")
+    Path(path).write_text("\n".join(lines), encoding="utf-8")
+
+
 def write_rows_csv(path, rows):
     """Write flat rows to CSV."""
     rows = list(rows)
@@ -472,19 +578,29 @@ def main():
     case_csv = data_dir / "staged_variable_radius_cases.csv"
     stage_csv = data_dir / "staged_variable_radius_stage_errors.csv"
     json_path = data_dir / "staged_variable_radius_summary.json"
+    replay_json_path = data_dir / "staged_variable_radius_replay_plan.json"
+    replay_commands_path = data_dir / "staged_variable_radius_replay_commands.txt"
     plot_path = figures_dir / "staged_variable_radius_pipeline_errors.png"
     notes_path = figures_dir / "FIGURE_NOTES.md"
+    summary_command = build_summary_command(args.run_name, args.case, args.outdir)
+    replay_plan = build_replay_plan(case_summaries, summary_command)
     write_rows_csv(case_csv, case_summaries)
     write_rows_csv(stage_csv, stage_error_rows)
+    write_replay_commands(replay_commands_path, replay_plan)
     plot_stage_errors(stage_error_rows, plot_path)
     write_figure_notes(notes_path, case_summaries)
+    with replay_json_path.open("w", encoding="utf-8") as handle:
+        json.dump(replay_plan, handle, indent=2)
     with json_path.open("w", encoding="utf-8") as handle:
         json.dump({
             "case_summaries": case_summaries,
             "stage_error_rows": stage_error_rows,
+            "replay_plan": replay_plan,
             "paths": {
                 "case_csv": str(case_csv),
                 "stage_csv": str(stage_csv),
+                "replay_json": str(replay_json_path),
+                "replay_commands": str(replay_commands_path),
                 "plot": str(plot_path),
                 "figure_notes": str(notes_path),
             },
@@ -496,6 +612,8 @@ def main():
             "case_csv": str(case_csv),
             "stage_csv": str(stage_csv),
             "json": str(json_path),
+            "replay_json": str(replay_json_path),
+            "replay_commands": str(replay_commands_path),
             "plot": str(plot_path),
             "figure_notes": str(notes_path),
         },

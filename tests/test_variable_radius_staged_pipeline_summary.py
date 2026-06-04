@@ -9,8 +9,12 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from run_variable_radius_staged_pipeline_summary import (  # noqa: E402
+    build_replay_plan,
+    build_summary_command,
     coordinate_confidence_metrics,
     focus_policy,
+    format_case_spec,
+    manifest_path_for_artifact,
     max_abs_error,
     parse_case_spec,
     stage_rows,
@@ -30,10 +34,14 @@ def test_parse_case_spec_requires_five_parts():
     assert spec["label"] == "seed"
     assert spec["joint_json"] == "joint.json"
     assert spec["focused_refinement_json"] is None
+    assert format_case_spec(spec) == "seed|det.json|loc.json|focus.json|joint.json"
 
     refined = parse_case_spec("seed|det.json|loc.json|focus.json|joint.json|refined.json")
 
     assert refined["focused_refinement_json"] == "refined.json"
+    assert format_case_spec(refined) == (
+        "seed|det.json|loc.json|focus.json|joint.json|refined.json"
+    )
 
     with pytest.raises(Exception, match="case spec"):
         parse_case_spec("seed|det.json")
@@ -41,6 +49,57 @@ def test_parse_case_spec_requires_five_parts():
 
 def test_max_abs_error_returns_largest_component():
     assert max_abs_error([1.0, 3.0], [2.0, 0.0]) == 3.0
+
+
+def test_build_summary_command_round_trips_case_specs():
+    case = parse_case_spec("seed|det.json|loc.json|focus.json|joint.json|refined.json")
+
+    command = build_summary_command("summary_run", [case], "outputs/999_summary")
+
+    assert command[:4] == [
+        sys.executable,
+        "run_variable_radius_staged_pipeline_summary.py",
+        "--run-name",
+        "summary_run",
+    ]
+    assert "--outdir" in command
+    assert command[command.index("--outdir") + 1] == "outputs/999_summary"
+    assert command[-2:] == [
+        "--case",
+        "seed|det.json|loc.json|focus.json|joint.json|refined.json",
+    ]
+
+
+def test_build_replay_plan_reads_stage_manifests(tmp_path):
+    root = tmp_path / "outputs" / "001_detection"
+    data = root / "data"
+    data.mkdir(parents=True)
+    artifact = data / "detection_summary.json"
+    artifact.write_text("{}", encoding="utf-8")
+    manifest = {
+        "run_kind": "detection",
+        "command": ["python", "run_rebar_detection_pipeline.py"],
+    }
+    (root / "run_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    case_summary = {
+        "label": "seed",
+        "detection_json": str(artifact),
+        "location_json": None,
+        "focused_json": None,
+        "focused_refinement_json": None,
+        "joint_json": None,
+    }
+
+    assert manifest_path_for_artifact(artifact) == root / "run_manifest.json"
+
+    plan = build_replay_plan([case_summary], ["python", "summary.py"])
+
+    assert plan["stage_count"] == 1
+    assert plan["command_available_count"] == 1
+    assert plan["stages"][0]["stage"] == "detection"
+    assert plan["stages"][0]["run_kind"] == "detection"
+    assert plan["stages"][0]["command"] == ["python", "run_rebar_detection_pipeline.py"]
+    assert plan["summary_command"] == ["python", "summary.py"]
 
 
 def test_truth_tuple_rank_finds_tuple_in_ranked_rows():

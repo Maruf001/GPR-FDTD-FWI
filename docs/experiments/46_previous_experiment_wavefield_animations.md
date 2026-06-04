@@ -300,14 +300,25 @@ Generated animations:
 | `figures/true_nominal_wavefield.gif` | true-model nominal material forward wavefield | 48 | `1000x600` | 255 | 33.64 |
 | `figures/candidate_rebar_sigma1e5_wavefield.gif` | candidate forward wavefield with true radius and low steel conductivity `1e5 S/m` | 48 | `1000x600` | 255 | 33.86 |
 
+Follow-up comparison:
+
+```text
+outputs/experiments/420_material_source_branch_animation_summary/figures/material_sigma1e5_vs_true_comparison.gif
+```
+
+This side-by-side GIF compares the true `1e7 S/m` material against the actual
+same-radius `1e5 S/m` branch from experiment 056. It has 48 frames,
+`1550x560` px, dynamic range 255, and mean frame std 39.3504.
+
 Note:
 
 This experiment varies material/radius tradeoffs. I added single-rebar material
-overrides to the forward animation runner before generating the candidate GIF,
-so the low-conductivity animation uses the actual `r=6.0 mm, sigma=1e5 S/m`
-candidate instead of a geometry-only substitute. The material matrix showed the
-radius remained robust at 6.0 mm while steel conductivity from `1e7` down to
-`1e5 S/m` was nearly indistinguishable in the objective.
+overrides to the forward and comparison animation runners before generating
+the candidate GIFs, so the low-conductivity animations use the actual
+`r=6.0 mm, sigma=1e5 S/m` candidate instead of a geometry-only substitute. The
+material matrix showed the radius remained robust at 6.0 mm while steel
+conductivity from `1e7` down to `1e5 S/m` was nearly indistinguishable in the
+objective.
 
 ## 055: Wavelet Mismatch Radius, Amplitude/Time/Frequency Fit
 
@@ -435,7 +446,7 @@ overrides for material-tradeoff animations.
 Validation:
 
 ```text
-tests/test_wavefield_animation.py: 9 passed
+tests/test_wavefield_animation.py: 10 passed
 full test suite: 127 passed in 23.57 s
 git diff --check: passed
 ```

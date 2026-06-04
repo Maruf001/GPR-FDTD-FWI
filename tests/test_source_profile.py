@@ -9,10 +9,13 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from inversion.source_profile import (  # noqa: E402
+    best_basis_coefficients,
     best_amplitude_scale,
     normalized_ls_misfit,
     shift_traces_zero_fill,
     source_profiled_ls,
+    source_profiled_ls_over_basis_profiles,
+    source_profiled_ls_over_profiles,
 )
 
 
@@ -60,9 +63,91 @@ def test_source_profiled_ls_picks_frequency_shift_and_amplitude():
     assert result.frequency_scale == 1.0
     assert result.time_shift_s == 1.0
     assert np.isclose(result.amplitude_scale, 3.0)
-    assert result.misfit == 0.0
+    assert np.isclose(result.misfit, 0.0)
+
+
+def test_source_profiled_ls_over_profiles_keeps_ringdown_metadata():
+    observed = np.array([0.0, 1.0, 2.0, 0.0])
+    profiles = [
+        {
+            "frequency_scale": 1.0,
+            "ringdown_scale": 0.0,
+            "traces": np.zeros_like(observed),
+        },
+        {
+            "frequency_scale": 1.0,
+            "ringdown_scale": 0.25,
+            "ringdown_delay_s": 180e-12,
+            "ringdown_frequency_scale": 0.8,
+            "traces": observed,
+        },
+    ]
+
+    result = source_profiled_ls_over_profiles(
+        observed,
+        profiles,
+        np.ones(observed.size),
+        dt=1.0,
+        time_shift_values_s=[0.0],
+        fit_amplitude=False,
+    )
+
+    assert np.isclose(result.misfit, 0.0)
+    assert result.ringdown_scale == 0.25
+    assert result.as_dict()["ringdown_delay_ps"] == 180.0
+
+
+def test_best_basis_coefficients_recovers_two_source_terms():
+    primary = np.array([0.0, 1.0, 2.0, 0.0])
+    ringdown = np.array([0.0, 0.0, 1.0, 2.0])
+    observed = 1.2 * primary + 0.3 * ringdown
+
+    coefficients = best_basis_coefficients(
+        observed,
+        [primary, ringdown],
+        np.ones(observed.size),
+    )
+
+    np.testing.assert_allclose(coefficients, [1.2, 0.3])
+
+
+def test_source_profiled_ls_over_basis_profiles_reports_ringdown_ratio():
+    primary = np.array([0.0, 1.0, 2.0, 0.0])
+    ringdown = np.array([0.0, 0.0, 1.0, 2.0])
+    observed = 1.2 * primary + 0.24 * ringdown
+    profiles = [
+        {
+            "frequency_scale": 1.0,
+            "ringdown_delay_s": 180e-12,
+            "ringdown_frequency_scale": 0.8,
+            "basis_traces": [primary, ringdown],
+        }
+    ]
+
+    result = source_profiled_ls_over_basis_profiles(
+        observed,
+        profiles,
+        np.ones(observed.size),
+        dt=1.0,
+        time_shift_values_s=[0.0],
+    )
+
+    assert np.isclose(result.misfit, 0.0)
+    assert np.isclose(result.primary_coefficient, 1.2)
+    assert np.isclose(result.ringdown_coefficient, 0.24)
+    assert np.isclose(result.ringdown_scale, 0.2)
 
 
 def test_source_profiled_ls_rejects_missing_synthetics():
     with pytest.raises(ValueError, match="non-empty"):
         source_profiled_ls(np.zeros(4), {}, np.ones(4), dt=1.0)
+
+
+def test_source_profiled_ls_over_profiles_rejects_missing_profiles():
+    with pytest.raises(ValueError, match="non-empty"):
+        source_profiled_ls_over_profiles(np.zeros(4), [], np.ones(4), dt=1.0)
+
+
+def test_source_profiled_ls_over_basis_profiles_rejects_missing_profiles():
+    with pytest.raises(ValueError, match="non-empty"):
+        source_profiled_ls_over_basis_profiles(np.zeros(4), [], np.ones(4), dt=1.0)

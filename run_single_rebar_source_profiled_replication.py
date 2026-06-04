@@ -25,20 +25,21 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 import config as cfg  # noqa: E402
 from core.run_outputs import allocate_output_dir, write_run_manifest  # noqa: E402
-from core.source import ricker_wavelet  # noqa: E402
 from inversion.frequency_weighting import radius_margin_from_ranked  # noqa: E402
 from inversion.single_rebar_pipeline import (  # noqa: E402
     SingleRebarInversionEngine,
     build_model_from_single_params,
     default_single_rebar_truth,
 )
-from inversion.source_profile import source_profiled_ls  # noqa: E402
+from inversion.source_profile import source_profiled_ls_over_profiles  # noqa: E402
+from inversion.source_profile import source_profiled_ls_over_basis_profiles  # noqa: E402
 from run_single_rebar_frequency_weight_matrix import parse_values_mm  # noqa: E402
 from run_single_rebar_inversion import _override_grid  # noqa: E402
 from run_single_rebar_source_profiled_polish import (  # noqa: E402
     _add_noise,
     _params_from_mm,
     observed_wavelet,
+    ringdown_component_wavelet,
 )
 from run_single_rebar_wavelet_mismatch import parse_positive_values, parse_shift_values_ps  # noqa: E402
 from visualization.plot_style import save_validated_figure  # noqa: E402
@@ -62,6 +63,13 @@ def parse_replication_cases(text):
     ```text
     label:frequency_scale,time_shift_ps,amplitude_scale,noise_fraction,noise_seed|...
     ```
+
+    Optional source-shape stress values can be appended:
+
+    ```text
+    label:frequency_scale,time_shift_ps,amplitude_scale,noise_fraction,noise_seed,
+          ringdown_scale,ringdown_delay_ps,ringdown_frequency_scale
+    ```
     """
     cases = []
     labels = set()
@@ -78,15 +86,24 @@ def parse_replication_cases(text):
         if not label or label in labels:
             raise argparse.ArgumentTypeError("replication case labels must be non-empty and unique")
         parts = [part.strip() for part in values_text.split(",") if part.strip()]
-        if len(parts) != 5:
-            raise argparse.ArgumentTypeError("replication case requires five values")
+        if len(parts) not in (5, 8):
+            raise argparse.ArgumentTypeError("replication case requires five values, or eight with ringdown")
         frequency_scale = float(parts[0])
         time_shift_ps = float(parts[1])
         amplitude_scale = float(parts[2])
         noise_fraction = float(parts[3])
         noise_seed = int(parts[4])
+        ringdown_scale = 0.0
+        ringdown_delay_ps = 180.0
+        ringdown_frequency_scale = 0.8
+        if len(parts) == 8:
+            ringdown_scale = float(parts[5])
+            ringdown_delay_ps = float(parts[6])
+            ringdown_frequency_scale = float(parts[7])
         if frequency_scale <= 0.0 or amplitude_scale <= 0.0:
             raise argparse.ArgumentTypeError("frequency and amplitude scales must be positive")
+        if ringdown_frequency_scale <= 0.0:
+            raise argparse.ArgumentTypeError("ringdown frequency scale must be positive")
         if noise_fraction < 0.0:
             raise argparse.ArgumentTypeError("noise fraction must be non-negative")
         labels.add(label)
@@ -97,10 +114,23 @@ def parse_replication_cases(text):
             "amplitude_scale": float(amplitude_scale),
             "noise_fraction": float(noise_fraction),
             "noise_seed": int(noise_seed),
+            "ringdown_scale": float(ringdown_scale),
+            "ringdown_delay_ps": float(ringdown_delay_ps),
+            "ringdown_frequency_scale": float(ringdown_frequency_scale),
         })
     if not cases:
         raise argparse.ArgumentTypeError("at least one replication case is required")
     return cases
+
+
+def parse_nonnegative_values(text):
+    """Parse comma-separated non-negative floats."""
+    values = [float(part.strip()) for part in str(text).split(",") if part.strip()]
+    if not values:
+        raise argparse.ArgumentTypeError("at least one value is required")
+    if any(value < 0.0 for value in values):
+        raise argparse.ArgumentTypeError("values must be non-negative")
+    return values
 
 
 def build_observed_cases(engine, frequency_hz, cases):
@@ -114,6 +144,9 @@ def build_observed_cases(engine, frequency_hz, cases):
             frequency_scale=case["frequency_scale"],
             time_shift_ps=case["time_shift_ps"],
             amplitude_scale=case["amplitude_scale"],
+            ringdown_scale=case.get("ringdown_scale", 0.0),
+            ringdown_delay_ps=case.get("ringdown_delay_ps", 180.0),
+            ringdown_frequency_scale=case.get("ringdown_frequency_scale", 0.8),
         )
         clean = engine._simulate_bscan(engine.true_model, wavelet)
         observed, noise_stats = _add_noise(clean, case["noise_fraction"], case["noise_seed"])
@@ -165,8 +198,12 @@ def evaluate_replication_grid(
         z_values_mm,
         radius_values_mm,
         modeled_frequency_scales,
+        modeled_ringdown_scales,
+        modeled_ringdown_delay_ps,
+        modeled_ringdown_frequency_scale,
         time_shift_values_s,
         fit_amplitude=True,
+        fit_ringdown_coefficient=False,
         progress_every=10):
     """Evaluate one synthetic grid against multiple observed/source cases."""
     frequency = engine.frequencies[0]
@@ -187,26 +224,79 @@ def evaluate_replication_grid(
                     geometry_mode=engine.geometry_mode,
                     subcell_samples=engine.subcell_samples,
                 )
-                synthetic_by_scale = {}
+                synthetic_profiles = []
+                basis_profiles = []
                 for scale in modeled_frequency_scales:
-                    wavelet = (
-                        engine.wavelets[frequency]
-                        if np.isclose(scale, 1.0, rtol=0.0, atol=1e-12)
-                        else ricker_wavelet(engine.time, frequency * float(scale))
-                    )
-                    synthetic = engine._simulate_bscan(model, wavelet)
-                    synthetic_by_scale[float(scale)] = engine._apply_objective_filter(synthetic)
+                    if fit_ringdown_coefficient:
+                        primary_wavelet = observed_wavelet(
+                            engine.time,
+                            frequency,
+                            frequency_scale=float(scale),
+                            time_shift_ps=0.0,
+                            amplitude_scale=1.0,
+                            ringdown_scale=0.0,
+                            ringdown_delay_ps=float(modeled_ringdown_delay_ps),
+                            ringdown_frequency_scale=float(modeled_ringdown_frequency_scale),
+                        )
+                        ringdown_wavelet = ringdown_component_wavelet(
+                            engine.time,
+                            frequency,
+                            frequency_scale=float(scale),
+                            time_shift_ps=0.0,
+                            ringdown_delay_ps=float(modeled_ringdown_delay_ps),
+                            ringdown_frequency_scale=float(modeled_ringdown_frequency_scale),
+                        )
+                        primary = engine._simulate_bscan(model, primary_wavelet)
+                        ringdown = engine._simulate_bscan(model, ringdown_wavelet)
+                        basis_profiles.append({
+                            "frequency_scale": float(scale),
+                            "ringdown_delay_s": float(modeled_ringdown_delay_ps) * 1e-12,
+                            "ringdown_frequency_scale": float(modeled_ringdown_frequency_scale),
+                            "basis_traces": [
+                                engine._apply_objective_filter(primary),
+                                engine._apply_objective_filter(ringdown),
+                            ],
+                        })
+                    else:
+                        for ringdown_scale in modeled_ringdown_scales:
+                            wavelet = observed_wavelet(
+                                engine.time,
+                                frequency,
+                                frequency_scale=float(scale),
+                                time_shift_ps=0.0,
+                                amplitude_scale=1.0,
+                                ringdown_scale=float(ringdown_scale),
+                                ringdown_delay_ps=float(modeled_ringdown_delay_ps),
+                                ringdown_frequency_scale=float(modeled_ringdown_frequency_scale),
+                            )
+                            synthetic = engine._simulate_bscan(model, wavelet)
+                            synthetic_profiles.append({
+                                "frequency_scale": float(scale),
+                                "ringdown_scale": float(ringdown_scale),
+                                "ringdown_delay_s": float(modeled_ringdown_delay_ps) * 1e-12,
+                                "ringdown_frequency_scale": float(modeled_ringdown_frequency_scale),
+                                "traces": engine._apply_objective_filter(synthetic),
+                            })
 
                 case_results = {}
                 for label, observed in observed_objective_by_case.items():
-                    profile = source_profiled_ls(
-                        observed,
-                        synthetic_by_scale,
-                        engine.mute,
-                        cfg.DT,
-                        time_shift_values_s=time_shift_values_s,
-                        fit_amplitude=fit_amplitude,
-                    )
+                    if fit_ringdown_coefficient:
+                        profile = source_profiled_ls_over_basis_profiles(
+                            observed,
+                            basis_profiles,
+                            engine.mute,
+                            cfg.DT,
+                            time_shift_values_s=time_shift_values_s,
+                        )
+                    else:
+                        profile = source_profiled_ls_over_profiles(
+                            observed,
+                            synthetic_profiles,
+                            engine.mute,
+                            cfg.DT,
+                            time_shift_values_s=time_shift_values_s,
+                            fit_amplitude=fit_amplitude,
+                        )
                     case_results[label] = {
                         "misfit": float(profile.misfit),
                         "source_profile": profile.as_dict(),
@@ -233,6 +323,11 @@ def write_candidate_csv(path, candidates, case_labels):
         "source_frequency_scale",
         "source_time_shift_ps",
         "source_amplitude_scale",
+        "source_ringdown_scale",
+        "source_ringdown_delay_ps",
+        "source_ringdown_frequency_scale",
+        "source_primary_coefficient",
+        "source_ringdown_coefficient",
     ]
     with open(path, "w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -250,6 +345,11 @@ def write_candidate_csv(path, candidates, case_labels):
                     "source_frequency_scale": profile["frequency_scale"],
                     "source_time_shift_ps": profile["time_shift_ps"],
                     "source_amplitude_scale": profile["amplitude_scale"],
+                    "source_ringdown_scale": profile.get("ringdown_scale", 0.0),
+                    "source_ringdown_delay_ps": profile.get("ringdown_delay_ps", 0.0),
+                    "source_ringdown_frequency_scale": profile.get("ringdown_frequency_scale", 1.0),
+                    "source_primary_coefficient": profile.get("primary_coefficient", profile["amplitude_scale"]),
+                    "source_ringdown_coefficient": profile.get("ringdown_coefficient", 0.0),
                 })
 
 
@@ -266,6 +366,11 @@ def write_case_summary_csv(path, results):
         "best_source_frequency_scale",
         "best_source_time_shift_ps",
         "best_source_amplitude_scale",
+        "best_source_ringdown_scale",
+        "best_source_ringdown_delay_ps",
+        "best_source_ringdown_frequency_scale",
+        "best_source_primary_coefficient",
+        "best_source_ringdown_coefficient",
     ]
     with open(path, "w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -286,6 +391,11 @@ def write_case_summary_csv(path, results):
                 "best_source_frequency_scale": profile.get("frequency_scale"),
                 "best_source_time_shift_ps": profile.get("time_shift_ps"),
                 "best_source_amplitude_scale": profile.get("amplitude_scale"),
+                "best_source_ringdown_scale": profile.get("ringdown_scale", 0.0),
+                "best_source_ringdown_delay_ps": profile.get("ringdown_delay_ps", 0.0),
+                "best_source_ringdown_frequency_scale": profile.get("ringdown_frequency_scale", 1.0),
+                "best_source_primary_coefficient": profile.get("primary_coefficient", profile.get("amplitude_scale")),
+                "best_source_ringdown_coefficient": profile.get("ringdown_coefficient", 0.0),
             })
 
 
@@ -321,6 +431,10 @@ def main():
     parser.add_argument("--z-values-mm", type=parse_values_mm, default=parse_values_mm("90.0,90.5,91.0,91.5"))
     parser.add_argument("--radius-values-mm", type=parse_values_mm, default=parse_values_mm("5.4:7.8:0.2"))
     parser.add_argument("--source-frequency-scales", type=parse_positive_values, default=parse_positive_values("0.9,1.0,1.1"))
+    parser.add_argument("--source-ringdown-scales", type=parse_nonnegative_values, default=parse_nonnegative_values("0.0"))
+    parser.add_argument("--source-ringdown-delay-ps", type=float, default=180.0)
+    parser.add_argument("--source-ringdown-frequency-scale", type=float, default=0.8)
+    parser.add_argument("--fit-ringdown-coefficient", action="store_true")
     parser.add_argument("--source-time-shift-ps-values", type=parse_shift_values_ps, default=parse_shift_values_ps("-80,-50,-25,0,25,50,80"))
     parser.set_defaults(fit_amplitude=True)
     parser.add_argument("--no-fit-amplitude", dest="fit_amplitude", action="store_false")
@@ -360,8 +474,12 @@ def main():
         args.z_values_mm,
         args.radius_values_mm,
         args.source_frequency_scales,
+        args.source_ringdown_scales,
+        args.source_ringdown_delay_ps,
+        args.source_ringdown_frequency_scale,
         [value * 1e-12 for value in args.source_time_shift_ps_values],
         fit_amplitude=args.fit_amplitude,
+        fit_ringdown_coefficient=args.fit_ringdown_coefficient,
         progress_every=args.progress_every,
     )
     elapsed = time.time() - started
@@ -396,6 +514,10 @@ def main():
         "radius_values_mm": args.radius_values_mm,
         "source_profile_grid": {
             "frequency_scales": args.source_frequency_scales,
+            "ringdown_scales": args.source_ringdown_scales,
+            "ringdown_delay_ps": float(args.source_ringdown_delay_ps),
+            "ringdown_frequency_scale": float(args.source_ringdown_frequency_scale),
+            "fit_ringdown_coefficient": bool(args.fit_ringdown_coefficient),
             "time_shift_ps_values": args.source_time_shift_ps_values,
             "fit_amplitude": bool(args.fit_amplitude),
         },
@@ -432,7 +554,7 @@ def main():
             f"next r={margin['next_radius_mm']} mm, "
             f"margin={margin['radius_margin_abs']}, "
             f"source=({profile['frequency_scale']}, {profile['time_shift_ps']} ps, "
-            f"{profile['amplitude_scale']})"
+            f"{profile['amplitude_scale']}, ringdown={profile.get('ringdown_scale', 0.0)})"
         )
     print(f"Wrote summary: {summary_path}")
     print(f"Wrote plot: {plot_path}")

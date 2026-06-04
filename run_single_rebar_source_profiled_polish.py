@@ -109,12 +109,48 @@ def _add_noise_by_frequency(clean_by_frequency, fraction, seed):
     return observed, stats
 
 
-def observed_wavelet(time, frequency_hz, frequency_scale=1.0, time_shift_ps=0.0, amplitude_scale=1.0):
+def observed_wavelet(
+        time,
+        frequency_hz,
+        frequency_scale=1.0,
+        time_shift_ps=0.0,
+        amplitude_scale=1.0,
+        ringdown_scale=0.0,
+        ringdown_delay_ps=180.0,
+        ringdown_frequency_scale=0.8):
     """Build a controlled observed source wavelet."""
     wavelet = ricker_wavelet(time, frequency_hz * float(frequency_scale))
     if time_shift_ps != 0.0:
         wavelet = shift_traces_zero_fill(wavelet, cfg.DT, float(time_shift_ps) * 1e-12)
+    if ringdown_scale != 0.0:
+        ringdown = ringdown_component_wavelet(
+            time,
+            frequency_hz,
+            frequency_scale=frequency_scale,
+            time_shift_ps=time_shift_ps,
+            ringdown_delay_ps=ringdown_delay_ps,
+            ringdown_frequency_scale=ringdown_frequency_scale,
+        )
+        wavelet = wavelet + float(ringdown_scale) * ringdown
     return float(amplitude_scale) * wavelet
+
+
+def ringdown_component_wavelet(
+        time,
+        frequency_hz,
+        frequency_scale=1.0,
+        time_shift_ps=0.0,
+        ringdown_delay_ps=180.0,
+        ringdown_frequency_scale=0.8):
+    """Build only the delayed ringdown source component."""
+    if ringdown_frequency_scale <= 0.0:
+        raise ValueError("ringdown_frequency_scale must be positive")
+    ringdown = ricker_wavelet(
+        time,
+        frequency_hz * float(frequency_scale) * float(ringdown_frequency_scale),
+    )
+    ringdown_shift_ps = float(time_shift_ps) + float(ringdown_delay_ps)
+    return shift_traces_zero_fill(ringdown, cfg.DT, ringdown_shift_ps * 1e-12)
 
 
 def parse_frequency_weights(text, frequencies_hz):
@@ -511,6 +547,9 @@ def main():
     parser.add_argument("--observed-frequency-scale", type=float, default=1.0)
     parser.add_argument("--observed-time-shift-ps", type=float, default=0.0)
     parser.add_argument("--observed-amplitude-scale", type=float, default=1.0)
+    parser.add_argument("--observed-ringdown-scale", type=float, default=0.0)
+    parser.add_argument("--observed-ringdown-delay-ps", type=float, default=180.0)
+    parser.add_argument("--observed-ringdown-frequency-scale", type=float, default=0.8)
     parser.add_argument("--observed-noise-rms-fraction", type=float, default=0.0)
     parser.add_argument("--noise-seed", type=int, default=13)
     parser.add_argument("--geometry-mode", choices=["hard", "subcell"], default="hard")
@@ -561,6 +600,9 @@ def main():
             frequency_scale=args.observed_frequency_scale,
             time_shift_ps=args.observed_time_shift_ps,
             amplitude_scale=args.observed_amplitude_scale,
+            ringdown_scale=args.observed_ringdown_scale,
+            ringdown_delay_ps=args.observed_ringdown_delay_ps,
+            ringdown_frequency_scale=args.observed_ringdown_frequency_scale,
         )
         observed_clean_by_frequency[frequency_hz] = engine._simulate_bscan(
             engine.true_model,
@@ -635,6 +677,9 @@ def main():
             "frequency_scale": float(args.observed_frequency_scale),
             "time_shift_ps": float(args.observed_time_shift_ps),
             "amplitude_scale": float(args.observed_amplitude_scale),
+            "ringdown_scale": float(args.observed_ringdown_scale),
+            "ringdown_delay_ps": float(args.observed_ringdown_delay_ps),
+            "ringdown_frequency_scale": float(args.observed_ringdown_frequency_scale),
             "noise": noise_stats,
         },
         "geometry_mode": args.geometry_mode,
