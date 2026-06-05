@@ -24,7 +24,7 @@ os.makedirs(os.environ["XDG_CACHE_HOME"], exist_ok=True)
 import matplotlib.pyplot as plt  # noqa: E402
 
 import config as cfg  # noqa: E402
-from core.geometry import build_rebar_model  # noqa: E402
+from core.materials import MaterialModel  # noqa: E402
 from core.run_outputs import allocate_output_dir, write_run_manifest  # noqa: E402
 from core.source import generate_time_array, ricker_wavelet  # noqa: E402
 from inversion.adjoint import _build_mute_window  # noqa: E402
@@ -146,19 +146,57 @@ def build_variable_geometry_model(
         z_values_mm,
         radii_mm,
         geometry_mode="hard",
-        subcell_samples=5):
-    """Build a multi-rebar model from per-rebar millimeter geometry."""
+        subcell_samples=5,
+        concrete_epsr=cfg.CONCRETE_EPSR,
+        concrete_sigma=cfg.CONCRETE_SIGMA,
+        rebar_epsr=cfg.REBAR_EPSR,
+        rebar_sigma=cfg.REBAR_SIGMA):
+    """Build a multi-rebar model from per-rebar geometry and material values."""
     if len(x_values_mm) != len(z_values_mm) or len(x_values_mm) != len(radii_mm):
         raise ValueError("x, z, and radius lists must have the same length")
-    rebars = [
-        (float(z_mm) / 1000.0, float(x_mm) / 1000.0, float(radius_mm) / 1000.0)
-        for x_mm, z_mm, radius_mm in zip(x_values_mm, z_values_mm, radii_mm)
-    ]
-    return build_rebar_model(
-        rebars=rebars,
-        geometry_mode=geometry_mode,
-        subcell_samples=subcell_samples,
+
+    model = MaterialModel(
+        cfg.NZ,
+        cfg.NX,
+        eps_r_bg=cfg.AIR_EPSR,
+        sigma_bg=cfg.AIR_SIGMA,
+        mu_r_bg=cfg.MU_R,
     )
+    iz_concrete_top = int(np.round(cfg.CONCRETE_TOP / cfg.DZ)) + cfg.NPML
+    model.set_region(
+        slice(iz_concrete_top, cfg.NZ),
+        slice(0, cfg.NX),
+        eps_r=float(concrete_epsr),
+        sigma=float(concrete_sigma),
+    )
+
+    for x_mm, z_mm, radius_mm in zip(x_values_mm, z_values_mm, radii_mm):
+        if geometry_mode == "hard":
+            model.add_circle(
+                z_center_m=float(z_mm) / 1000.0,
+                x_center_m=float(x_mm) / 1000.0,
+                radius_m=float(radius_mm) / 1000.0,
+                eps_r=float(rebar_epsr),
+                sigma=float(rebar_sigma),
+                dz=cfg.DZ,
+                dx=cfg.DX,
+                npml=cfg.NPML,
+            )
+        elif geometry_mode == "subcell":
+            model.add_circle_subcell(
+                z_center_m=float(z_mm) / 1000.0,
+                x_center_m=float(x_mm) / 1000.0,
+                radius_m=float(radius_mm) / 1000.0,
+                eps_r=float(rebar_epsr),
+                sigma=float(rebar_sigma),
+                dz=cfg.DZ,
+                dx=cfg.DX,
+                npml=cfg.NPML,
+                samples=subcell_samples,
+            )
+        else:
+            raise ValueError(f"Unsupported geometry_mode: {geometry_mode}")
+    return model
 
 
 def _candidate_case_result(candidate, case_label, objective_label=None):
@@ -221,6 +259,10 @@ def evaluate_local_geometry_grid(
         fit_ringdown_coefficient=False,
         source_ringdown_delay_ps=180.0,
         source_ringdown_frequency_scale=0.8,
+        concrete_epsr=cfg.CONCRETE_EPSR,
+        concrete_sigma=cfg.CONCRETE_SIGMA,
+        rebar_epsr=cfg.REBAR_EPSR,
+        rebar_sigma=cfg.REBAR_SIGMA,
         objective_variants=None,
         progress_every=25):
     variants = list(objective_variants or [])
@@ -265,6 +307,10 @@ def evaluate_local_geometry_grid(
                     radii,
                     geometry_mode=geometry_mode,
                     subcell_samples=subcell_samples,
+                    concrete_epsr=concrete_epsr,
+                    concrete_sigma=concrete_sigma,
+                    rebar_epsr=rebar_epsr,
+                    rebar_sigma=rebar_sigma,
                 )
                 synthetic_by_scale = {}
                 basis_by_scale = {}
@@ -407,6 +453,13 @@ def evaluate_local_geometry_grid(
                         "radii_mm": [float(value) for value in radii],
                     },
                     "case_results": case_results,
+                    "material": {
+                        "concrete_epsr": float(concrete_epsr),
+                        "concrete_sigma": float(concrete_sigma),
+                        "rebar_epsr": float(rebar_epsr),
+                        "rebar_sigma": float(rebar_sigma),
+                        "rebar_log10_sigma": float(np.log10(rebar_sigma)),
+                    },
                 }
                 if variants:
                     candidate["objective_results"] = objective_results

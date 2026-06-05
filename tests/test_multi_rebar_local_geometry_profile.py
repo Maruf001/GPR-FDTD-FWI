@@ -14,6 +14,7 @@ from run_multi_rebar_common_radius_profile import build_scan_positions  # noqa: 
 from run_multi_rebar_local_geometry_profile import (  # noqa: E402
     best_curve_by_radius,
     build_objective_results,
+    build_variable_geometry_model,
     candidate_rebar_arrays,
     candidate_rebar_arrays_from_base,
     parse_vector_mm,
@@ -80,6 +81,22 @@ def test_candidate_rebar_arrays_from_base_preserves_non_target_radii():
 def test_candidate_rebar_arrays_rejects_bad_target():
     with pytest.raises(ValueError, match="valid"):
         candidate_rebar_arrays([150.0], [90.0], 6.0, 1, 150.0, 90.0, 6.0)
+
+
+def test_build_variable_geometry_model_accepts_material_overrides():
+    model = build_variable_geometry_model(
+        [150.0],
+        [90.0],
+        [6.0],
+        concrete_epsr=5.8,
+        rebar_sigma=1.0e5,
+    )
+
+    concrete_iz = int(round(40.0e-3 / cfg.DZ)) + cfg.NPML
+    rebar_iz = int(round(90.0e-3 / cfg.DZ)) + cfg.NPML
+    rebar_ix = int(round(150.0e-3 / cfg.DX)) + cfg.NPML
+    assert model.epsilon_r[concrete_iz, cfg.NPML] == pytest.approx(5.8)
+    assert model.sigma[rebar_iz, rebar_ix] == pytest.approx(1.0e5)
 
 
 def test_build_scan_positions_accepts_tx_rx_offset_override():

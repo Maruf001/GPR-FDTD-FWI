@@ -4670,4 +4670,121 @@ The fitted nuisance source recovered fc=1.1, shift=-50 ps, and ringdown about
 0.25 in every step. This is a correct first coupled pass, but not yet a
 high-confidence radius claim. Next, repeat from a harder x/z/r perturbed seed
 before spending GPU time on dense coupled sweeps.
+Experiment 441 ran that harder coupled x/z/r-perturbed pass. The initial state
+was x=[149,251,349] mm, z=[91,89,91] mm, r=[6.2,5.8,6.2] mm, and the update
+order again corrected center, left, then right. The final state was exact truth
+x=[150,250,350] mm, z=[90,90,90] mm, r=[6,6,6] mm. The center correction was
+strong with margin 1.346e-03 even though both neighbors were initially wrong;
+left and right remained point-correct but weak, with margins 3.283e-04 and
+2.185e-04 and local 6.0-6.2 mm radius intervals. Experiment 442 aggregated
+runs 440-441: 6/6 coupled rows are true geometry, no row has x/z ambiguity,
+five rows are weak, one row is strong, and the maximum radius ambiguity width
+is 0.2 mm. The next coupled source-shape step should be one independent
+seed/order replication or a two-pass compact check; dense coupled Stage 4C
+sweeps should still wait.
+Experiment 443 ran the independent seed/order replication: initial
+x=[151,249,351] mm, z=[89,91,89] mm, r=[5.8,6.2,5.8] mm, updating right,
+center, then left. It also recovered the exact true final state. The right row
+was moderate with margin 8.522e-04, the center row was weak with margin
+4.022e-04, and the left row was strong with margin 1.399e-03. Experiment 444
+aggregated runs 440, 441, and 443: all 9 coupled rows are true geometry, there
+is no x ambiguity, and the maximum remaining z/r ambiguity is 1.0 mm and
+0.4 mm. The next GPU branch should be a two-pass compact check from the harder
+reversed-order seed before any dense coupled sweep.
+Experiment 445 ran that two-pass compact check from the reversed-order seed.
+Pass 0 reproduced experiment 443 exactly enough for the decision: right,
+center, and left all corrected to truth. Pass 1 started from the true state and
+kept all targets at truth, so the coupled coordinate update is point-stable.
+The second pass did not remove the weak radius evidence: target 2 margin was
+2.185e-04, target 1 margin was the branch minimum 1.006e-04, and target 0
+margin was 3.456e-04, all against nearby radius alternatives. Experiment 446
+aggregated all coupled source-shape coordinate rows from 440, 441, 443, and
+445. Across 15 rows, every row is true geometry, no row has x ambiguity, 10
+rows are weak, 2 are moderate, and 3 are strong. The branch should avoid dense
+coupled Stage 4C sweeps for now; if source-shape work continues, target the
+true-state r=6.0 versus r=6.2 ambiguity directly with a narrow refinement or
+objective diagnostic. Experiments 447-448 completed that narrow true-state
+diagnostic for the weakest center row. Base again selected x=250 mm, z=90 mm,
+r=6.0 mm over r=6.2 mm by 1.006e-04. Highband preserved the same true geometry
+and raised the absolute gap by only 1.139x to 1.146e-04. This is useful
+diagnostic support but does not collapse the 6.0-6.2 mm ambiguity interval, so
+the source-shape branch should remain interval-supported unless a new physics
+or objective lever changes the evidence. Experiment 53 tested the nearest
+material lever with a multi-rebar material-profiled radius runner. A CPU smoke
+validated the new reporting path, then run 450 profiled the center true-state
+radius over r=5.8/6.0/6.2 mm, concrete epsr=5.8/6.0/6.2, and steel
+conductivity 1e5/1e7 S/m under the same source-mismatch/ringdown/noise case.
+The best row still used concrete epsr=6.0 and r=6.0 mm; steel conductivity was
+saturated, with 1e5 and 1e7 nearly tied. The material-profiled margin against
+r=6.2 was 1.019e-04, essentially unchanged from experiment 447. Therefore free
+material parameters should not be added to this production branch, and the
+weak center-radius result should stay reported as a 6.0-6.2 mm interval.
+Experiment 54 opened the next staged geometry branch by combining variable
+depth and variable radius in one detector/assignment case:
+x=[150,250,350] mm, z=[80,100,120] mm, r=[5,6,8] mm under source mismatch and
+10% noise. Run 451's detector found all three truths within tolerance; ranks
+1-3 were the physical center, left, and right seeds, while ranks 4-5 were
+false shallow aliases. Run 452's assignment policy selected the physical
+three-seed set and rejected the duplicate center alias. Run 453 packaged a
+dry-run coordinate-FWI command with per-target truth radii and broad ambiguity
+guards. The full broad radius command was deliberately not launched. The next
+GPU step should be a bounded location-only x/z coordinate stage with radii
+fixed at [6,6,6] mm, followed by focused radius refinement only after the
+location stage is interpreted.
+Runs 454-457 completed that staged follow-up. Run 455's location-only
+coordinate step refined the assigned seeds to x/z errors of 1.41 mm, 0.00 mm,
+and 1.00 mm while radii were fixed at [6,6,6] mm, and base/highband objectives
+agreed on all three basins. Run 456 then recovered the right/deep radius
+r=8 mm and kept the center r=6 mm; run 457 repeated the radius pass from
+[6,6,8] and confirmed center/right stability. The left target still preferred
+r=6.0 mm, but the target-0 revisit margin collapsed to 8.431e-05 against
+r=5.75 mm, with highband giving a similarly tiny 6.994e-05 gap. Therefore the
+branch should report left radius as a weak 5.5-6.0 mm interval rather than a
+point-correct 5 mm recovery, and the broad all-parameter command should remain
+deferred until a bounded target-0 diagnostic or acquisition/objective lever
+changes that evidence.
+Run 458 tested the first bounded acquisition lever for that left-target
+ambiguity by profiling target 0 only with seven source positions and a
+4.5-6.25 mm radius grid while keeping the 455/457 x/z and center/right radii
+fixed. The main 7-source row still selected r=6.0 mm with a weak
+3.888e-04 gap, and the fine revisit moved the best point to r=5.875 mm with a
+weak 3.550e-04 gap against r=6.0 mm. Highband agreed with the 5.875 mm revisit
+best point, but the true r=5.0 mm candidate remained only rank 6 in the main
+objective. Extra source count alone therefore improves the interval but does
+not solve the shallow-left radius recovery. The next bounded diagnostic should
+test target-0 local x/z-radius coupling around the residual 1 mm location
+error before trying broader acquisition changes or launching the dry-run
+all-parameter command.
+Run 459 then tested that local x/z-radius coupling directly with five sources:
+target 0 was allowed to move over x=149-150 mm, z=80-81 mm, and
+r=5.0-6.25 mm while center/right stayed fixed at r=[6,8] mm. The main row and
+the fine revisit both recovered the true local point x=150 mm, z=80 mm,
+r=5.0 mm. The update-case margin was 5.104e-04 against nearby 5.125-5.25 mm
+radii, and highband agreed with a 4.453e-04 gap. The target-0 failure mode was
+therefore residual x/z-radius coupling, not a need for the broad 453
+all-parameter search. The staged final state is now x=[150,250,349] mm,
+z=[80,100,120] mm, r=[5,6,8] mm. The next cheapest closure step is a tiny
+target-2 x polish over x=349-350 mm with z/r fixed, after which the branch can
+be summarized with intervals.
+Run 460 completed that closure step. With x=[150,250,349] mm,
+z=[80,100,120] mm, and r=[5,6,8] mm as the initial state, target 2 was profiled
+only over x=349-350 mm with z/r fixed. Base and highband both selected
+x=350 mm, z=120 mm, r=8 mm; the update-case base gap against x=349 mm was
+2.672e-03, and the highband gap was 2.421e-03. The staged variable-depth /
+variable-radius path therefore reaches the exact truth tuple for this
+source-mismatch/noise seed. The result should be promoted as a staged
+procedure with interval reporting, not as evidence that the broad all-parameter
+command is necessary. Next build a CPU summary artifact for runs 451-460 and
+then replicate the staged policy on one new seed before making a branch-level
+claim.
+Run 461 packaged that CPU summary artifact with the existing coordinate
+confidence aggregate tool. Across the coordinate summaries 455-460 it records
+30 confidence rows: 8 missing, 8 weak, 3 moderate, and 11 strong, with a
+minimum radius margin of 8.431e-05 and maximum x/z/r ambiguity widths of
+2.0/1.0/0.75 mm. Because the aggregate includes intermediate staged rows, the
+11 truth-geometry rows are a diagnostic ledger rather than a final-success
+denominator. It confirms that the weak evidence is concentrated on target 0
+before the local x/z-radius coupling stage, while center/right focused rows are
+stable. The next GPU step should replicate the staged policy on one new noise
+seed, still avoiding the broad all-parameter command.
 ```
