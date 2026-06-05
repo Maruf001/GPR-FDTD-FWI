@@ -34,7 +34,10 @@ from inversion.objective_variants import (  # noqa: E402
     objective_variant_window,
     parse_objective_variants,
 )
-from inversion.source_profile import source_profiled_ls  # noqa: E402
+from inversion.source_profile import (  # noqa: E402
+    source_profiled_ls,
+    source_profiled_ls_over_basis_profiles,
+)
 from run_multi_rebar_common_radius_profile import (  # noqa: E402
     build_observed_cases,
     build_scan_positions,
@@ -44,6 +47,10 @@ from run_multi_rebar_common_radius_profile import (  # noqa: E402
 )
 from run_single_rebar_frequency_weight_matrix import parse_values_mm  # noqa: E402
 from run_single_rebar_inversion import _override_grid  # noqa: E402
+from run_single_rebar_source_profiled_polish import (  # noqa: E402
+    observed_wavelet,
+    ringdown_component_wavelet,
+)
 from run_single_rebar_source_profiled_replication import parse_replication_cases  # noqa: E402
 from run_single_rebar_wavelet_mismatch import parse_positive_values, parse_shift_values_ps  # noqa: E402
 from visualization.plot_style import save_validated_figure  # noqa: E402
@@ -211,6 +218,9 @@ def evaluate_local_geometry_grid(
         geometry_mode="hard",
         subcell_samples=5,
         fit_amplitude=True,
+        fit_ringdown_coefficient=False,
+        source_ringdown_delay_ps=180.0,
+        source_ringdown_frequency_scale=0.8,
         objective_variants=None,
         progress_every=25):
     variants = list(objective_variants or [])
@@ -257,37 +267,97 @@ def evaluate_local_geometry_grid(
                     subcell_samples=subcell_samples,
                 )
                 synthetic_by_scale = {}
+                basis_by_scale = {}
                 for scale in modeled_frequency_scales:
-                    wavelet = ricker_wavelet(time_values, frequency_hz * float(scale))
-                    synthetic_by_scale[float(scale)] = simulate_bscan(
-                        model,
-                        wavelet,
-                        scan_positions,
-                        backend,
-                    )
+                    if fit_ringdown_coefficient:
+                        primary_wavelet = observed_wavelet(
+                            time_values,
+                            frequency_hz,
+                            frequency_scale=float(scale),
+                            time_shift_ps=0.0,
+                            amplitude_scale=1.0,
+                            ringdown_scale=0.0,
+                            ringdown_delay_ps=float(source_ringdown_delay_ps),
+                            ringdown_frequency_scale=float(source_ringdown_frequency_scale),
+                        )
+                        ringdown_wavelet = ringdown_component_wavelet(
+                            time_values,
+                            frequency_hz,
+                            frequency_scale=float(scale),
+                            time_shift_ps=0.0,
+                            ringdown_delay_ps=float(source_ringdown_delay_ps),
+                            ringdown_frequency_scale=float(source_ringdown_frequency_scale),
+                        )
+                        primary = simulate_bscan(
+                            model,
+                            primary_wavelet,
+                            scan_positions,
+                            backend,
+                        )
+                        ringdown = simulate_bscan(
+                            model,
+                            ringdown_wavelet,
+                            scan_positions,
+                            backend,
+                        )
+                        basis_by_scale[float(scale)] = (primary, ringdown)
+                    else:
+                        wavelet = ricker_wavelet(time_values, frequency_hz * float(scale))
+                        synthetic_by_scale[float(scale)] = simulate_bscan(
+                            model,
+                            wavelet,
+                            scan_positions,
+                            backend,
+                        )
 
                 case_results = {}
                 objective_results = {}
                 if variants:
-                    synthetic_by_variant = {
-                        variant.label: {
-                            scale: apply_objective_variant(synthetic, variant, cfg.DT)
-                            for scale, synthetic in synthetic_by_scale.items()
+                    if fit_ringdown_coefficient:
+                        basis_by_variant = {
+                            variant.label: [
+                                {
+                                    "frequency_scale": float(scale),
+                                    "ringdown_delay_s": float(source_ringdown_delay_ps) * 1e-12,
+                                    "ringdown_frequency_scale": float(source_ringdown_frequency_scale),
+                                    "basis_traces": [
+                                        apply_objective_variant(primary, variant, cfg.DT),
+                                        apply_objective_variant(ringdown, variant, cfg.DT),
+                                    ],
+                                }
+                                for scale, (primary, ringdown) in basis_by_scale.items()
+                            ]
+                            for variant in variants
                         }
-                        for variant in variants
-                    }
+                    else:
+                        synthetic_by_variant = {
+                            variant.label: {
+                                scale: apply_objective_variant(synthetic, variant, cfg.DT)
+                                for scale, synthetic in synthetic_by_scale.items()
+                            }
+                            for variant in variants
+                        }
                     primary_label = variants[0].label
                     for label, observed_by_variant in observed_objective_by_case.items():
                         objective_results[label] = {}
                         for variant in variants:
-                            profile = source_profiled_ls(
-                                observed_by_variant[variant.label],
-                                synthetic_by_variant[variant.label],
-                                variant_mute_by_label[variant.label],
-                                cfg.DT,
-                                time_shift_values_s=time_shift_values_s,
-                                fit_amplitude=fit_amplitude,
-                            )
+                            if fit_ringdown_coefficient:
+                                profile = source_profiled_ls_over_basis_profiles(
+                                    observed_by_variant[variant.label],
+                                    basis_by_variant[variant.label],
+                                    variant_mute_by_label[variant.label],
+                                    cfg.DT,
+                                    time_shift_values_s=time_shift_values_s,
+                                )
+                            else:
+                                profile = source_profiled_ls(
+                                    observed_by_variant[variant.label],
+                                    synthetic_by_variant[variant.label],
+                                    variant_mute_by_label[variant.label],
+                                    cfg.DT,
+                                    time_shift_values_s=time_shift_values_s,
+                                    fit_amplitude=fit_amplitude,
+                                )
                             objective_results[label][variant.label] = {
                                 "misfit": float(profile.misfit),
                                 "source_profile": profile.as_dict(),
@@ -295,14 +365,32 @@ def evaluate_local_geometry_grid(
                         case_results[label] = objective_results[label][primary_label]
                 else:
                     for label, observed in observed_objective_by_case.items():
-                        profile = source_profiled_ls(
-                            observed,
-                            synthetic_by_scale,
-                            mute,
-                            cfg.DT,
-                            time_shift_values_s=time_shift_values_s,
-                            fit_amplitude=fit_amplitude,
-                        )
+                        if fit_ringdown_coefficient:
+                            basis_profiles = [
+                                {
+                                    "frequency_scale": float(scale),
+                                    "ringdown_delay_s": float(source_ringdown_delay_ps) * 1e-12,
+                                    "ringdown_frequency_scale": float(source_ringdown_frequency_scale),
+                                    "basis_traces": [primary, ringdown],
+                                }
+                                for scale, (primary, ringdown) in basis_by_scale.items()
+                            ]
+                            profile = source_profiled_ls_over_basis_profiles(
+                                observed,
+                                basis_profiles,
+                                mute,
+                                cfg.DT,
+                                time_shift_values_s=time_shift_values_s,
+                            )
+                        else:
+                            profile = source_profiled_ls(
+                                observed,
+                                synthetic_by_scale,
+                                mute,
+                                cfg.DT,
+                                time_shift_values_s=time_shift_values_s,
+                                fit_amplitude=fit_amplitude,
+                            )
                         case_results[label] = {
                             "misfit": float(profile.misfit),
                             "source_profile": profile.as_dict(),
@@ -362,6 +450,11 @@ def write_candidate_csv(path, candidates, case_labels):
         "source_frequency_scale",
         "source_time_shift_ps",
         "source_amplitude_scale",
+        "source_ringdown_scale",
+        "source_ringdown_delay_ps",
+        "source_ringdown_frequency_scale",
+        "source_primary_coefficient",
+        "source_ringdown_coefficient",
     ]
     with open(path, "w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -384,6 +477,11 @@ def write_candidate_csv(path, candidates, case_labels):
                     "source_frequency_scale": profile["frequency_scale"],
                     "source_time_shift_ps": profile["time_shift_ps"],
                     "source_amplitude_scale": profile["amplitude_scale"],
+                    "source_ringdown_scale": profile.get("ringdown_scale", 0.0),
+                    "source_ringdown_delay_ps": profile.get("ringdown_delay_ps", 0.0),
+                    "source_ringdown_frequency_scale": profile.get("ringdown_frequency_scale", 1.0),
+                    "source_primary_coefficient": profile.get("primary_coefficient", profile["amplitude_scale"]),
+                    "source_ringdown_coefficient": profile.get("ringdown_coefficient", 0.0),
                 })
 
 
@@ -399,6 +497,11 @@ def write_case_summary_csv(path, results):
         "best_source_frequency_scale",
         "best_source_time_shift_ps",
         "best_source_amplitude_scale",
+        "best_source_ringdown_scale",
+        "best_source_ringdown_delay_ps",
+        "best_source_ringdown_frequency_scale",
+        "best_source_primary_coefficient",
+        "best_source_ringdown_coefficient",
     ]
     with open(path, "w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -419,6 +522,11 @@ def write_case_summary_csv(path, results):
                 "best_source_frequency_scale": profile["frequency_scale"],
                 "best_source_time_shift_ps": profile["time_shift_ps"],
                 "best_source_amplitude_scale": profile["amplitude_scale"],
+                "best_source_ringdown_scale": profile.get("ringdown_scale", 0.0),
+                "best_source_ringdown_delay_ps": profile.get("ringdown_delay_ps", 0.0),
+                "best_source_ringdown_frequency_scale": profile.get("ringdown_frequency_scale", 1.0),
+                "best_source_primary_coefficient": profile.get("primary_coefficient", profile.get("amplitude_scale")),
+                "best_source_ringdown_coefficient": profile.get("ringdown_coefficient", 0.0),
             })
 
 
@@ -436,6 +544,11 @@ def write_objective_summary_csv(path, objective_results):
         "best_source_frequency_scale",
         "best_source_time_shift_ps",
         "best_source_amplitude_scale",
+        "best_source_ringdown_scale",
+        "best_source_ringdown_delay_ps",
+        "best_source_ringdown_frequency_scale",
+        "best_source_primary_coefficient",
+        "best_source_ringdown_coefficient",
     ]
     with open(path, "w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -459,6 +572,11 @@ def write_objective_summary_csv(path, objective_results):
                     "best_source_frequency_scale": profile["frequency_scale"],
                     "best_source_time_shift_ps": profile["time_shift_ps"],
                     "best_source_amplitude_scale": profile["amplitude_scale"],
+                    "best_source_ringdown_scale": profile.get("ringdown_scale", 0.0),
+                    "best_source_ringdown_delay_ps": profile.get("ringdown_delay_ps", 0.0),
+                    "best_source_ringdown_frequency_scale": profile.get("ringdown_frequency_scale", 1.0),
+                    "best_source_primary_coefficient": profile.get("primary_coefficient", profile.get("amplitude_scale")),
+                    "best_source_ringdown_coefficient": profile.get("ringdown_coefficient", 0.0),
                 })
 
 
@@ -477,6 +595,11 @@ def write_objective_candidate_csv(path, candidates, case_labels, objective_label
         "source_frequency_scale",
         "source_time_shift_ps",
         "source_amplitude_scale",
+        "source_ringdown_scale",
+        "source_ringdown_delay_ps",
+        "source_ringdown_frequency_scale",
+        "source_primary_coefficient",
+        "source_ringdown_coefficient",
     ]
     with open(path, "w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -501,6 +624,11 @@ def write_objective_candidate_csv(path, candidates, case_labels, objective_label
                         "source_frequency_scale": profile["frequency_scale"],
                         "source_time_shift_ps": profile["time_shift_ps"],
                         "source_amplitude_scale": profile["amplitude_scale"],
+                        "source_ringdown_scale": profile.get("ringdown_scale", 0.0),
+                        "source_ringdown_delay_ps": profile.get("ringdown_delay_ps", 0.0),
+                        "source_ringdown_frequency_scale": profile.get("ringdown_frequency_scale", 1.0),
+                        "source_primary_coefficient": profile.get("primary_coefficient", profile["amplitude_scale"]),
+                        "source_ringdown_coefficient": profile.get("ringdown_coefficient", 0.0),
                     })
 
 
@@ -575,6 +703,9 @@ def main():
     parser.add_argument("--replication-cases", type=parse_replication_cases, default=parse_replication_cases(DEFAULT_CASES))
     parser.add_argument("--source-frequency-scales", type=parse_positive_values, default=parse_positive_values("0.9,1.0,1.1"))
     parser.add_argument("--source-time-shift-ps-values", type=parse_shift_values_ps, default=parse_shift_values_ps("-80,-50,-25,0,25,50,80"))
+    parser.add_argument("--source-ringdown-delay-ps", type=float, default=180.0)
+    parser.add_argument("--source-ringdown-frequency-scale", type=float, default=0.8)
+    parser.add_argument("--fit-ringdown-coefficient", action="store_true")
     parser.add_argument("--objective-variants", type=parse_objective_variants, default=parse_objective_variants(DEFAULT_OBJECTIVE_VARIANTS))
     parser.set_defaults(fit_amplitude=True)
     parser.add_argument("--no-fit-amplitude", dest="fit_amplitude", action="store_false")
@@ -671,6 +802,9 @@ def main():
         geometry_mode=args.geometry_mode,
         subcell_samples=args.subcell_samples,
         fit_amplitude=args.fit_amplitude,
+        fit_ringdown_coefficient=args.fit_ringdown_coefficient,
+        source_ringdown_delay_ps=args.source_ringdown_delay_ps,
+        source_ringdown_frequency_scale=args.source_ringdown_frequency_scale,
         objective_variants=args.objective_variants,
         progress_every=args.progress_every,
     )
@@ -729,6 +863,9 @@ def main():
             "frequency_scales": args.source_frequency_scales,
             "time_shift_ps_values": args.source_time_shift_ps_values,
             "fit_amplitude": bool(args.fit_amplitude),
+            "fit_ringdown_coefficient": bool(args.fit_ringdown_coefficient),
+            "ringdown_delay_ps": float(args.source_ringdown_delay_ps),
+            "ringdown_frequency_scale": float(args.source_ringdown_frequency_scale),
         },
         "objective_variants": [variant.as_dict() for variant in args.objective_variants],
         "primary_objective_label": objective_labels[0],

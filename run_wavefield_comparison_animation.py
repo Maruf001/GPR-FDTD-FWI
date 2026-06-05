@@ -29,13 +29,14 @@ import matplotlib.patches as patches  # noqa: E402
 import config as cfg  # noqa: E402
 from core.source import generate_time_array  # noqa: E402
 from run_multi_rebar_common_radius_profile import make_simulator  # noqa: E402
-from run_multi_rebar_local_geometry_profile import (  # noqa: E402
-    build_variable_geometry_model,
-    parse_vector_mm,
-)
+from run_multi_rebar_local_geometry_profile import parse_vector_mm  # noqa: E402
 from run_single_rebar_inversion import _override_grid  # noqa: E402
 from run_single_rebar_source_profiled_polish import observed_wavelet  # noqa: E402
-from run_wavefield_animation import source_receiver_indices, validate_animation  # noqa: E402
+from run_wavefield_animation import (  # noqa: E402
+    build_animation_model,
+    source_receiver_indices,
+    validate_animation,
+)
 from visualization.plot_style import safe_symmetric_limits  # noqa: E402
 
 
@@ -53,14 +54,22 @@ def simulate_snapshots(
         source_x_mm,
         save_every,
         geometry_mode,
-        subcell_samples):
+        subcell_samples,
+        concrete_epsr=None,
+        concrete_sigma=None,
+        rebar_epsr=None,
+        rebar_sigma=None):
     """Run one model and return sparse Ez snapshots."""
-    model = build_variable_geometry_model(
+    model = build_animation_model(
         x_values_mm,
         z_values_mm,
         radius_values_mm,
         geometry_mode=geometry_mode,
         subcell_samples=subcell_samples,
+        concrete_epsr=concrete_epsr,
+        concrete_sigma=concrete_sigma,
+        rebar_epsr=rebar_epsr,
+        rebar_sigma=rebar_sigma,
     )
     src_iz, src_ix, rec_iz, rec_ix = source_receiver_indices(source_x_mm)
     simulator = make_simulator(model, backend)
@@ -97,6 +106,16 @@ def source_parameters_from_args(args, prefix):
         "frequency_scale": float(args.frequency_scale if frequency_scale is None else frequency_scale),
         "time_shift_ps": float(args.time_shift_ps if time_shift_ps is None else time_shift_ps),
         "amplitude_scale": float(args.amplitude_scale if amplitude_scale is None else amplitude_scale),
+    }
+
+
+def material_parameters_from_args(args, prefix):
+    """Return optional material overrides for one comparison panel."""
+    return {
+        "concrete_epsr": getattr(args, f"{prefix}_concrete_epsr"),
+        "concrete_sigma": getattr(args, f"{prefix}_concrete_sigma"),
+        "rebar_epsr": getattr(args, f"{prefix}_rebar_epsr"),
+        "rebar_sigma": getattr(args, f"{prefix}_rebar_sigma"),
     }
 
 
@@ -223,9 +242,17 @@ def main():
     parser.add_argument("--truth-frequency-scale", type=float, default=None)
     parser.add_argument("--truth-time-shift-ps", type=float, default=None)
     parser.add_argument("--truth-amplitude-scale", type=float, default=None)
+    parser.add_argument("--truth-concrete-epsr", type=float, default=None)
+    parser.add_argument("--truth-concrete-sigma", type=float, default=None)
+    parser.add_argument("--truth-rebar-epsr", type=float, default=None)
+    parser.add_argument("--truth-rebar-sigma", type=float, default=None)
     parser.add_argument("--candidate-frequency-scale", type=float, default=None)
     parser.add_argument("--candidate-time-shift-ps", type=float, default=None)
     parser.add_argument("--candidate-amplitude-scale", type=float, default=None)
+    parser.add_argument("--candidate-concrete-epsr", type=float, default=None)
+    parser.add_argument("--candidate-concrete-sigma", type=float, default=None)
+    parser.add_argument("--candidate-rebar-epsr", type=float, default=None)
+    parser.add_argument("--candidate-rebar-sigma", type=float, default=None)
     parser.add_argument("--source-x-mm", type=float, required=True)
     parser.add_argument("--save-every", type=int, default=80)
     parser.add_argument("--fps", type=int, default=12)
@@ -261,6 +288,8 @@ def main():
     time_values = generate_time_array(cfg.NT, cfg.DT)
     truth_source = source_parameters_from_args(args, "truth")
     candidate_source = source_parameters_from_args(args, "candidate")
+    truth_material = material_parameters_from_args(args, "truth")
+    candidate_material = material_parameters_from_args(args, "candidate")
     truth_wavelet = observed_wavelet(
         time_values,
         args.frequency_ghz * 1e9,
@@ -287,6 +316,7 @@ def main():
         args.save_every,
         args.geometry_mode,
         args.subcell_samples,
+        **truth_material,
     )
     candidate_snapshots = simulate_snapshots(
         args.backend,
@@ -298,6 +328,7 @@ def main():
         args.save_every,
         args.geometry_mode,
         args.subcell_samples,
+        **candidate_material,
     )
     elapsed_s = time.time() - started
 
@@ -345,6 +376,8 @@ def main():
         "amplitude_scale": float(args.amplitude_scale),
         "truth_source": truth_source,
         "candidate_source": candidate_source,
+        "truth_material": truth_material,
+        "candidate_material": candidate_material,
         "source_x_mm": float(args.source_x_mm),
         "receiver_x_mm": float(args.source_x_mm + cfg.TX_RX_OFFSET * 1000.0),
         "source_z_mm": float(cfg.TX_Z * 1000.0),

@@ -181,6 +181,9 @@ def build_observed_cases(
             frequency_scale=case["frequency_scale"],
             time_shift_ps=case["time_shift_ps"],
             amplitude_scale=case["amplitude_scale"],
+            ringdown_scale=case.get("ringdown_scale", 0.0),
+            ringdown_delay_ps=case.get("ringdown_delay_ps", 180.0),
+            ringdown_frequency_scale=case.get("ringdown_frequency_scale", 0.8),
         )
         clean = simulate_bscan(true_model, wavelet, scan_positions, backend)
         observed, noise_stats = _add_noise(clean, case["noise_fraction"], case["noise_seed"])

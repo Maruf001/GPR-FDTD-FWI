@@ -4,6 +4,7 @@ import os
 import sys
 
 import argparse
+import csv
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -18,6 +19,8 @@ from run_multi_rebar_local_geometry_profile import (  # noqa: E402
     parse_vector_mm,
     rank_case,
     truth_radius_values_for_run,
+    write_case_summary_csv,
+    write_candidate_csv,
 )
 
 
@@ -213,3 +216,80 @@ def test_build_objective_results_computes_margin_per_variant():
     assert results["case"]["base"]["margin"]["next_radius_mm"] == 6.2
     assert results["case"]["late"]["margin"]["best_radius_mm"] == 6.2
     assert results["case"]["late"]["top_candidates"][0]["misfit"] == 1.0
+
+
+def test_write_candidate_csv_includes_source_shape_coefficients(tmp_path):
+    candidates = [
+        {
+            "params": {
+                "target_index": 0,
+                "x_mm": 150.0,
+                "z_mm": 90.0,
+                "radius_mm": 6.0,
+                "x_values_mm": [150.0, 250.0, 350.0],
+                "z_values_mm": [90.0, 90.0, 90.0],
+                "radii_mm": [6.0, 6.0, 6.0],
+            },
+            "case_results": {
+                "ringdown": {
+                    "misfit": 0.1,
+                    "source_profile": {
+                        "frequency_scale": 1.0,
+                        "time_shift_ps": 0.0,
+                        "amplitude_scale": 1.0,
+                        "ringdown_scale": 0.25,
+                        "ringdown_delay_ps": 180.0,
+                        "ringdown_frequency_scale": 0.8,
+                        "primary_coefficient": 1.0,
+                        "ringdown_coefficient": 0.25,
+                    },
+                }
+            },
+        }
+    ]
+    path = tmp_path / "candidates.csv"
+
+    write_candidate_csv(path, candidates, ["ringdown"])
+
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        row = next(csv.DictReader(handle))
+    assert row["source_ringdown_scale"] == "0.25"
+    assert row["source_primary_coefficient"] == "1.0"
+    assert row["source_ringdown_coefficient"] == "0.25"
+
+
+def test_write_case_summary_csv_includes_source_shape_coefficients(tmp_path):
+    results = {
+        "ringdown": {
+            "top_candidates": [
+                {
+                    "params": {"x_mm": 150.0, "z_mm": 90.0},
+                    "source_profile": {
+                        "frequency_scale": 1.0,
+                        "time_shift_ps": 0.0,
+                        "amplitude_scale": 1.0,
+                        "ringdown_scale": 0.25,
+                        "ringdown_delay_ps": 180.0,
+                        "ringdown_frequency_scale": 0.8,
+                        "primary_coefficient": 1.0,
+                        "ringdown_coefficient": 0.25,
+                    },
+                }
+            ],
+            "margin": {
+                "best_radius_mm": 6.0,
+                "next_radius_mm": 6.2,
+                "radius_margin_abs": 0.1,
+                "best_radius_misfit": 0.2,
+            },
+        }
+    }
+    path = tmp_path / "summary.csv"
+
+    write_case_summary_csv(path, results)
+
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        row = next(csv.DictReader(handle))
+    assert row["best_source_ringdown_scale"] == "0.25"
+    assert row["best_source_primary_coefficient"] == "1.0"
+    assert row["best_source_ringdown_coefficient"] == "0.25"

@@ -15,6 +15,7 @@ from run_wavefield_animation import (  # noqa: E402
 )
 from run_wavefield_comparison_animation import (  # noqa: E402
     comparison_frame_count,
+    material_parameters_from_args,
     source_parameters_from_args,
     validate_same_length,
 )
@@ -105,6 +106,24 @@ def test_source_parameters_from_args_prefers_prefixed_values():
         "frequency_scale": 0.9,
         "time_shift_ps": 25.0,
         "amplitude_scale": 1.2,
+    }
+
+
+def test_material_parameters_from_args_returns_prefixed_overrides():
+    args = SimpleNamespace(
+        truth_concrete_epsr=6.1,
+        truth_concrete_sigma=0.02,
+        truth_rebar_epsr=1.0,
+        truth_rebar_sigma=1e7,
+    )
+
+    params = material_parameters_from_args(args, "truth")
+
+    assert params == {
+        "concrete_epsr": 6.1,
+        "concrete_sigma": 0.02,
+        "rebar_epsr": 1.0,
+        "rebar_sigma": 1e7,
     }
 
 

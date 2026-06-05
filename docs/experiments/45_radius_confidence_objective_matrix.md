@@ -5851,3 +5851,10812 @@ keeps weak radius margins after revisit, and the source-mismatch row selects
 the wrong lateral point x=301 mm. The practical close50 offset bracket is now
 25 mm fail, 30 mm replicated but borderline, and 40 mm robust.
 ```
+
+## 286: Close-50 Sources=4, Tx/Rx Offset 35 mm, Seed34 Robustness Probe
+
+Purpose:
+
+```text
+test whether 35 mm Tx/Rx gives 40 mm-like robustness while reducing the
+offset below the current robust default.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,300 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,300
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/286_coordinate_optimizer_close50_seed34_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1310.2 s
+sources: 4
+tx_rx_offset_mm: 35.0
+scan x positions: [50,178,314,450] mm
+final state: x=[190,250,300], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=300,z=90,r=8, strong, x interval 300-300
+  source_mismatch_noise10_seed34: best x=300,z=90,r=8, strong,
+    x interval 300-300
+
+base objective, noise10_seed34:
+  x299-minus-x300 gap: +2.95010e-03 (4.7127% relative to x300)
+  x301-minus-x300 gap: +3.16728e-03 (5.0597% relative to x300)
+
+high-band objective, noise10_seed34:
+  x299-minus-x300 gap: +2.79594e-03 (25.8368% relative to x300)
+  x301-minus-x300 gap: +3.51051e-03 (32.4400% relative to x300)
+
+base objective, source_mismatch_noise10_seed34:
+  x299-minus-x300 gap: +4.03588e-03 (6.2386% relative to x300)
+  x301-minus-x300 gap: +3.81040e-03 (5.8900% relative to x300)
+
+high-band objective, source_mismatch_noise10_seed34:
+  x299-minus-x300 gap: +4.14400e-03 (36.9574% relative to x300)
+  x301-minus-x300 gap: +4.07639e-03 (36.3545% relative to x300)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 82.40
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+35 mm Tx/Rx passes the seed34 robustness probe. The weakest base lateral gap
+is 4.71%, comparable to the 40 mm seed34 run and much stronger than the 30 mm
+borderline seed34 run. Replicate 35 mm on seeds 13 and 21 before promoting it
+as the robust default.
+```
+
+## 287: Close-50 Sources=4, Tx/Rx Offset 35 mm, Seed13 Replication
+
+Purpose:
+
+```text
+replicate the positive seed34 35 mm Tx/Rx robustness probe on seed13.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,300 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,300
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/287_coordinate_optimizer_close50_seed13_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1275.5 s
+sources: 4
+tx_rx_offset_mm: 35.0
+scan x positions: [50,178,314,450] mm
+final state: x=[190,250,300], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=300,z=90,r=8, strong, x interval 300-300
+  source_mismatch_noise10_seed13: best x=300,z=90,r=8, strong,
+    x interval 300-300
+
+base objective, noise10_seed13:
+  x301-minus-x300 gap: +2.94248e-03 (4.6435% relative to x300)
+  x299-minus-x300 gap: +3.14914e-03 (4.9696% relative to x300)
+
+high-band objective, noise10_seed13:
+  x301-minus-x300 gap: +3.16570e-03 (28.4665% relative to x300)
+  x299-minus-x300 gap: +3.13235e-03 (28.1666% relative to x300)
+
+base objective, source_mismatch_noise10_seed13:
+  x301-minus-x300 gap: +4.08443e-03 (6.2679% relative to x300)
+  x299-minus-x300 gap: +3.72104e-03 (5.7102% relative to x300)
+
+high-band objective, source_mismatch_noise10_seed13:
+  x301-minus-x300 gap: +4.29028e-03 (35.4578% relative to x300)
+  x299-minus-x300 gap: +3.89328e-03 (32.1767% relative to x300)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 82.76
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+seed13 confirms the 35 mm Tx/Rx robustness probe. The weakest base lateral
+gap is 4.64%, much stronger than the 30 mm replicated minimum and comparable
+to 40 mm. Run seed21 to complete the 35 mm robustness set.
+```
+
+## 288: Close-50 Sources=4, Tx/Rx Offset 35 mm, Seed21 Replication
+
+Purpose:
+
+```text
+complete the seed34/13/21 replication set for the 4-source 35 mm Tx/Rx
+close50 target-2 robustness probe.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,300 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,300
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/288_coordinate_optimizer_close50_seed21_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1266.8 s
+sources: 4
+tx_rx_offset_mm: 35.0
+scan x positions: [50,178,314,450] mm
+final state: x=[190,250,300], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=300,z=90,r=8, strong, x interval 300-300
+  source_mismatch_noise10_seed21: best x=300,z=90,r=8, strong,
+    x interval 300-300
+
+base objective, noise10_seed21:
+  x299-minus-x300 gap: +2.88779e-03 (4.6368% relative to x300)
+  x301-minus-x300 gap: +3.18264e-03 (5.1103% relative to x300)
+
+high-band objective, noise10_seed21:
+  x299-minus-x300 gap: +2.97962e-03 (28.5291% relative to x300)
+  x301-minus-x300 gap: +3.27934e-03 (31.3989% relative to x300)
+
+base objective, source_mismatch_noise10_seed21:
+  x299-minus-x300 gap: +3.85294e-03 (5.8377% relative to x300)
+  x301-minus-x300 gap: +3.97268e-03 (6.0192% relative to x300)
+
+high-band objective, source_mismatch_noise10_seed21:
+  x299-minus-x300 gap: +4.01066e-03 (32.1162% relative to x300)
+  x301-minus-x300 gap: +4.21111e-03 (33.7213% relative to x300)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 82.21
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+seed21 completes the 35 mm Tx/Rx robustness set as another truth-geometry
+pass with collapsed x interval. The weakest seed21 base lateral gap is 4.64%,
+which is stronger than every 30 mm base gap and above the weakest 40 mm base
+gap.
+```
+
+## 289: Close-50 Sources=4, Tx/Rx Offset 35 mm, Seed Aggregate
+
+Purpose:
+
+```text
+summarize the replicated 4-source 35 mm Tx/Rx close50 diagnostics across
+seeds 34, 13, and 21.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close50_sources4_txrx35_seed_replicates
+  --outdir outputs/experiments/289_coordinate_confidence_close50_sources4_txrx35_seed_replicates
+  outputs/experiments/286_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/287_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/288_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/289_coordinate_confidence_close50_sources4_txrx35_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  4.27278e-03 / 5.18816e-03 / 6.02166e-03
+acquisition group:
+  4 sources, Tx/Rx offset 35 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest lateral relative gaps:
+  base: 4.6368% (seed21 nominal)
+  highband: 25.8368% (seed34 nominal)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 75.02
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.53
+FIGURE_NOTES.md includes source-count and acquisition summaries.
+```
+
+Interpretation:
+
+```text
+35 mm Tx/Rx is replicated across seeds 13, 21, and 34 as a robust
+truth-geometry setting. It keeps the zero-ambiguity behavior of 40 mm while
+using 5 mm less offset. Its aggregate radius margin mean is lower than 40 mm
+but far above 30 mm, and its weakest base lateral percentage gap exceeds the
+40 mm replicated set. Promote 35 mm as the robust close50 default; keep 30 mm
+as the minimum replicated margin-aware setting and 25 mm as the failed lower
+bound.
+```
+
+## 290: Close-45 Sources=4, Tx/Rx Offset 35 mm, Seed34 Geometry Stress
+
+Purpose:
+
+```text
+test whether the new robust 35 mm Tx/Rx default still resolves target 2 when
+the center/right separation tightens from 50 mm to 45 mm.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,295 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,295
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/290_coordinate_optimizer_close45_seed34_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1272.8 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,295] mm
+scan x positions: [50,178,314,450] mm
+final state: x=[190,250,295], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=295,z=90,r=8, strong, x interval 295-295
+  source_mismatch_noise10_seed34: best x=295,z=90,r=8, strong,
+    x interval 295-295
+
+base objective, noise10_seed34:
+  x294-minus-x295 gap: +3.22385e-03 (4.6352% relative to x295)
+  x296-minus-x295 gap: +5.14044e-03 (7.3909% relative to x295)
+
+high-band objective, noise10_seed34:
+  x294-minus-x295 gap: +2.91270e-03 (24.2249% relative to x295)
+  x296-minus-x295 gap: +5.76624e-03 (47.9577% relative to x295)
+
+base objective, source_mismatch_noise10_seed34:
+  x294-minus-x295 gap: +4.03884e-03 (5.5379% relative to x295)
+  x296-minus-x295 gap: +6.52531e-03 (8.9473% relative to x295)
+
+high-band objective, source_mismatch_noise10_seed34:
+  x294-minus-x295 gap: +3.77718e-03 (29.8296% relative to x295)
+  x296-minus-x295 gap: +7.20266e-03 (56.8816% relative to x295)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 81.93
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close45 seed34 passes strongly under the 35 mm robust default. The weakest
+base lateral gap is 4.64%, effectively matching the close50 35 mm replicated
+floor. Replicate close45 on seeds 13 and 21 before declaring the geometry
+limit shifted from 50 mm to 45 mm.
+```
+
+## 291: Close-45 Sources=4, Tx/Rx Offset 35 mm, Seed13 Replication
+
+Purpose:
+
+```text
+replicate the positive close45 seed34 geometry-stress result on seed13.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,295 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,295
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/291_coordinate_optimizer_close45_seed13_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1272.5 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,295] mm
+final state: x=[190,250,295], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=295,z=90,r=8, strong, x interval 295-295
+  source_mismatch_noise10_seed13: best x=295,z=90,r=8, strong,
+    x interval 295-295
+
+base objective, noise10_seed13:
+  x294-minus-x295 gap: +3.12724e-03 (4.4358% relative to x295)
+  x296-minus-x295 gap: +5.19040e-03 (7.3622% relative to x295)
+
+high-band objective, noise10_seed13:
+  x294-minus-x295 gap: +2.96008e-03 (23.7980% relative to x295)
+  x296-minus-x295 gap: +5.69713e-03 (45.8030% relative to x295)
+
+base objective, source_mismatch_noise10_seed13:
+  x294-minus-x295 gap: +4.02206e-03 (5.4922% relative to x295)
+  x296-minus-x295 gap: +6.63186e-03 (9.0560% relative to x295)
+
+high-band objective, source_mismatch_noise10_seed13:
+  x294-minus-x295 gap: +3.80706e-03 (28.2116% relative to x295)
+  x296-minus-x295 gap: +7.27469e-03 (53.9078% relative to x295)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 82.06
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close45 seed13 confirms the seed34 result under the 35 mm robust default. The
+weakest base lateral gap is 4.44%, still well above the 1.5% ambiguity
+threshold. Run seed21 to complete close45 replication.
+```
+
+## 292: Close-45 Sources=4, Tx/Rx Offset 35 mm, Seed21 Replication
+
+Purpose:
+
+```text
+complete the seed34/13/21 replication set for close45 target-2 geometry under
+the 35 mm robust acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,295 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,295
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/292_coordinate_optimizer_close45_seed21_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1287.4 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,295] mm
+final state: x=[190,250,295], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=295,z=90,r=8, strong, x interval 295-295
+  source_mismatch_noise10_seed21: best x=295,z=90,r=8, strong,
+    x interval 295-295
+
+base objective, noise10_seed21:
+  x294-minus-x295 gap: +2.87542e-03 (4.1528% relative to x295)
+  x296-minus-x295 gap: +5.43804e-03 (7.8538% relative to x295)
+
+high-band objective, noise10_seed21:
+  x294-minus-x295 gap: +2.72571e-03 (23.2602% relative to x295)
+  x296-minus-x295 gap: +5.90064e-03 (50.3540% relative to x295)
+
+base objective, source_mismatch_noise10_seed21:
+  x294-minus-x295 gap: +3.85376e-03 (5.1813% relative to x295)
+  x296-minus-x295 gap: +6.74725e-03 (9.0714% relative to x295)
+
+high-band objective, source_mismatch_noise10_seed21:
+  x294-minus-x295 gap: +3.80887e-03 (27.1254% relative to x295)
+  x296-minus-x295 gap: +7.25460e-03 (51.6646% relative to x295)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 82.23
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close45 seed21 completes the replication set as another strong truth-geometry
+pass. The weakest base lateral gap is 4.15%, still comfortably above the
+1.5% ambiguity threshold.
+```
+
+## 293: Close-45 Sources=4, Tx/Rx Offset 35 mm, Seed Aggregate
+
+Purpose:
+
+```text
+summarize the replicated close45 4-source 35 mm Tx/Rx diagnostics across
+seeds 34, 13, and 21.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close45_sources4_txrx35_seed_replicates
+  --outdir outputs/experiments/293_coordinate_confidence_close45_sources4_txrx35_seed_replicates
+  outputs/experiments/290_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/291_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/292_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/293_coordinate_confidence_close45_sources4_txrx35_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  5.34539e-03 / 6.56100e-03 / 7.94417e-03
+acquisition group:
+  4 sources, Tx/Rx offset 35 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest lateral relative gaps:
+  base: 4.1528% (seed21 nominal)
+  highband: 23.2602% (seed21 nominal)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 74.09
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.53
+FIGURE_NOTES.md includes source-count and acquisition summaries.
+```
+
+Interpretation:
+
+```text
+close45 is replicated across seeds 13, 21, and 34 under the 4-source 35 mm
+Tx/Rx robust acquisition. The replicated close45 set has zero x ambiguity and
+stronger aggregate radius margins than the close50 35 mm set, while the
+weakest base lateral gap remains well above the ambiguity threshold. Move the
+geometry-stress branch to close40 before claiming a tighter geometry limit.
+```
+
+## 294: Close-40 Sources=4, Tx/Rx Offset 35 mm, Seed34 Geometry Stress
+
+Purpose:
+
+```text
+test whether the 4-source 35 mm robust acquisition still resolves target 2
+when the center/right separation tightens from 45 mm to 40 mm.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,290 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,290
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/294_coordinate_optimizer_close40_seed34_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1409.0 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,290] mm
+final state: x=[190,250,290], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=290,z=90,r=8, strong, x interval 290-290
+  source_mismatch_noise10_seed34: best x=290,z=90,r=8, strong,
+    x interval 290-290
+
+base objective, noise10_seed34:
+  x289-minus-x290 gap: +4.96251e-03 (6.6059% relative to x290)
+  x291-minus-x290 gap: +6.76536e-03 (9.0058% relative to x290)
+
+high-band objective, noise10_seed34:
+  x289-minus-x290 gap: +4.74275e-03 (36.5545% relative to x290)
+  x291-minus-x290 gap: +7.40839e-03 (57.0998% relative to x290)
+
+base objective, source_mismatch_noise10_seed34:
+  x289-minus-x290 gap: +6.57982e-03 (8.0021% relative to x290)
+  x291-minus-x290 gap: +9.12203e-03 (11.0938% relative to x290)
+
+high-band objective, source_mismatch_noise10_seed34:
+  x289-minus-x290 gap: +6.30773e-03 (43.0940% relative to x290)
+  x291-minus-x290 gap: +9.90929e-03 (67.6997% relative to x290)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 81.35
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close40 seed34 passes strongly under the 4-source 35 mm acquisition. The
+weakest base lateral gap is 6.61%, stronger than close45 and close50, and the
+ambiguity interval collapses to x=290 mm. Replicate seeds 13 and 21 before
+moving the geometry-stress branch tighter.
+```
+
+## 295: Close-40 Sources=4, Tx/Rx Offset 35 mm, Seed13 Replication
+
+Purpose:
+
+```text
+replicate the positive close40 seed34 geometry-stress result on seed13.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,290 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,290
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/295_coordinate_optimizer_close40_seed13_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1396.4 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,290] mm
+final state: x=[190,250,290], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=290,z=90,r=8, strong, x interval 290-290
+  source_mismatch_noise10_seed13: best x=290,z=90,r=8, strong,
+    x interval 290-290
+
+base objective, noise10_seed13:
+  x289-minus-x290 gap: +4.79918e-03 (6.3074% relative to x290)
+  x291-minus-x290 gap: +6.95227e-03 (9.1371% relative to x290)
+
+high-band objective, noise10_seed13:
+  x289-minus-x290 gap: +4.71134e-03 (35.0766% relative to x290)
+  x291-minus-x290 gap: +7.49038e-03 (55.7669% relative to x290)
+
+base objective, source_mismatch_noise10_seed13:
+  x289-minus-x290 gap: +7.23560e-03 (8.7646% relative to x290)
+  x291-minus-x290 gap: +8.52185e-03 (10.3227% relative to x290)
+
+high-band objective, source_mismatch_noise10_seed13:
+  x289-minus-x290 gap: +6.97342e-03 (45.3200% relative to x290)
+  x291-minus-x290 gap: +9.31995e-03 (60.5699% relative to x290)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 81.32
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close40 seed13 confirms the seed34 result. The weakest base lateral gap is
+6.31%, with strong confidence and x interval 290-290 mm. Run seed21 to
+complete close40 replication.
+```
+
+## 296: Close-40 Sources=4, Tx/Rx Offset 35 mm, Seed21 Replication
+
+Purpose:
+
+```text
+complete the close40 seed replication under the 4-source 35 mm robust
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,290 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,290
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/296_coordinate_optimizer_close40_seed21_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1411.5 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,290] mm
+final state: x=[190,250,290], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=290,z=90,r=8, strong, x interval 290-290
+  source_mismatch_noise10_seed21: best x=290,z=90,r=8, strong,
+    x interval 290-290
+
+base objective, noise10_seed21:
+  x289-minus-x290 gap: +4.71837e-03 (6.3125% relative to x290)
+  x291-minus-x290 gap: +7.07980e-03 (9.4718% relative to x290)
+
+high-band objective, noise10_seed21:
+  x289-minus-x290 gap: +4.58447e-03 (36.0600% relative to x290)
+  x291-minus-x290 gap: +7.64893e-03 (60.1640% relative to x290)
+
+base objective, source_mismatch_noise10_seed21:
+  x289-minus-x290 gap: +6.72788e-03 (8.0265% relative to x290)
+  x291-minus-x290 gap: +9.04535e-03 (10.7913% relative to x290)
+
+high-band objective, source_mismatch_noise10_seed21:
+  x289-minus-x290 gap: +6.72221e-03 (41.8766% relative to x290)
+  x291-minus-x290 gap: +9.58594e-03 (59.7164% relative to x290)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 82.04
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close40 seed21 completes the close40 replication as another strong
+truth-geometry pass. The weakest base lateral gap is 6.31% nominal and 8.03%
+under source mismatch, with zero x ambiguity. Aggregate the close40 seed set
+before moving tighter.
+```
+
+## 297: Close-40 Sources=4, Tx/Rx Offset 35 mm, Seed Aggregate
+
+Purpose:
+
+```text
+summarize the replicated close40 4-source 35 mm Tx/Rx diagnostics across
+seeds 34, 13, and 21.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close40_sources4_txrx35_seed_replicates
+  --outdir outputs/experiments/297_coordinate_confidence_close40_sources4_txrx35_seed_replicates
+  outputs/experiments/294_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/295_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/296_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/297_coordinate_confidence_close40_sources4_txrx35_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  5.87764e-03 / 7.41450e-03 / 9.22123e-03
+acquisition group:
+  4 sources, Tx/Rx offset 35 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest lateral relative gaps:
+  base nominal: 6.3074% (seed13)
+  base source mismatch: 8.0021% (seed34)
+  highband nominal: 35.0766% (seed13)
+  highband source mismatch: 41.8766% (seed21)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 73.52
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.54
+FIGURE_NOTES.md includes source-count and acquisition summaries.
+```
+
+Interpretation:
+
+```text
+close40 is replicated across seeds 13, 21, and 34 under the 4-source 35 mm
+Tx/Rx robust acquisition. All six rows recover truth geometry with strong
+confidence, zero x ambiguity, and larger aggregate radius margins than the
+close45 and close50 35 mm sets. Move the geometry-stress branch to close35
+with the same acquisition before claiming the tight-separation limit.
+```
+
+## 298: Close-35 Sources=4, Tx/Rx Offset 35 mm, Seed34 Geometry Stress
+
+Purpose:
+
+```text
+test whether the replicated 4-source 35 mm robust acquisition still resolves
+target 2 when the center/right separation tightens from 40 mm to 35 mm.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,285 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,285
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/298_coordinate_optimizer_close35_seed34_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1404.9 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,285] mm
+final state: x=[190,250,285], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=285,z=90,r=8, strong, x interval 285-285
+  source_mismatch_noise10_seed34: best x=285,z=90,r=8, strong,
+    x interval 285-285
+
+base objective, noise10_seed34:
+  x284-minus-x285 gap: +7.11576e-03 (9.4885% relative to x285)
+  x286-minus-x285 gap: +5.45803e-03 (7.2780% relative to x285)
+
+high-band objective, noise10_seed34:
+  x284-minus-x285 gap: +7.15466e-03 (55.7079% relative to x285)
+  x286-minus-x285 gap: +5.68654e-03 (44.2767% relative to x285)
+
+base objective, source_mismatch_noise10_seed34:
+  x284-minus-x285 gap: +1.16354e-02 (13.2461% relative to x285)
+  x286-minus-x285 gap: +7.69844e-03 (8.7641% relative to x285)
+
+high-band objective, source_mismatch_noise10_seed34:
+  x284-minus-x285 gap: +1.14626e-02 (71.3695% relative to x285)
+  x286-minus-x285 gap: +8.22707e-03 (51.2242% relative to x285)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 81.08
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close35 seed34 passes strongly under the same 4-source 35 mm acquisition. The
+nearest lateral branch is the right-shifted x=286 mm candidate, but it remains
+7.28% worse than truth under the base objective and 44.28% worse under
+highband. Replicate close35 on seeds 13 and 21 before setting a tighter
+geometry limit.
+```
+
+## 299: Close-35 Sources=4, Tx/Rx Offset 35 mm, Seed13 Replication
+
+Purpose:
+
+```text
+replicate the positive close35 seed34 geometry-stress result on seed13.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,285 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,285
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/299_coordinate_optimizer_close35_seed13_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1406.3 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,285] mm
+final state: x=[190,250,285], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=285,z=90,r=8, strong, x interval 285-285
+  source_mismatch_noise10_seed13: best x=285,z=90,r=8, strong,
+    x interval 285-285
+
+base objective, noise10_seed13:
+  x284-minus-x285 gap: +6.79769e-03 (8.9622% relative to x285)
+  x286-minus-x285 gap: +5.72695e-03 (7.5505% relative to x285)
+
+high-band objective, noise10_seed13:
+  x284-minus-x285 gap: +6.86944e-03 (51.9828% relative to x285)
+  x286-minus-x285 gap: +5.94125e-03 (44.9589% relative to x285)
+
+base objective, source_mismatch_noise10_seed13:
+  x284-minus-x285 gap: +1.22496e-02 (13.8733% relative to x285)
+  x286-minus-x285 gap: +7.00493e-03 (7.9334% relative to x285)
+
+high-band objective, source_mismatch_noise10_seed13:
+  x284-minus-x285 gap: +1.21057e-02 (72.5841% relative to x285)
+  x286-minus-x285 gap: +7.55372e-03 (45.2911% relative to x285)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 80.57
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close35 seed13 confirms the seed34 result as another strong truth-geometry
+pass with x interval 285-285 mm and no revisit. The weakest base lateral gap
+is 7.55% nominal and 7.93% under source mismatch. Run seed21 to complete the
+close35 seed set.
+```
+
+## 300: Close-35 Sources=4, Tx/Rx Offset 35 mm, Seed21 Replication
+
+Purpose:
+
+```text
+complete the close35 seed replication under the 4-source 35 mm robust
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,285 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,285
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/300_coordinate_optimizer_close35_seed21_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1411.7 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,285] mm
+final state: x=[190,250,285], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=285,z=90,r=8, strong, x interval 285-285
+  source_mismatch_noise10_seed21: best x=285,z=90,r=8, strong,
+    x interval 285-285
+
+base objective, noise10_seed21:
+  x284-minus-x285 gap: +7.20729e-03 (9.6689% relative to x285)
+  x286-minus-x285 gap: +5.36333e-03 (7.1952% relative to x285)
+
+high-band objective, noise10_seed21:
+  x284-minus-x285 gap: +7.22998e-03 (57.9170% relative to x285)
+  x286-minus-x285 gap: +5.61841e-03 (45.0073% relative to x285)
+
+base objective, source_mismatch_noise10_seed21:
+  x284-minus-x285 gap: +1.16166e-02 (12.9949% relative to x285)
+  x286-minus-x285 gap: +7.67460e-03 (8.5851% relative to x285)
+
+high-band objective, source_mismatch_noise10_seed21:
+  x284-minus-x285 gap: +1.15882e-02 (66.8119% relative to x285)
+  x286-minus-x285 gap: +8.07187e-03 (46.5386% relative to x285)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 81.52
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close35 seed21 completes the replicated close35 seed set as another strong
+truth-geometry pass with x interval 285-285 mm. The weakest base lateral gap
+is 7.20% nominal and 8.59% under source mismatch. Aggregate close35 before
+moving tighter.
+```
+
+## 301: Close-35 Sources=4, Tx/Rx Offset 35 mm, Seed Aggregate
+
+Purpose:
+
+```text
+summarize the replicated close35 4-source 35 mm Tx/Rx diagnostics across
+seeds 34, 13, and 21.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close35_sources4_txrx35_seed_replicates
+  --outdir outputs/experiments/301_coordinate_confidence_close35_sources4_txrx35_seed_replicates
+  outputs/experiments/298_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/299_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/300_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/301_coordinate_confidence_close35_sources4_txrx35_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  4.32560e-03 / 5.74808e-03 / 7.34131e-03
+acquisition group:
+  4 sources, Tx/Rx offset 35 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest lateral relative gaps:
+  base nominal: 7.1952% (seed21)
+  base source mismatch: 7.9334% (seed13)
+  highband nominal: 44.2767% (seed34)
+  highband source mismatch: 45.2911% (seed13)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 72.94
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.51
+FIGURE_NOTES.md includes source-count and acquisition summaries.
+```
+
+Interpretation:
+
+```text
+close35 is replicated across seeds 13, 21, and 34 under the 4-source 35 mm
+Tx/Rx robust acquisition. All six rows recover truth geometry with strong
+confidence and zero x ambiguity. The right-shifted x=286 mm branch is the
+nearest repeated competitor but remains at least 7.20% worse under the base
+objective. Move the geometry-stress branch to close30 with the same
+acquisition before claiming the tight-separation limit.
+```
+
+## 302: Close-30 Sources=4, Tx/Rx Offset 35 mm, Seed34 Geometry Stress
+
+Purpose:
+
+```text
+test whether the replicated 4-source 35 mm robust acquisition still resolves
+target 2 when the center/right separation tightens from 35 mm to 30 mm.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,280 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,280
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/302_coordinate_optimizer_close30_seed34_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1399.5 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,280] mm
+final state: x=[190,250,280], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=280,z=90,r=8, strong, x interval 280-280
+  source_mismatch_noise10_seed34: best x=280,z=90,r=8, strong,
+    x interval 280-280
+
+base objective, noise10_seed34:
+  x281/r7.5-minus-x280/r8 gap: +1.68189e-03 (2.4364% relative)
+  x281/r8-minus-x280/r8 gap: +2.59941e-03 (3.7656% relative)
+  x279/r8-minus-x280/r8 gap: +5.92264e-03 (8.5797% relative)
+
+high-band objective, noise10_seed34:
+  x281/r7.5-minus-x280/r8 gap: +1.26722e-03 (11.0084% relative)
+  x281/r8-minus-x280/r8 gap: +2.52234e-03 (21.9117% relative)
+  x279/r8-minus-x280/r8 gap: +5.93636e-03 (51.5697% relative)
+
+base objective, source_mismatch_noise10_seed34:
+  x281/r7.5-minus-x280/r8 gap: +3.42169e-03 (4.0612% relative)
+  x281/r8-minus-x280/r8 gap: +4.31369e-03 (5.1200% relative)
+  x279/r8-minus-x280/r8 gap: +9.85685e-03 (11.6992% relative)
+
+high-band objective, source_mismatch_noise10_seed34:
+  x281/r7.5-minus-x280/r8 gap: +3.21554e-03 (21.3384% relative)
+  x281/r8-minus-x280/r8 gap: +4.45915e-03 (29.5910% relative)
+  x279/r8-minus-x280/r8 gap: +9.60794e-03 (63.7585% relative)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 79.26
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close30 seed34 is a truth-geometry pass with strong labels and zero x
+ambiguity, but it is the first geometry-stress result where the nearest
+competitor is a coupled lateral/radius branch: x=281 mm, r=7.5 mm. The
+nominal base gap is 2.44%, above the ambiguity threshold but much smaller than
+close35. Treat close30 as a margin-aware pass and replicate seeds 13 and 21
+before calling it validated.
+```
+
+## 303: Close-30 Sources=4, Tx/Rx Offset 35 mm, Seed13 Replication
+
+Purpose:
+
+```text
+replicate the close30 seed34 margin-aware pass on seed13.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,280 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,280
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/303_coordinate_optimizer_close30_seed13_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1399.1 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,280] mm
+final state: x=[190,250,280], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=280,z=90,r=8, strong, x interval 280-280
+  source_mismatch_noise10_seed13: best x=280,z=90,r=8, strong,
+    x interval 280-280
+
+base objective, noise10_seed13:
+  x281/r7.5-minus-x280/r8 gap: +1.85341e-03 (2.6598% relative)
+  x281/r8-minus-x280/r8 gap: +3.04018e-03 (4.3629% relative)
+  x279/r8-minus-x280/r8 gap: +5.50173e-03 (7.8955% relative)
+
+high-band objective, noise10_seed13:
+  x281/r7.5-minus-x280/r8 gap: +1.54403e-03 (13.1390% relative)
+  x281/r8-minus-x280/r8 gap: +3.03493e-03 (25.8258% relative)
+  x279/r8-minus-x280/r8 gap: +5.45893e-03 (46.4530% relative)
+
+base objective, source_mismatch_noise10_seed13:
+  x281/r7.5-minus-x280/r8 gap: +3.00141e-03 (3.5384% relative)
+  x281/r8-minus-x280/r8 gap: +3.99171e-03 (4.7059% relative)
+  x279/r8-minus-x280/r8 gap: +1.00804e-02 (11.8839% relative)
+
+high-band objective, source_mismatch_noise10_seed13:
+  x281/r7.5-minus-x280/r8 gap: +2.89518e-03 (18.5339% relative)
+  x281/r8-minus-x280/r8 gap: +4.07965e-03 (26.1165% relative)
+  x279/r8-minus-x280/r8 gap: +9.93335e-03 (63.5898% relative)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 80.82
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close30 seed13 confirms the seed34 result as another truth-geometry,
+strong-label pass with zero x ambiguity. The same coupled x=281 mm, r=7.5 mm
+branch is nearest, with a nominal base gap of 2.66% and source-mismatch base
+gap of 3.54%. Run seed21 to complete the close30 seed set.
+```
+
+## 304: Close-30 Sources=4, Tx/Rx Offset 35 mm, Seed21 Replication
+
+Purpose:
+
+```text
+complete the close30 seed replication under the 4-source 35 mm robust
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,280 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,280
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/304_coordinate_optimizer_close30_seed21_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1412.0 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,280] mm
+final state: x=[190,250,280], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=280,z=90,r=8, strong, x interval 280-280
+  source_mismatch_noise10_seed21: best x=280,z=90,r=8, strong,
+    x interval 280-280
+
+base objective, noise10_seed21:
+  x281/r7.5-minus-x280/r8 gap: +1.49602e-03 (2.1815% relative)
+  x281/r8-minus-x280/r8 gap: +2.57016e-03 (3.7479% relative)
+  x279/r8-minus-x280/r8 gap: +5.93203e-03 (8.6502% relative)
+
+high-band objective, noise10_seed21:
+  x281/r7.5-minus-x280/r8 gap: +1.15278e-03 (10.4013% relative)
+  x281/r8-minus-x280/r8 gap: +2.58570e-03 (23.3303% relative)
+  x279/r8-minus-x280/r8 gap: +5.87037e-03 (52.9672% relative)
+
+base objective, source_mismatch_noise10_seed21:
+  x281/r7.5-minus-x280/r8 gap: +3.14644e-03 (3.6730% relative)
+  x281/r8-minus-x280/r8 gap: +4.34803e-03 (5.0757% relative)
+  x279/r8-minus-x280/r8 gap: +9.86470e-03 (11.5155% relative)
+
+high-band objective, source_mismatch_noise10_seed21:
+  x281/r7.5-minus-x280/r8 gap: +3.06856e-03 (18.9014% relative)
+  x281/r8-minus-x280/r8 gap: +4.52857e-03 (27.8946% relative)
+  x279/r8-minus-x280/r8 gap: +9.59165e-03 (59.0816% relative)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 79.00
+FIGURE_NOTES.md exists.
+```
+
+Interpretation:
+
+```text
+close30 seed21 completes the close30 seed set as a truth-geometry, strong-label
+pass with zero x ambiguity. The coupled x=281 mm, r=7.5 mm branch remains the
+nearest competitor and is only 2.18% worse under nominal base. Aggregate the
+close30 set before deciding whether to probe closer spacing.
+```
+
+## 305: Close-30 Sources=4, Tx/Rx Offset 35 mm, Seed Aggregate
+
+Purpose:
+
+```text
+summarize the replicated close30 4-source 35 mm Tx/Rx diagnostics across
+seeds 34, 13, and 21.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close30_sources4_txrx35_seed_replicates
+  --outdir outputs/experiments/305_coordinate_confidence_close30_sources4_txrx35_seed_replicates
+  outputs/experiments/302_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/303_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/304_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/305_coordinate_confidence_close30_sources4_txrx35_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  1.49602e-03 / 2.43348e-03 / 3.42169e-03
+acquisition group:
+  4 sources, Tx/Rx offset 35 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest coupled-branch relative gaps:
+  base nominal: 2.1815% (seed21, x281/r7.5)
+  base source mismatch: 3.5384% (seed13, x281/r7.5)
+  highband nominal: 10.4013% (seed21, x281/r7.5)
+  highband source mismatch: 18.5339% (seed13, x281/r7.5)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 71.20
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.52
+FIGURE_NOTES.md includes source-count and acquisition summaries.
+```
+
+Interpretation:
+
+```text
+close30 is replicated across seeds 13, 21, and 34 under the 4-source 35 mm
+Tx/Rx robust acquisition. All six rows recover truth geometry with strong
+confidence and zero x ambiguity, but the aggregate radius margin mean is much
+lower than close35 and the nearest repeated competitor is a coupled x=281 mm,
+r=7.5 mm branch only 2.18% worse under nominal base. Treat close30 as the
+current tightest replicated 35 mm-offset result, with margin-aware reporting.
+Use a close25 seed34 lower-bound probe before claiming close30 as the final
+geometry-separation limit.
+```
+
+## 306: Close-25 Sources=4, Tx/Rx Offset 35 mm, Seed34 Lower-Bound Probe
+
+Purpose:
+
+```text
+probe whether the 4-source 35 mm robust acquisition can resolve target 2 when
+the center/right separation tightens from 30 mm to 25 mm.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,275 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,275
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/306_coordinate_optimizer_close25_seed34_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1810.5 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,275] mm
+final state: x=[190,250,275], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 160
+revisit triggered for target 2; revisit did not resolve the ambiguity.
+
+confidence rows:
+  noise10_seed34 main: best x=276,z=90,r=7.5, weak,
+    x interval 275-276, radius interval 7.5-8.0
+  source_mismatch_noise10_seed34 main: best x=275,z=90,r=8, weak,
+    x interval 275-276, radius interval 7.5-8.0
+  noise10_seed34 revisit: best x=276,z=90,r=7.5, weak,
+    x interval 275-276, radius interval 7.5-8.0
+  source_mismatch_noise10_seed34 revisit: best x=275,z=90,r=8, weak,
+    x interval 275-276, radius interval 7.5-8.0
+
+base objective, noise10_seed34:
+  x276/r7.5 is best.
+  truth x275/r8 is +3.83534e-04 worse (0.6126% relative).
+
+high-band objective, noise10_seed34:
+  x276/r7.5 is best.
+  truth x275/r8 is +7.38335e-04 worse (7.8952% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x275/r8 is best.
+  x276/r7.5 is +3.24950e-04 worse (0.4272% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  x276/r7.5 is best.
+  truth x275/r8 is +1.73149e-04 worse (1.3864% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 63.12
+FIGURE_NOTES.md exists and reports weak=4 with broad radius ambiguity.
+```
+
+Interpretation:
+
+```text
+close25 fails as a lower-bound probe for the 4-source 35 mm acquisition. The
+main and revisit rows remain weak, keep x=275-276 mm and radius 7.5-8.0 mm
+ambiguity intervals, and the nominal observation selects the shifted
+x=276 mm, r=7.5 mm branch rather than truth. Treat close30 as the tightest
+replicated result for the 35 mm Tx/Rx acquisition unless the extra-conservative
+40 mm Tx/Rx offset rescues close25.
+```
+
+## 307: Close-25 Sources=4, Tx/Rx Offset 40 mm, Seed34 Rescue Probe
+
+Purpose:
+
+```text
+test whether the extra-conservative 40 mm Tx/Rx offset rescues the failed
+close25 seed34 geometry under the same 4-source scan count.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 40 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,275 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,275
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/307_coordinate_optimizer_close25_seed34_sources4_txrx40_objectives
+```
+
+Result:
+
+```text
+elapsed: 1408.4 s
+sources: 4
+tx_rx_offset_mm: 40.0
+truth x positions: [190,250,275] mm
+final state: x=[190,250,275], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=275,z=90,r=8, moderate,
+    x interval 275-276, radius interval 7.5-8.0
+  source_mismatch_noise10_seed34: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x275/r8 is best.
+  x276/r7.5 is +6.32088e-04 worse (1.2365% relative).
+
+high-band objective, noise10_seed34:
+  truth x275/r8 is best.
+  x276/r7.5 is +5.93536e-04 worse (5.8391% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x275/r8 is best.
+  x276/r7.5 is +1.88927e-03 worse (2.6009% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x275/r8 is best.
+  x276/r7.5 is +1.38954e-03 worse (9.6490% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 74.50
+FIGURE_NOTES.md exists and reports moderate=1, strong=1.
+```
+
+Interpretation:
+
+```text
+the extra-conservative 40 mm Tx/Rx offset partially rescues close25 seed34:
+both observed cases now select truth and no revisit is triggered. However, the
+nominal row is only moderate and retains a near-best x=275-276 mm,
+r=7.5-8.0 mm interval, with the x276/r7.5 branch only 1.24% above truth under
+the base objective. Replicate seeds 13 and 21 before treating close25 as
+validated under 40 mm Tx/Rx.
+```
+
+## 308: Close-25 Sources=4, Tx/Rx Offset 40 mm, Seed13 Rescue Replicate
+
+Purpose:
+
+```text
+replicate the close25 40 mm Tx/Rx rescue probe on seed13 after seed34 showed
+truth selection but only moderate nominal confidence.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 40 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,275 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,275
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/308_coordinate_optimizer_close25_seed13_sources4_txrx40_objectives
+```
+
+Result:
+
+```text
+elapsed: 1418.7 s
+sources: 4
+tx_rx_offset_mm: 40.0
+truth x positions: [190,250,275] mm
+final state: x=[190,250,275], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=275,z=90,r=8, moderate,
+    x interval 275-276, radius interval 7.5-8.0
+  source_mismatch_noise10_seed13: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+
+base objective, noise10_seed13:
+  truth x275/r8 is best.
+  x276/r7.5 is +6.94296e-04 worse (1.3465% relative).
+
+high-band objective, noise10_seed13:
+  truth x275/r8 is best.
+  x276/r7.5 is +7.31617e-04 worse (7.0607% relative).
+
+base objective, source_mismatch_noise10_seed13:
+  truth x275/r8 is best.
+  x276/r7.5 is +1.66729e-03 worse (2.2767% relative).
+
+high-band objective, source_mismatch_noise10_seed13:
+  truth x275/r8 is best.
+  x276/r7.5 is +1.27501e-03 worse (8.4155% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 75.34
+FIGURE_NOTES.md exists and reports moderate=1, strong=1.
+```
+
+Interpretation:
+
+```text
+close25 seed13 repeats the 40 mm Tx/Rx rescue pattern from seed34: truth is
+selected in both observed cases, no revisit is triggered, and the
+source-mismatch row is strong. The nominal row is still only moderate and
+retains the same near-best x=275-276 mm, r=7.5-8.0 mm interval, with the
+x276/r7.5 branch only 1.35% above truth under the base objective. Run seed21
+before validating close25 under 40 mm Tx/Rx; if seed21 also passes, aggregate
+307-309 and report the result as margin-aware rather than high-margin.
+```
+
+## 309: Close-25 Sources=4, Tx/Rx Offset 40 mm, Seed21 Rescue Replicate
+
+Purpose:
+
+```text
+complete the seed replication set for the close25 40 mm Tx/Rx rescue branch.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 40 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,275 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,275
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/309_coordinate_optimizer_close25_seed21_sources4_txrx40_objectives
+```
+
+Result:
+
+```text
+elapsed: 1402.4 s
+sources: 4
+tx_rx_offset_mm: 40.0
+truth x positions: [190,250,275] mm
+final state: x=[190,250,275], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=275,z=90,r=8, weak,
+    x interval 275-276, radius interval 7.5-8.0
+  source_mismatch_noise10_seed21: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+
+base objective, noise10_seed21:
+  truth x275/r8 is best.
+  x276/r7.5 is +4.88175e-04 worse (0.9647% relative).
+
+high-band objective, noise10_seed21:
+  truth x275/r8 is best.
+  x276/r7.5 is +4.70687e-04 worse (4.9112% relative).
+
+base objective, source_mismatch_noise10_seed21:
+  truth x275/r8 is best.
+  x276/r7.5 is +1.42873e-03 worse (1.9323% relative).
+
+high-band objective, source_mismatch_noise10_seed21:
+  truth x275/r8 is best.
+  x276/r7.5 is +9.76376e-04 worse (6.3329% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 75.88
+FIGURE_NOTES.md exists and reports weak=1, strong=1.
+```
+
+Interpretation:
+
+```text
+close25 seed21 remains a truth-selected 40 mm Tx/Rx run, but it is the weakest
+replicate: the nominal row is weak and keeps the near-best x=275-276 mm,
+r=7.5-8.0 mm ambiguity interval, with the x276/r7.5 branch less than 1% above
+truth under the base objective. Aggregate 307-309 before making any policy
+statement; this should not be promoted as a zero-ambiguity geometry limit.
+```
+
+## 310: Close-25 Sources=4, Tx/Rx Offset 40 mm, Seed Aggregate
+
+Purpose:
+
+```text
+summarize the close25 40 mm Tx/Rx rescue branch across seeds 34, 13, and 21.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close25_sources4_txrx40_seed_replicates
+  --outdir outputs/experiments/310_coordinate_confidence_close25_sources4_txrx40_seed_replicates
+  outputs/experiments/307_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/308_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/309_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/310_coordinate_confidence_close25_sources4_txrx40_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=3, moderate=2, weak=1
+fallback warning rows: 1
+x-ambiguity rows: 3
+max x/z/r ambiguity widths: 1.0 / 0.0 / 0.5 mm
+radius margin abs min/mean/max:
+  4.88175e-04 / 1.13331e-03 / 1.88927e-03
+acquisition group:
+  4 sources, Tx/Rx offset 40 mm: rows=6, truth rows=6, x ambiguity=3
+
+weakest coupled-branch relative gaps:
+  base nominal: 0.9647% (seed21, x276/r7.5)
+  base source mismatch: 1.9323% (seed21, x276/r7.5)
+  highband nominal: 4.9112% (seed21, x276/r7.5)
+  highband source mismatch: 6.3329% (seed21, x276/r7.5)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 65.96
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 44.79
+FIGURE_NOTES.md reports rows=6, truth rows=6, and x-ambiguity rows=3.
+```
+
+Interpretation:
+
+```text
+the 40 mm Tx/Rx offset rescues close25 as a truth-selected point estimate
+across all three seeds, but not as a clean zero-ambiguity geometry limit. Half
+of the rows retain a 1 mm lateral ambiguity interval, one nominal row is weak,
+and the weakest base gap is only 0.9647%. Keep close30 under 35 mm Tx/Rx as
+the tightest replicated zero-ambiguity geometry result. Record close25 under
+40 mm Tx/Rx as a lower-margin recovery mode that requires interval reporting.
+The next useful bracket is close28 under the original 35 mm robust acquisition
+to locate the transition between close30 pass and close25 fail.
+```
+
+## 311: Close-28 Sources=4, Tx/Rx Offset 35 mm, Seed34 Bracket Probe
+
+Purpose:
+
+```text
+bracket the transition between close30 truth-geometry pass and close25 35 mm
+failure using the original 4-source, 35 mm Tx/Rx robust acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,278 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,278
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/311_coordinate_optimizer_close28_seed34_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1405.7 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,278] mm
+final state: x=[190,250,278], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=278,z=90,r=8, weak,
+    x interval 278-279, radius interval 7.5-8.0
+  source_mismatch_noise10_seed34: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x278/r8 is best.
+  x279/r7.5 is +4.53024e-04 worse (0.6831% relative).
+
+high-band objective, noise10_seed34:
+  truth x278/r8 is best.
+  x279/r7.5 is +3.04065e-05 worse (0.2796% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x278/r8 is best.
+  x279/r7.5 is +1.73564e-03 worse (2.1432% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x278/r8 is best.
+  x279/r7.5 is +1.40613e-03 worse (9.9504% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 74.67
+FIGURE_NOTES.md exists and reports weak=1, strong=1.
+```
+
+Interpretation:
+
+```text
+close28 seed34 is a truth-selected point-estimate pass under the original
+35 mm robust acquisition, but it is already below the clean-confidence line:
+the nominal row is weak, retains a 1 mm x ambiguity interval, and the
+high-band x279/r7.5 branch is only 0.2796% above truth. Replicate seed13 only
+if the goal is to map the transition band; do not treat close28 as validated
+until seed replication and aggregate ambiguity reporting are complete.
+```
+
+## 312: Close-28 Sources=4, Tx/Rx Offset 35 mm, Seed13 Bracket Replicate
+
+Purpose:
+
+```text
+replicate the close28 35 mm Tx/Rx transition-band probe on seed13 after seed34
+selected truth but showed weak nominal confidence and lateral ambiguity.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,278 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,278
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/312_coordinate_optimizer_close28_seed13_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1407.8 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,278] mm
+final state: x=[190,250,278], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=278,z=90,r=8, moderate,
+    x interval 278-279, radius interval 7.5-8.0
+  source_mismatch_noise10_seed13: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+
+base objective, noise10_seed13:
+  truth x278/r8 is best.
+  x279/r7.5 is +5.83239e-04 worse (0.8714% relative).
+
+high-band objective, noise10_seed13:
+  truth x278/r8 is best.
+  x279/r7.5 is +2.73266e-04 worse (2.4603% relative).
+
+base objective, source_mismatch_noise10_seed13:
+  truth x278/r8 is best.
+  x279/r7.5 is +1.39728e-03 worse (1.7138% relative).
+
+high-band objective, source_mismatch_noise10_seed13:
+  truth x278/r8 is best.
+  x279/r7.5 is +1.14618e-03 worse (7.8336% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 75.47
+FIGURE_NOTES.md exists and reports moderate=1, strong=1.
+```
+
+Interpretation:
+
+```text
+close28 seed13 repeats the seed34 truth-selected transition-band pattern but
+with slightly stronger nominal confidence. The nominal row is still not a
+clean strong result and keeps the same x=278-279 mm, r=7.5-8.0 mm near-best
+interval. Run seed21 and aggregate 311-313 before making a close28 policy
+statement. Current evidence says close28 may be point-recoverable under
+35 mm Tx/Rx, but still requires interval reporting like close25/40 mm.
+```
+
+## 313: Close-28 Sources=4, Tx/Rx Offset 35 mm, Seed21 Bracket Replicate
+
+Purpose:
+
+```text
+complete the close28 35 mm Tx/Rx seed set before deciding whether close28 is
+a clean geometry limit or only a transition-band point-recovery case.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 35 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,278 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,278
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/313_coordinate_optimizer_close28_seed21_sources4_txrx35_objectives
+```
+
+Result:
+
+```text
+elapsed: 1373.1 s
+sources: 4
+tx_rx_offset_mm: 35.0
+truth x positions: [190,250,278] mm
+final state: x=[190,250,278], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=278,z=90,r=8, weak,
+    x interval 278-279, radius interval 7.5-8.0
+  source_mismatch_noise10_seed21: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+
+base objective, noise10_seed21:
+  truth x278/r8 is best.
+  x279/r7.5 is +2.82689e-04 worse (0.4291% relative).
+
+high-band objective, noise10_seed21:
+  x279/r7.5 is best.
+  truth x278/r8 is +5.53495e-05 worse (0.5322% relative).
+
+base objective, source_mismatch_noise10_seed21:
+  truth x278/r8 is best.
+  x279/r7.5 is +1.50218e-03 worse (1.8248% relative).
+
+high-band objective, source_mismatch_noise10_seed21:
+  truth x278/r8 is best.
+  x279/r7.5 is +1.27499e-03 worse (8.3906% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 73.53
+FIGURE_NOTES.md exists and reports weak=1, strong=1.
+```
+
+Interpretation:
+
+```text
+close28 seed21 completes the seed set as a truth-selected point update, but it
+is the weakest close28 replicate. The nominal row is weak, retains the same
+x=278-279 mm, r=7.5-8.0 mm ambiguity interval, and the high-band diagnostic
+actually ranks the x279/r7.5 competitor above truth by 0.5322%. Aggregate
+311-313 before setting policy; close28 should not be promoted as a clean
+zero-ambiguity limit from this single run.
+```
+
+## 314: Close-28 Sources=4, Tx/Rx Offset 35 mm, Seed Aggregate
+
+Purpose:
+
+```text
+summarize the close28 35 mm Tx/Rx transition-band bracket across seeds 34,
+13, and 21.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close28_sources4_txrx35_seed_replicates
+  --outdir outputs/experiments/314_coordinate_confidence_close28_sources4_txrx35_seed_replicates
+  outputs/experiments/311_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/312_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/313_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/314_coordinate_confidence_close28_sources4_txrx35_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=3, moderate=1, weak=2
+fallback warning rows: 2
+x-ambiguity rows: 3
+max x/z/r ambiguity widths: 1.0 / 0.0 / 0.5 mm
+radius margin abs min/mean/max:
+  2.82689e-04 / 9.92343e-04 / 1.73564e-03
+acquisition group:
+  4 sources, Tx/Rx offset 35 mm: rows=6, truth rows=6, x ambiguity=3
+
+weakest coupled-branch relative gaps:
+  base nominal: 0.4291% (seed21, x279/r7.5)
+  base source mismatch: 1.7138% (seed13, x279/r7.5)
+  highband nominal: x279/r7.5 beats truth by 0.5322% (seed21)
+  highband source mismatch: 7.8336% (seed13, x279/r7.5)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 65.86
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 44.77
+FIGURE_NOTES.md reports rows=6, truth rows=6, and x-ambiguity rows=3.
+```
+
+Interpretation:
+
+```text
+close28 is replicated as a truth-selected point estimate under the 4-source,
+35 mm Tx/Rx acquisition, but it is not a clean zero-ambiguity geometry limit.
+Half of the rows retain a 1 mm lateral ambiguity interval, two rows are weak,
+and seed21 high-band nominal prefers the shifted x279/r7.5 branch. Keep
+close30 as the tightest replicated clean 35 mm-offset separation result.
+Classify close28 as a transition-band recovery mode requiring interval
+reporting. The next useful question is whether an intermediate 37.5 mm or
+40 mm Tx/Rx acquisition can make close28 clean without paying the ambiguity
+cost seen at close25/40 mm.
+```
+
+## 315: Close-28 Sources=4, Tx/Rx Offset 40 mm, Seed34 Rescue Probe
+
+Purpose:
+
+```text
+test whether the extra-conservative 40 mm Tx/Rx acquisition cleans up the
+close28 ambiguity observed under the original 35 mm robust acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 40 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,278 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,278
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/315_coordinate_optimizer_close28_seed34_sources4_txrx40_objectives
+```
+
+Result:
+
+```text
+elapsed: 1394.8 s
+sources: 4
+tx_rx_offset_mm: 40.0
+truth x positions: [190,250,278] mm
+final state: x=[190,250,278], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=278,z=90,r=8, moderate,
+    x interval 278-279, radius interval 7.5-8.0
+  source_mismatch_noise10_seed34: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x278/r8 is best.
+  x279/r7.5 is +6.40575e-04 worse (1.2088% relative).
+
+high-band objective, noise10_seed34:
+  truth x278/r8 is best.
+  x279/r7.5 is +5.28545e-04 worse (4.8776% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x278/r8 is best.
+  x279/r7.5 is +2.31717e-03 worse (3.0391% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x278/r8 is best.
+  x279/r7.5 is +1.94764e-03 worse (12.2749% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 73.93
+FIGURE_NOTES.md exists and reports moderate=1, strong=1.
+```
+
+Interpretation:
+
+```text
+the 40 mm Tx/Rx offset improves close28 seed34 relative to the 35 mm bracket:
+truth now wins both base and high-band diagnostics, and the nominal high-band
+gap increases from 0.2796% to 4.8776%. However, the nominal base gap is still
+only 1.2088%, leaving the same x=278-279 mm, r=7.5-8.0 mm ambiguity interval.
+Do not replicate 40 mm yet as a clean setting; first test whether an even more
+conservative 45 mm Tx/Rx seed34 probe crosses the zero-ambiguity threshold.
+```
+
+## 316: Close-28 Sources=4, Tx/Rx Offset 45 mm, Seed34 Rescue Probe
+
+Purpose:
+
+```text
+test whether an extra-conservative 45 mm Tx/Rx acquisition removes the close28
+seed34 lateral/radius ambiguity that persisted at 40 mm.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,278 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,278
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/316_coordinate_optimizer_close28_seed34_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1422.0 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,278] mm
+final state: x=[190,250,278], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+  source_mismatch_noise10_seed34: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x278/r8 is best.
+  x278/r7.5 is +2.25056e-03 worse (5.4584% relative).
+
+high-band objective, noise10_seed34:
+  truth x278/r8 is best.
+  x278/r7.5 is +2.68644e-03 worse (25.8367% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x278/r8 is best.
+  x278/r7.5 is +4.46740e-03 worse (6.5331% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x278/r8 is best.
+  x278/r7.5 is +4.42880e-03 worse (25.3243% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 79.51
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+45 mm Tx/Rx cleans close28 seed34: both observed cases are strong, no x/radius
+ambiguity interval remains, and the nearest competitor is now the same-x
+smaller-radius x278/r7.5 branch rather than the shifted x279/r7.5 branch.
+Replicate seeds 13 and 21 before promoting 45 mm as a clean close28 acquisition
+rescue. This is a conservative acquisition, so compare its cost/geometry
+against the existing close30 35 mm clean limit when writing final guidance.
+```
+
+## 317: Close-28 Sources=4, Tx/Rx Offset 45 mm, Seed13 Rescue Replicate
+
+Purpose:
+
+```text
+replicate the clean close28 45 mm Tx/Rx seed34 rescue result on seed13.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,278 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,278
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/317_coordinate_optimizer_close28_seed13_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1407.8 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,278] mm
+final state: x=[190,250,278], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+  source_mismatch_noise10_seed13: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+
+base objective, noise10_seed13:
+  truth x278/r8 is best.
+  x278/r7.5 is +2.26401e-03 worse (5.4497% relative).
+
+high-band objective, noise10_seed13:
+  truth x278/r8 is best.
+  x278/r7.5 is +2.72573e-03 worse (25.9517% relative).
+
+base objective, source_mismatch_noise10_seed13:
+  truth x278/r8 is best.
+  x278/r7.5 is +3.92538e-03 worse (5.6737% relative).
+
+high-band objective, source_mismatch_noise10_seed13:
+  truth x278/r8 is best.
+  x278/r7.5 is +3.92275e-03 worse (21.1786% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 80.41
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close28 45 mm Tx/Rx seed13 replicates the clean seed34 result: both rows are
+strong, no ambiguity interval remains, and the nearest competitor is again
+the same-x smaller-radius x278/r7.5 branch with at least a 5.45% base gap.
+Run seed21 and aggregate 316-318 before promoting 45 mm as a replicated clean
+close28 acquisition rescue.
+```
+
+## 318: Close-28 Sources=4, Tx/Rx Offset 45 mm, Seed21 Rescue Replicate
+
+Purpose:
+
+```text
+complete the close28 45 mm Tx/Rx seed replicate set with seed21 before
+aggregating the extra-conservative acquisition rescue.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,278 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,278
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/318_coordinate_optimizer_close28_seed21_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1400.3 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,278] mm
+final state: x=[190,250,278], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+  source_mismatch_noise10_seed21: best x=278,z=90,r=8, strong,
+    x interval 278-278, radius interval 8-8
+
+base objective, noise10_seed21:
+  truth x278/r8 is best.
+  x278/r7.5 is +2.18203e-03 worse (5.3608% relative).
+
+high-band objective, noise10_seed21:
+  truth x278/r8 is best.
+  x278/r7.5 is +2.57994e-03 worse (26.5229% relative).
+
+base objective, source_mismatch_noise10_seed21:
+  truth x278/r8 is best.
+  x278/r7.5 is +4.15616e-03 worse (5.9815% relative).
+
+high-band objective, source_mismatch_noise10_seed21:
+  truth x278/r8 is best.
+  x278/r7.5 is +4.02109e-03 worse (21.8081% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.79,
+  nonwhite fraction 0.315978
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close28 45 mm Tx/Rx seed21 replicates the clean seed34 and seed13 pattern:
+both rows are strong, no ambiguity interval remains, and all base/high-band
+diagnostic objectives rank the true x278/z90/r8 geometry first. The nearest
+competitor is the same-x smaller-radius x278/r7.5 branch, with the weakest
+base gap still 5.36%. Aggregate 316-318 next; if all six rows stay strong with
+zero x/radius ambiguity, classify 45 mm Tx/Rx as a replicated clean close28
+acquisition rescue while keeping close30 as the cleaner 35 mm-offset limit.
+```
+
+## 319: Close-28 Sources=4, Tx/Rx Offset 45 mm, Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the close28 45 mm Tx/Rx seed34/seed13/seed21 rescue replicates and
+decide whether the extra-conservative acquisition is a clean replicated result.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close28_sources4_txrx45_seed_replicates
+  --outdir outputs/experiments/319_coordinate_confidence_close28_sources4_txrx45_seed_replicates
+  outputs/experiments/316_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/317_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/318_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/319_coordinate_confidence_close28_sources4_txrx45_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+fallback warning rows: 0
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  2.18203e-03 / 3.20759e-03 / 4.46740e-03
+acquisition group:
+  4 sources, Tx/Rx offset 45 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest base gaps:
+  nominal: 5.3608% (seed21, x278/r7.5)
+  source mismatch: 5.6737% (seed13, x278/r7.5)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 78.73,
+  nonwhite fraction 0.221877
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.65,
+  nonwhite fraction 0.039757
+FIGURE_NOTES.md reports rows=6, truth rows=6, strong=6, and x-ambiguity rows=0.
+```
+
+Interpretation:
+
+```text
+45 mm Tx/Rx is a replicated clean close28 acquisition rescue: every row across
+seed34, seed13, and seed21 selected truth geometry, every row was strong, and
+no x/z/r ambiguity interval remained. This does not make close28 clean under
+the standard 35 mm-offset acquisition; it means a larger Tx/Rx offset can buy
+enough angular/offset diversity to separate the coupled x/radius branch.
+Current policy should distinguish the two limits: close30 is the tightest
+replicated clean result at 35 mm Tx/Rx, while close28 is clean only with the
+extra-conservative 45 mm Tx/Rx acquisition.
+Next run a close25 seed34 45 mm Tx/Rx lower-bound rescue probe. If it fails,
+45 mm likely brackets between close25 and close28; if it passes cleanly, then
+replicate seed13 and seed21 before lowering the clean-separation guidance.
+```
+
+## 320: Close-25 Sources=4, Tx/Rx Offset 45 mm, Seed34 Lower-Bound Rescue Probe
+
+Purpose:
+
+```text
+test whether the extra-conservative 45 mm Tx/Rx acquisition that cleaned
+close28 can also rescue the harder close25 geometry on seed34.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,275 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,275
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/320_coordinate_optimizer_close25_seed34_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1390.1 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,275] mm
+final state: x=[190,250,275], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+  source_mismatch_noise10_seed34: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x275/r8 is best.
+  x274/r8 is +1.65541e-03 worse (4.1200% relative).
+
+high-band objective, noise10_seed34:
+  truth x275/r8 is best.
+  x274/r8 is +1.76313e-03 worse (17.8553% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x275/r8 is best.
+  x274/r8 is +4.08932e-03 worse (6.2006% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x275/r8 is best.
+  x274/r8 is +4.28142e-03 worse (26.1069% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.59,
+  nonwhite fraction 0.315134
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close25 seed34 is clean under the 45 mm Tx/Rx acquisition. Both observed cases
+are strong, no ambiguity interval remains, and all base/high-band diagnostics
+rank truth first. The nearest competitor has shifted from the earlier
+close25/40 mm coupled x276/r7.5 branch to a same-radius lateral x274/r8 branch,
+and the weakest base lateral gap is still 4.12%. This is enough to replicate
+seed13 and seed21 before deciding whether 45 mm Tx/Rx can lower the clean
+multi-rebar separation guidance from close28 to close25.
+```
+
+## 321: Close-25 Sources=4, Tx/Rx Offset 45 mm, Seed13 Rescue Replicate
+
+Purpose:
+
+```text
+replicate the clean close25 45 mm Tx/Rx seed34 lower-bound rescue result on
+seed13 before deciding whether to aggregate the seed set.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,275 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,275
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/321_coordinate_optimizer_close25_seed13_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1403.4 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,275] mm
+final state: x=[190,250,275], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+  source_mismatch_noise10_seed13: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+
+base objective, noise10_seed13:
+  truth x275/r8 is best.
+  x274/r8 is +1.72347e-03 worse (4.2551% relative).
+
+high-band objective, noise10_seed13:
+  truth x275/r8 is best.
+  x274/r8 is +1.84965e-03 worse (18.4776% relative).
+
+base objective, source_mismatch_noise10_seed13:
+  truth x275/r8 is best.
+  x274/r8 is +3.68215e-03 worse (5.5210% relative).
+
+high-band objective, source_mismatch_noise10_seed13:
+  truth x275/r8 is best.
+  x274/r8 is +3.73000e-03 worse (21.4676% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 90.89,
+  nonwhite fraction 0.329789
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close25 45 mm Tx/Rx seed13 replicates the clean seed34 rescue: both rows are
+strong, no ambiguity interval remains, and all base/high-band diagnostics rank
+truth first. The nearest competitor is again the same-radius lateral x274/r8
+branch, with the weakest base gap still 4.26%. Run seed21 and then aggregate
+320-322 before lowering the clean separation guidance.
+```
+
+## 322: Close-25 Sources=4, Tx/Rx Offset 45 mm, Seed21 Rescue Replicate
+
+Purpose:
+
+```text
+complete the close25 45 mm Tx/Rx seed replicate set before aggregating the
+extra-conservative lower-bound rescue evidence.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,275 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,275
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/322_coordinate_optimizer_close25_seed21_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1393.8 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,275] mm
+final state: x=[190,250,275], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+  source_mismatch_noise10_seed21: best x=275,z=90,r=8, strong,
+    x interval 275-275, radius interval 8-8
+
+base objective, noise10_seed21:
+  truth x275/r8 is best.
+  x274/r8 is +1.72412e-03 worse (4.3456% relative).
+
+high-band objective, noise10_seed21:
+  truth x275/r8 is best.
+  x274/r8 is +1.79334e-03 worse (19.4257% relative).
+
+base objective, source_mismatch_noise10_seed21:
+  truth x275/r8 is best.
+  x274/r8 is +4.23134e-03 worse (6.3081% relative).
+
+high-band objective, source_mismatch_noise10_seed21:
+  truth x275/r8 is best.
+  x274/r8 is +4.36969e-03 worse (25.2227% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.99,
+  nonwhite fraction 0.318414
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close25 45 mm Tx/Rx seed21 completes the clean replicate set: both rows are
+strong, no ambiguity interval remains, and all base/high-band diagnostics rank
+truth first. The nearest competitor remains the same-radius lateral x274/r8
+branch, with the weakest base gap 4.35%. Aggregate 320-322 next; if all six
+rows stay strong with zero ambiguity, promote close25 as clean under 45 mm
+Tx/Rx while clearly distinguishing that from the standard 35 mm acquisition.
+```
+
+## 323: Close-25 Sources=4, Tx/Rx Offset 45 mm, Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the close25 45 mm Tx/Rx seed34/seed13/seed21 rescue replicates and
+decide whether the extra-conservative acquisition cleanly validates close25.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close25_sources4_txrx45_seed_replicates
+  --outdir outputs/experiments/323_coordinate_confidence_close25_sources4_txrx45_seed_replicates
+  outputs/experiments/320_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/321_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/322_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/323_coordinate_confidence_close25_sources4_txrx45_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+fallback warning rows: 0
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  2.50749e-03 / 3.64800e-03 / 5.02189e-03
+acquisition group:
+  4 sources, Tx/Rx offset 45 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest base lateral gaps:
+  nominal: 4.1200% (seed34, x274/r8)
+  source mismatch: 5.5210% (seed13, x274/r8)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 79.04,
+  nonwhite fraction 0.225545
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.63,
+  nonwhite fraction 0.039700
+FIGURE_NOTES.md reports rows=6, truth rows=6, strong=6, and x-ambiguity rows=0.
+```
+
+Interpretation:
+
+```text
+45 mm Tx/Rx cleanly validates close25 across seeds 34, 13, and 21: every row
+selects truth, every row is strong, and no ambiguity interval remains. The
+standard 35 mm acquisition still has close30 as the tightest clean replicated
+limit, and close28/close25 require larger acquisition offsets. Under the
+extra-conservative 45 mm Tx/Rx geometry, the clean limit now extends to
+close25. The nearest systematic competitor is a same-radius lateral x274/r8
+branch, not the earlier x276/r7.5 coupled branch from close25/40 mm.
+Next run a close20 seed34 45 mm Tx/Rx lower-bound probe. If it fails, treat
+close25 as the current practical 45 mm clean limit; if it passes cleanly,
+replicate seeds 13 and 21 before lowering the guidance again.
+```
+
+## 324: Close-20 Sources=4, Tx/Rx Offset 45 mm, Seed34 Lower-Bound Probe
+
+Purpose:
+
+```text
+test whether the 45 mm Tx/Rx acquisition that cleaned close25 can also recover
+the tighter close20 geometry on seed34.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,270 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,270
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/324_coordinate_optimizer_close20_seed34_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1404.0 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,270] mm
+final state: x=[190,250,270], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=270,z=90,r=8, strong,
+    x interval 270-270, radius interval 8-8
+  source_mismatch_noise10_seed34: best x=270,z=90,r=8, strong,
+    x interval 270-270, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x270/r8 is best.
+  x269/r8 is +1.08399e-03 worse (2.7705% relative).
+
+high-band objective, noise10_seed34:
+  truth x270/r8 is best.
+  x269/r8 is +9.53060e-04 worse (10.1322% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x270/r8 is best.
+  x269/r8 is +2.58113e-03 worse (4.0933% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x270/r8 is best.
+  x269/r8 is +2.34524e-03 worse (14.9554% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.79,
+  nonwhite fraction 0.317571
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close20 45 mm Tx/Rx seed34 is a clean point pass: both observed cases are
+strong, no ambiguity interval remains, and all base/high-band diagnostics rank
+truth first. The margin is narrower than close25, and the systematic
+competitor is now same-radius lateral x269/r8 with the weakest base gap
+2.77%. Replicate seed13 and seed21 before promoting close20 under 45 mm Tx/Rx.
+```
+
+## 325: Close-20 Sources=4, Tx/Rx Offset 45 mm, Seed13 Rescue Replicate
+
+Purpose:
+
+```text
+replicate the close20 45 mm Tx/Rx seed34 lower-bound pass on seed13 before
+aggregating the seed set.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,270 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,270
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/325_coordinate_optimizer_close20_seed13_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1398.6 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,270] mm
+final state: x=[190,250,270], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=270,z=90,r=8, strong,
+    x interval 270-270, radius interval 8-8
+  source_mismatch_noise10_seed13: best x=270,z=90,r=8, strong,
+    x interval 270-270, radius interval 8-8
+
+base objective, noise10_seed13:
+  truth x270/r8 is best.
+  x269/r8 is +1.28725e-03 worse (3.2599% relative).
+
+high-band objective, noise10_seed13:
+  truth x270/r8 is best.
+  x269/r8 is +1.22924e-03 worse (12.8285% relative).
+
+base objective, source_mismatch_noise10_seed13:
+  truth x270/r8 is best.
+  x269/r8 is +2.23408e-03 worse (3.5078% relative).
+
+high-band objective, source_mismatch_noise10_seed13:
+  truth x270/r8 is best.
+  x269/r8 is +1.84809e-03 worse (11.1629% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 90.25,
+  nonwhite fraction 0.323236
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close20 45 mm Tx/Rx seed13 replicates the clean seed34 result. Both rows are
+strong, no ambiguity interval remains, and all base/high-band diagnostics rank
+truth first. The nearest competitor remains the same-radius lateral x269/r8
+branch, with weakest base gap 3.26%. Run seed21 and aggregate 324-326 before
+promoting close20 under 45 mm Tx/Rx.
+```
+
+## 326: Close-20 Sources=4, Tx/Rx Offset 45 mm, Seed21 Rescue Replicate
+
+Purpose:
+
+```text
+complete the close20 45 mm Tx/Rx seed replicate set before aggregating.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,270 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,270
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/326_coordinate_optimizer_close20_seed21_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1419.6 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,270] mm
+final state: x=[190,250,270], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=270,z=90,r=8, strong,
+    x interval 270-270, radius interval 8-8
+  source_mismatch_noise10_seed21: best x=270,z=90,r=8, strong,
+    x interval 270-270, radius interval 8-8
+
+base objective, noise10_seed21:
+  truth x270/r8 is best.
+  x269/r8 is +1.18854e-03 worse (3.0737% relative).
+
+high-band objective, noise10_seed21:
+  truth x270/r8 is best.
+  x269/r8 is +9.82884e-04 worse (11.1747% relative).
+
+base objective, source_mismatch_noise10_seed21:
+  truth x270/r8 is best.
+  x269/r8 is +2.47846e-03 worse (3.8636% relative).
+
+high-band objective, source_mismatch_noise10_seed21:
+  truth x270/r8 is best.
+  x269/r8 is +2.20704e-03 worse (13.3149% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.89,
+  nonwhite fraction 0.318765
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close20 45 mm Tx/Rx seed21 completes the clean replicate set: both rows are
+strong, no ambiguity interval remains, and all base/high-band diagnostics rank
+truth first. The nearest competitor remains x269/r8, with weakest base gap
+3.07%. Aggregate 324-326 next; if the aggregate remains all-strong with zero
+ambiguity, promote close20 under 45 mm Tx/Rx.
+```
+
+## 327: Close-20 Sources=4, Tx/Rx Offset 45 mm, Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the close20 45 mm Tx/Rx seed34/seed13/seed21 replicates and decide
+whether the extra-conservative acquisition validates close20.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close20_sources4_txrx45_seed_replicates
+  --outdir outputs/experiments/327_coordinate_confidence_close20_sources4_txrx45_seed_replicates
+  outputs/experiments/324_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/325_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/326_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/327_coordinate_confidence_close20_sources4_txrx45_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+fallback warning rows: 0
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  2.69458e-03 / 3.97425e-03 / 5.39289e-03
+acquisition group:
+  4 sources, Tx/Rx offset 45 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest base lateral gaps:
+  nominal: 2.7705% (seed34, x269/r8)
+  source mismatch: 3.5078% (seed13, x269/r8)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 79.39,
+  nonwhite fraction 0.227778
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.64,
+  nonwhite fraction 0.039725
+FIGURE_NOTES.md reports rows=6, truth rows=6, strong=6, and x-ambiguity rows=0.
+```
+
+Interpretation:
+
+```text
+45 mm Tx/Rx cleanly validates close20 across seeds 34, 13, and 21: every row
+selects truth, every row is strong, and no ambiguity interval remains. The
+margin is narrower than close25 but still replicated, with the weakest base
+lateral gap 2.77%. The standard 35 mm acquisition remains clean only through
+close30; the extra-conservative 45 mm acquisition now extends the clean
+replicated geometry separation to close20.
+Next run a close15 seed34 45 mm Tx/Rx lower-bound probe. This is a near-touching
+case with only about 1 mm gap between the 6 mm and 8 mm bars, so failure would
+bracket the 45 mm clean limit near close20; a clean pass would require seed
+replication before promotion.
+```
+
+## 328: Close-15 Sources=4, Tx/Rx Offset 45 mm, Seed34 Objective Diagnostics
+
+Purpose:
+
+```text
+test whether the 45 mm Tx/Rx acquisition that cleaned close20 can also recover
+the near-touching close15 geometry on seed34. The center-to-target spacing is
+15 mm while the two radii sum to 14 mm, leaving about 1 mm physical gap between
+the 6 mm and 8 mm bars.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,265 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,265
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/328_coordinate_optimizer_close15_seed34_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1404.8 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,265] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,265], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=265,z=90,r=8, strong,
+    x interval 265-265, radius interval 8-8
+  source_mismatch_noise10_seed34: best x=265,z=90,r=8, strong,
+    x interval 265-265, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x265/r8 is best.
+  x264/r8 is +1.16167e-03 worse (2.9713% relative).
+  first non-r8 branch x266/r7.5 is +2.73249e-03 worse (6.9892% relative).
+
+high-band objective, noise10_seed34:
+  truth x265/r8 is best.
+  x264/r8 is +9.92373e-04 worse (10.6209% relative).
+  first non-r8 branch x265/r7.5 is +3.59931e-03 worse (38.5219% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x265/r8 is best.
+  x264/r8 is +2.42657e-03 worse (3.8532% relative).
+  first non-r8 branch x266/r7.5 is +5.30392e-03 worse (8.4223% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x265/r8 is best.
+  x264/r8 is +2.02880e-03 worse (12.7554% relative).
+  first non-r8 branch x265/r7.5 is +6.01561e-03 worse (37.8211% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.62,
+  nonwhite fraction 0.316626
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close15 45 mm Tx/Rx seed34 is a clean point pass despite being near-touching:
+both observed rows are strong, no x/z/r ambiguity interval remains, and every
+base/high-band diagnostic ranks truth first. The nearest competitor is now the
+same-radius lateral x264/r8 branch, not a smaller-radius substitute. The weakest
+base lateral gap is 2.97%, so this is promising but still needs seed13 and
+seed21 replication before the clean 45 mm separation guidance can be lowered
+from close20 to close15.
+```
+
+## 329: Close-15 Sources=4, Tx/Rx Offset 45 mm, Seed13 Objective Diagnostics
+
+Purpose:
+
+```text
+replicate the clean close15 45 mm Tx/Rx seed34 near-touching result on seed13
+before deciding whether close15 can be promoted under the extra-conservative
+45 mm acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,265 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,265
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/329_coordinate_optimizer_close15_seed13_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1409.3 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,265] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,265], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=265,z=90,r=8, strong,
+    x interval 265-265, radius interval 8-8
+  source_mismatch_noise10_seed13: best x=265,z=90,r=8, strong,
+    x interval 265-265, radius interval 8-8
+
+base objective, noise10_seed13:
+  truth x265/r8 is best.
+  x264/r8 is +1.39319e-03 worse (3.5259% relative).
+  first non-r8 branch x266/r7.5 is +2.68085e-03 worse (6.7847% relative).
+
+high-band objective, noise10_seed13:
+  truth x265/r8 is best.
+  x264/r8 is +1.28556e-03 worse (13.4400% relative).
+  first non-r8 branch x266/r7.5 is +3.77783e-03 worse (39.4957% relative).
+
+base objective, source_mismatch_noise10_seed13:
+  truth x265/r8 is best.
+  x264/r8 is +2.31043e-03 worse (3.6390% relative).
+  first non-r8 branch x266/r7.5 is +5.41505e-03 worse (8.5289% relative).
+
+high-band objective, source_mismatch_noise10_seed13:
+  truth x265/r8 is best.
+  x264/r8 is +1.92273e-03 worse (11.5121% relative).
+  first non-r8 branch x265/r7.5 is +6.14810e-03 worse (36.8109% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.31,
+  nonwhite fraction 0.312955
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close15 45 mm Tx/Rx seed13 replicates the clean seed34 near-touching result:
+both rows are strong, no ambiguity interval remains, and all base/high-band
+diagnostics rank truth first. The nearest competitor remains the same-radius
+lateral x264/r8 branch, with weakest base gap 3.53%. Run seed21 and aggregate
+328-330 before promoting close15 under 45 mm Tx/Rx.
+```
+
+## 330: Close-15 Sources=4, Tx/Rx Offset 45 mm, Seed21 Objective Diagnostics
+
+Purpose:
+
+```text
+complete the close15 45 mm Tx/Rx seed replicate set before aggregating the
+near-touching clean-pass evidence.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,265 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,265
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/330_coordinate_optimizer_close15_seed21_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1409.0 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,265] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,265], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=265,z=90,r=8, strong,
+    x interval 265-265, radius interval 8-8
+  source_mismatch_noise10_seed21: best x=265,z=90,r=8, strong,
+    x interval 265-265, radius interval 8-8
+
+base objective, noise10_seed21:
+  truth x265/r8 is best.
+  x264/r8 is +1.30635e-03 worse (3.3777% relative).
+  first non-r8 branch x266/r7.5 is +2.60681e-03 worse (6.7402% relative).
+
+high-band objective, noise10_seed21:
+  truth x265/r8 is best.
+  x264/r8 is +1.04585e-03 worse (11.9636% relative).
+  first non-r8 branch x265/r7.5 is +3.54135e-03 worse (40.5102% relative).
+
+base objective, source_mismatch_noise10_seed21:
+  truth x265/r8 is best.
+  x264/r8 is +2.19690e-03 worse (3.4340% relative).
+  first non-r8 branch x265/r7.5 is +5.26377e-03 worse (8.2280% relative).
+
+high-band objective, source_mismatch_noise10_seed21:
+  truth x265/r8 is best.
+  x264/r8 is +1.72443e-03 worse (10.2826% relative).
+  first non-r8 branch x265/r7.5 is +5.80819e-03 worse (34.6337% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.31,
+  nonwhite fraction 0.312952
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close15 45 mm Tx/Rx seed21 completes the clean seed set: both rows are strong,
+no ambiguity interval remains, and all base/high-band diagnostics rank truth
+first. The nearest competitor remains the same-radius lateral x264/r8 branch,
+with weakest base gap 3.38%. Aggregate 328-330 next; if all six rows remain
+truth-selected, strong, and zero-ambiguity, promote close15 as a clean
+near-touching result under 45 mm Tx/Rx.
+```
+
+## 331: Close-15 Sources=4, Tx/Rx Offset 45 mm, Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the close15 45 mm Tx/Rx seed34/seed13/seed21 replicates and decide
+whether the near-touching geometry is cleanly validated.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close15_sources4_txrx45_seed_replicates
+  --outdir outputs/experiments/331_coordinate_confidence_close15_sources4_txrx45_seed_replicates
+  outputs/experiments/328_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/329_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/330_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/331_coordinate_confidence_close15_sources4_txrx45_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+fallback warning rows: 0
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  2.60681e-03 / 4.00048e-03 / 5.41505e-03
+acquisition group:
+  4 sources, Tx/Rx offset 45 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest base lateral gaps:
+  nominal: 2.9713% (seed34, x264/r8)
+  source mismatch: 3.4340% (seed21, x264/r8)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 79.44,
+  nonwhite fraction 0.233998
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.62,
+  nonwhite fraction 0.045367
+FIGURE_NOTES.md reports rows=6, truth rows=6, strong=6, and x-ambiguity rows=0.
+```
+
+Interpretation:
+
+```text
+45 mm Tx/Rx cleanly validates close15 across seeds 34, 13, and 21: every row
+selects truth, every row is strong, and no ambiguity interval remains. This is
+a near-touching geometry with about 1 mm physical gap between the 6 mm center
+bar and 8 mm target bar, so it materially extends the extra-conservative
+45 mm acquisition guidance beyond close20. Keep close30 as the tightest clean
+replicated result under the standard 35 mm acquisition, and report close15 as
+requiring the larger 45 mm Tx/Rx acquisition.
+Next run a close14 seed34 45 mm Tx/Rx tangent lower-bound probe. At close14,
+the 6 mm and 8 mm bars are tangent in the truth geometry. A failure would
+bracket the practical 45 mm clean limit at close15; a clean pass would require
+seed replication before promotion.
+```
+
+## 332: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Objective Diagnostics
+
+Purpose:
+
+```text
+test the tangent close14 lower-bound geometry after close15 was replicated as
+clean under the 45 mm Tx/Rx acquisition. At close14, the 6 mm center bar and
+8 mm target bar touch in the truth geometry.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/332_coordinate_optimizer_close14_seed34_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1401.1 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise10_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.21482e-03 worse (3.0986% relative).
+  first non-r8 branch x265/r7.5 is +2.69546e-03 worse (6.8753% relative).
+
+high-band objective, noise10_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.05041e-03 worse (11.2065% relative).
+  first non-r8 branch x264/r7.5 is +3.61575e-03 worse (38.5753% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.46573e-03 worse (3.8958% relative).
+  first non-r8 branch x265/r7.5 is +5.27299e-03 worse (8.3312% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05725e-03 worse (12.8285% relative).
+  first non-r8 branch x264/r7.5 is +6.05291e-03 worse (37.7445% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.55,
+  nonwhite fraction 0.315814
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close14 45 mm Tx/Rx seed34 passes the tangent lower-bound probe cleanly:
+both rows are strong, no ambiguity interval remains, and all base/high-band
+diagnostics rank truth first. The nearest competitor is the same-radius lateral
+x263/r8 branch, with weakest base gap 3.10%. Replicate seeds 13 and 21 before
+promoting close14 under 45 mm Tx/Rx.
+```
+
+## 333: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed13 Objective Diagnostics
+
+Purpose:
+
+```text
+replicate the clean close14 45 mm Tx/Rx tangent seed34 result on seed13 before
+deciding whether close14 can be promoted under the extra-conservative 45 mm
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed13|source_mismatch_noise10_seed13
+  --update-case-label source_mismatch_noise10_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/333_coordinate_optimizer_close14_seed13_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1392.6 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise10_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise10_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +1.43649e-03 worse (3.6243% relative).
+  first non-r8 branch x265/r7.5 is +2.64555e-03 worse (6.6749% relative).
+
+high-band objective, noise10_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +1.32367e-03 worse (13.7819% relative).
+  first non-r8 branch x265/r7.5 is +3.75610e-03 worse (39.1080% relative).
+
+base objective, source_mismatch_noise10_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +2.41026e-03 worse (3.7782% relative).
+  first non-r8 branch x265/r7.5 is +5.39906e-03 worse (8.4634% relative).
+
+high-band objective, source_mismatch_noise10_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +2.04885e-03 worse (12.1770% relative).
+  first non-r8 branch x264/r7.5 is +6.27730e-03 worse (37.3079% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.21,
+  nonwhite fraction 0.311737
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close14 45 mm Tx/Rx seed13 replicates the clean seed34 tangent result:
+both rows are strong, no ambiguity interval remains, and all base/high-band
+diagnostics rank truth first. The nearest competitor remains the same-radius
+lateral x263/r8 branch, with weakest base gap 3.62%. Run seed21 and aggregate
+332-334 before promoting close14 under 45 mm Tx/Rx.
+```
+
+## 334: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed21 Objective Diagnostics
+
+Purpose:
+
+```text
+complete the close14 45 mm Tx/Rx tangent seed replicate set before aggregating
+the clean-pass evidence.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed21|source_mismatch_noise10_seed21
+  --update-case-label source_mismatch_noise10_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/334_coordinate_optimizer_close14_seed21_sources4_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1409.8 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise10_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise10_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.36926e-03 worse (3.5299% relative).
+  first non-r8 branch x265/r7.5 is +2.57355e-03 worse (6.6345% relative).
+
+high-band objective, noise10_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.11620e-03 worse (12.7265% relative).
+  first non-r8 branch x264/r7.5 is +3.57587e-03 worse (40.7707% relative).
+
+base objective, source_mismatch_noise10_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +2.23329e-03 worse (3.4747% relative).
+  first non-r8 branch x265/r7.5 is +5.28358e-03 worse (8.2206% relative).
+
+high-band objective, source_mismatch_noise10_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.73474e-03 worse (10.2672% relative).
+  first non-r8 branch x264/r7.5 is +5.86985e-03 worse (34.7414% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.17,
+  nonwhite fraction 0.311328
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+close14 45 mm Tx/Rx seed21 completes the clean seed set: both rows are strong,
+no ambiguity interval remains, and all base/high-band diagnostics rank truth
+first. The nearest competitor remains the same-radius lateral x263/r8 branch,
+with weakest base gap 3.53%. Aggregate 332-334 next; if all six rows remain
+truth-selected, strong, and zero-ambiguity, promote close14 as clean under
+45 mm Tx/Rx.
+```
+
+## 335: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the close14 45 mm Tx/Rx seed34/seed13/seed21 tangent replicates and
+decide whether the tangent geometry is cleanly validated.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close14_sources4_txrx45_seed_replicates
+  --outdir outputs/experiments/335_coordinate_confidence_close14_sources4_txrx45_seed_replicates
+  outputs/experiments/332_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/333_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/334_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/335_coordinate_confidence_close14_sources4_txrx45_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+fallback warning rows: 0
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  2.57355e-03 / 3.97836e-03 / 5.39906e-03
+acquisition group:
+  4 sources, Tx/Rx offset 45 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest base lateral gaps:
+  nominal: 3.0986% (seed34, x263/r8)
+  source mismatch: 3.4747% (seed21, x263/r8)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 79.38,
+  nonwhite fraction 0.233560
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 32.63,
+  nonwhite fraction 0.045375
+FIGURE_NOTES.md reports rows=6, truth rows=6, strong=6, and x-ambiguity rows=0.
+```
+
+Interpretation:
+
+```text
+45 mm Tx/Rx cleanly validates close14 across seeds 34, 13, and 21: every row
+selects truth, every row is strong, and no ambiguity interval remains. This is
+the tangent physical limit for the 6 mm center bar and 8 mm target bar; closer
+truth spacing would overlap the two circular bars rather than describe two
+separate non-overlapping rebars. Promote close14 as the clean physical spacing
+floor under the 4-source, 45 mm Tx/Rx acquisition. Keep close30 as the tightest
+clean replicated result under the standard 35 mm acquisition.
+Next move from spacing lower-bound probes to acquisition-cost probes. Run a
+close14 seed34 sources=3, Tx/Rx=45 mm diagnostic: if it fails, 4 sources remain
+the minimum clean tangent acquisition; if it passes, replicate before lowering
+the source-count guidance.
+```
+
+## 336: Close-14 Sources=3, Tx/Rx Offset 45 mm, Seed34 Cost Probe
+
+Purpose:
+
+```text
+test whether the replicated clean close14 tangent result under 4 sources and
+45 mm Tx/Rx can be made cheaper by reducing the scan to 3 sources.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 3 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise10_seed34|source_mismatch_noise10_seed34
+  --update-case-label source_mismatch_noise10_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/336_coordinate_optimizer_close14_seed34_sources3_txrx45_objectives
+```
+
+Result:
+
+```text
+elapsed: 1087.5 s
+sources: 3
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,265], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise10_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-265, radius interval 8-8
+  source_mismatch_noise10_seed34: best x=265,z=90,r=8, strong,
+    x interval 264-265, radius interval 8-8
+
+base objective, noise10_seed34:
+  truth x264/r8 is best.
+  x265/r8 is +3.00863e-04 worse (0.9100% relative).
+  first non-r8 branch x265/r7.5 is +3.18855e-03 worse (9.6442% relative).
+
+high-band objective, noise10_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +4.15238e-04 worse (4.7243% relative).
+  x265/r8 is +5.07431e-04 worse (5.7732% relative).
+
+base objective, source_mismatch_noise10_seed34:
+  x265/r8 is best.
+  truth x264/r8 is rank2, +7.48547e-05 worse (0.1702% relative).
+  first non-r8 branch x266/r7.5 is +3.54963e-03 worse (8.0711% relative).
+
+high-band objective, source_mismatch_noise10_seed34:
+  truth x264/r8 is best.
+  x265/r8 is +1.95933e-04 worse (1.5857% relative).
+  first non-r8 branch x265/r7.5 is +4.09832e-03 worse (33.1684% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 94.35,
+  nonwhite fraction 0.387244
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+sources=3 is not a clean tangent acquisition even though the radius margins are
+strong. The reduced scan is faster, but the x landscape becomes too flat:
+nominal keeps a 264-265 mm ambiguity interval, and the source-mismatch update
+selects x265/r8 while truth x264/r8 is only 0.1702% worse. Keep sources=4 as
+the minimum clean close14 tangent acquisition under 45 mm Tx/Rx.
+```
+
+## 337: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise20 Robustness Probe
+
+Purpose:
+
+```text
+test whether the replicated clean close14 4-source 45 mm Tx/Rx tangent result
+remains clean when observation noise is doubled from 10% RMS to 20% RMS.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise20_seed34|source_mismatch_noise20_seed34
+  --update-case-label source_mismatch_noise20_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/337_coordinate_optimizer_close14_seed34_sources4_txrx45_noise20_objectives
+```
+
+Result:
+
+```text
+elapsed: 1394.8 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise20_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise20_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+
+base objective, noise20_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.10005e-03 worse (0.9217% relative).
+  first non-r8 branch x265/r7.5 is +2.45546e-03 worse (2.0574% relative).
+
+high-band objective, noise20_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04461e-03 worse (9.8315% relative).
+  first non-r8 branch x264/r7.5 is +3.58662e-03 worse (33.7558% relative).
+
+base objective, source_mismatch_noise20_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.19756e-03 worse (1.2320% relative).
+  first non-r8 branch x265/r7.5 is +4.59742e-03 worse (2.5775% relative).
+
+high-band objective, source_mismatch_noise20_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05708e-03 worse (12.3924% relative).
+  first non-r8 branch x264/r7.5 is +5.97437e-03 worse (35.9912% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.92,
+  nonwhite fraction 0.318705
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+20% noise preserves truth-selected point recovery but not clean zero-ambiguity
+recovery. Both rows are radius-strong and rank truth first, but both retain a
+263-264 mm x-ambiguity interval. Treat 20% noise as an interval-reporting
+robustness mode, not as a clean close14 operating point. Run a 15% noise seed34
+probe to bracket where the clean zero-ambiguity threshold sits between the
+replicated 10% clean result and this 20% interval result.
+```
+
+## 338: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise15 Robustness Probe
+
+Purpose:
+
+```text
+test whether the close14 4-source 45 mm Tx/Rx tangent result remains clean at
+15% RMS noise, midway between the replicated 10% clean operating point and the
+20% point-correct but x-ambiguous robustness result.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15_seed34|source_mismatch_noise15_seed34
+  --update-case-label source_mismatch_noise15_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/338_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15_objectives
+```
+
+Result:
+
+```text
+elapsed: 1397.6 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.16333e-03 worse (1.5649% relative).
+  first non-r8 branch x265/r7.5 is +2.58892e-03 worse (3.4826% relative).
+
+high-band objective, noise15_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04759e-03 worse (10.5574% relative).
+  first non-r8 branch x264/r7.5 is +3.60145e-03 worse (36.2946% relative).
+
+base objective, source_mismatch_noise15_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.34860e-03 worse (2.0440% relative).
+  first non-r8 branch x265/r7.5 is +4.96752e-03 worse (4.3233% relative).
+
+high-band objective, source_mismatch_noise15_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05739e-03 worse (12.6907% relative).
+  first non-r8 branch x264/r7.5 is +6.01427e-03 worse (37.0982% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.74,
+  nonwhite fraction 0.318645
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15% RMS noise is clean for close14 seed34 under the 4-source, 45 mm Tx/Rx
+tangent acquisition. Both rows select truth, both are strong, and the
+ambiguity set collapses to the single truth point x264/z90/r8. This separates
+15% from the 20% case: 20% still selected truth, but required interval
+reporting because x263/r8 stayed inside the near-best ambiguity threshold.
+Replicate 15% noise on seeds 13 and 21 before promoting it as a noise-robust
+operating point; until then, the fully replicated clean noise level remains
+10% RMS and 15% is a promising seed34 bracket result.
+```
+
+## 339: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed13 Noise15 Robustness Replicate
+
+Purpose:
+
+```text
+replicate the clean close14 15% RMS noise seed34 result on seed13 before
+promoting 15% noise as a robust tangent acquisition setting.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15_seed13|source_mismatch_noise15_seed13
+  --update-case-label source_mismatch_noise15_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/339_coordinate_optimizer_close14_seed13_sources4_txrx45_noise15_objectives
+```
+
+Result:
+
+```text
+elapsed: 1412.1 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +1.48329e-03 worse (1.9745% relative).
+  first non-r8 branch x265/r7.5 is +2.51638e-03 worse (3.3498% relative).
+
+high-band objective, noise15_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +1.45725e-03 worse (14.0820% relative).
+  first non-r8 branch x265/r7.5 is +3.72693e-03 worse (36.0150% relative).
+
+base objective, source_mismatch_noise15_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +2.27042e-03 worse (1.9666% relative).
+  first non-r8 branch x265/r7.5 is +5.14695e-03 worse (4.4583% relative).
+
+high-band objective, source_mismatch_noise15_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +2.04459e-03 worse (11.6870% relative).
+  first non-r8 branch x264/r7.5 is +6.34984e-03 worse (36.2961% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.21,
+  nonwhite fraction 0.311725
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15% RMS noise remains clean for close14 seed13 under the 4-source, 45 mm Tx/Rx
+tangent acquisition. Seed34 and seed13 now give 4/4 truth-selected, strong,
+zero-ambiguity rows at 15% noise. The nearest lateral competitor is still the
+same-radius x263/r8 branch, but it stays outside the ambiguity interval in
+both observed cases and both objective diagnostics. Run seed21 next; if the
+last two rows stay clean, aggregate 338-340 and promote 15% RMS as a
+replicated clean noise level. If seed21 fails, classify 15% as seed-sensitive
+and keep the replicated clean threshold at 10% RMS.
+```
+
+## 340: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed21 Noise15 Robustness Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replication set for close14 tangent recovery at
+15% RMS noise under the 4-source, 45 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15_seed21|source_mismatch_noise15_seed21
+  --update-case-label source_mismatch_noise15_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/340_coordinate_optimizer_close14_seed21_sources4_txrx45_noise15_objectives
+```
+
+Result:
+
+```text
+elapsed: 1386.5 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.38646e-03 worse (1.8794% relative).
+  first non-r8 branch x265/r7.5 is +2.41265e-03 worse (3.2704% relative).
+
+high-band objective, noise15_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.14612e-03 worse (12.5707% relative).
+  first non-r8 branch x264/r7.5 is +3.54130e-03 worse (38.8412% relative).
+
+base objective, source_mismatch_noise15_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +2.01895e-03 worse (1.7349% relative).
+  first non-r8 branch x264/r7.5 is +4.92789e-03 worse (4.2346% relative).
+
+high-band objective, source_mismatch_noise15_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.57336e-03 worse (8.9222% relative).
+  first non-r8 branch x264/r7.5 is +5.73882e-03 worse (32.5435% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.23,
+  nonwhite fraction 0.312535
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15% RMS noise remains clean for close14 seed21 under the 4-source, 45 mm Tx/Rx
+tangent acquisition. Seeds 34, 13, and 21 now produce 6/6 truth-selected,
+strong, zero-ambiguity rows at 15% RMS noise. The nearest same-radius lateral
+competitor x263/r8 stays outside the ambiguity threshold in every observed
+case, while first non-r8 branches remain farther away. Aggregate 338-340 next;
+if the aggregate confirms the six-row summary, promote 15% RMS as the
+replicated clean close14 tangent noise level and keep 20% RMS as
+point-correct but interval-reporting.
+```
+
+## 341: Close-14 Sources=4, Tx/Rx Offset 45 mm, Noise15 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the close14 15% RMS noise seed34/seed13/seed21 tangent replicates
+and decide whether 15% RMS can be promoted as a replicated clean noise level.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close14_sources4_txrx45_noise15_seed_replicates
+  --outdir outputs/experiments/341_coordinate_confidence_close14_sources4_txrx45_noise15_seed_replicates
+  outputs/experiments/338_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/339_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/340_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/341_coordinate_confidence_close14_sources4_txrx45_noise15_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+fallback warning rows: 0
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  2.41265e-03 / 3.76005e-03 / 5.14695e-03
+acquisition group:
+  4 sources, Tx/Rx offset 45 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest base lateral gaps:
+  nominal: 1.5649% (seed34, x263/r8)
+  source mismatch: 1.7349% (seed21, x263/r8)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255, std 75.79,
+  nonwhite fraction 0.209716
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255, std 33.00,
+  nonwhite fraction 0.046983
+FIGURE_NOTES.md reports rows=6, truth rows=6, strong=6, and x-ambiguity rows=0.
+```
+
+Interpretation:
+
+```text
+15% RMS noise is now a replicated clean close14 tangent operating point under
+the 4-source, 45 mm Tx/Rx acquisition. Across seeds 34, 13, and 21, all six
+rows select truth, all six are strong, and no near-best x/z/r ambiguity
+interval remains. This is a stronger claim than the 20% RMS result, where truth
+was still ranked first but x263/r8 stayed within the ambiguity threshold.
+Promote 15% RMS as clean and keep 20% RMS as point-correct but
+interval-reporting. Run a 17.5% noise seed34 bracket next if the goal is to
+locate the clean-to-interval transition more tightly.
+```
+
+## 342: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise17.5 Bracket Probe
+
+Purpose:
+
+```text
+test a 17.5% RMS noise midpoint between the replicated clean 15% result and
+the point-correct but x-ambiguous 20% result.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise17p5_seed34|source_mismatch_noise17p5_seed34
+  --update-case-label source_mismatch_noise17p5_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/342_coordinate_optimizer_close14_seed34_sources4_txrx45_noise17p5_objectives
+```
+
+Result:
+
+```text
+elapsed: 1409.5 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise17p5_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise17p5_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise17p5_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.13291e-03 worse (1.1825% relative).
+  first non-r8 branch x265/r7.5 is +2.52500e-03 worse (2.6356% relative).
+
+high-band objective, noise17p5_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04612e-03 worse (10.2011% relative).
+  first non-r8 branch x264/r7.5 is +3.59410e-03 worse (35.0473% relative).
+
+base objective, source_mismatch_noise17p5_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.27634e-03 worse (1.5641% relative).
+  first non-r8 branch x265/r7.5 is +4.78835e-03 worse (3.2902% relative).
+
+high-band objective, source_mismatch_noise17p5_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05729e-03 worse (12.5604% relative).
+  first non-r8 branch x264/r7.5 is +5.99447e-03 worse (36.5983% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 89.22,
+  nonwhite fraction 0.310432
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+17.5% RMS noise is point-correct but not clean for close14 seed34 under the
+4-source, 45 mm Tx/Rx tangent acquisition. Both rows select truth and keep
+strong radius margins, but the nominal row has two near-best x candidates:
+truth x264/r8 and same-radius x263/r8. That 263-264 mm x interval puts 17.5%
+in the same interval-reporting family as 20%, though milder because the
+source-mismatch row is still zero-ambiguity. The clean noise threshold is now
+bracketed between the replicated 15% clean result and this 17.5% nominal
+ambiguity. Run a 16.25% seed34 bracket if a tighter threshold is needed.
+```
+
+## 343: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise16.25 Bracket Probe
+
+Purpose:
+
+```text
+test a 16.25% RMS noise midpoint between the replicated clean 15% result and
+the seed34-ambiguous 17.5% bracket result.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise16p25_seed34|source_mismatch_noise16p25_seed34
+  --update-case-label source_mismatch_noise16p25_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/343_coordinate_optimizer_close14_seed34_sources4_txrx45_noise16p25_objectives
+```
+
+Result:
+
+```text
+elapsed: 1403.0 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise16p25_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise16p25_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise16p25_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.14846e-03 worse (1.3545% relative).
+  first non-r8 branch x265/r7.5 is +2.55773e-03 worse (3.0167% relative).
+
+high-band objective, noise16p25_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04686e-03 worse (10.3812% relative).
+  first non-r8 branch x264/r7.5 is +3.59779e-03 worse (35.6777% relative).
+
+base objective, source_mismatch_noise16p25_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.31341e-03 worse (1.7810% relative).
+  first non-r8 branch x265/r7.5 is +4.87968e-03 worse (3.7566% relative).
+
+high-band objective, source_mismatch_noise16p25_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05735e-03 worse (12.6305% relative).
+  first non-r8 branch x264/r7.5 is +6.00441e-03 worse (36.8622% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 88.90,
+  nonwhite fraction 0.308970
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+16.25% RMS noise is also point-correct but not clean for close14 seed34 under
+the 4-source, 45 mm Tx/Rx tangent acquisition. The nominal row selects truth
+and has a strong radius margin, but x263/r8 stays inside the ambiguity
+threshold, leaving the same 263-264 mm interval seen at 17.5%. The
+source-mismatch row remains zero-ambiguity. The clean threshold is now
+bracketed between replicated-clean 15% RMS and seed34-ambiguous 16.25% RMS.
+Run a 15.625% seed34 midpoint if the threshold needs further tightening.
+```
+
+## 344: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise15.625 Bracket Probe
+
+Purpose:
+
+```text
+test a 15.625% RMS noise midpoint between the replicated clean 15% result and
+the seed34-ambiguous 16.25% bracket result.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p625_seed34|source_mismatch_noise15p625_seed34
+  --update-case-label source_mismatch_noise15p625_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/344_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15p625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1408.9 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p625_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise15p625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.15599e-03 worse (1.4543% relative).
+  first non-r8 branch x265/r7.5 is +2.57353e-03 worse (3.2376% relative).
+
+high-band objective, noise15p625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04723e-03 worse (10.4699% relative).
+  first non-r8 branch x264/r7.5 is +3.59962e-03 worse (35.9880% relative).
+
+base objective, source_mismatch_noise15p625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.33125e-03 worse (1.9060% relative).
+  first non-r8 branch x265/r7.5 is +4.92407e-03 worse (4.0258% relative).
+
+high-band objective, source_mismatch_noise15p625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05737e-03 worse (12.6618% relative).
+  first non-r8 branch x264/r7.5 is +6.00935e-03 worse (36.9838% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 88.58,
+  nonwhite fraction 0.305460
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.625% RMS noise is still point-correct but not clean for close14 seed34 under
+the 4-source, 45 mm Tx/Rx tangent acquisition. The nominal row selects truth
+with a strong radius margin, but x263/r8 remains inside the ambiguity threshold
+and keeps a 263-264 mm x interval. The source-mismatch row remains
+zero-ambiguity. The clean threshold is now bracketed tightly between
+replicated-clean 15% RMS and seed34-ambiguous 15.625% RMS. A 15.3125% seed34
+midpoint is the next finer bracket if this threshold needs more precision.
+```
+
+## 345: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise15.3125 Bracket Probe
+
+Purpose:
+
+```text
+test a 15.3125% RMS noise midpoint between the replicated clean 15% result and
+the seed34-ambiguous 15.625% bracket result.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p3125_seed34|source_mismatch_noise15p3125_seed34
+  --update-case-label source_mismatch_noise15p3125_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/345_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15p3125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1395.2 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p3125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p3125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p3125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.15968e-03 worse (1.5082% relative).
+  first non-r8 branch x265/r7.5 is +2.58128e-03 worse (3.3569% relative).
+
+high-band objective, noise15p3125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04741e-03 worse (10.5137% relative).
+  first non-r8 branch x264/r7.5 is +3.60054e-03 worse (36.1417% relative).
+
+base objective, source_mismatch_noise15p3125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.33999e-03 worse (1.9733% relative).
+  first non-r8 branch x265/r7.5 is +4.94591e-03 worse (4.1708% relative).
+
+high-band objective, source_mismatch_noise15p3125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05738e-03 worse (12.6766% relative).
+  first non-r8 branch x264/r7.5 is +6.01181e-03 worse (37.0419% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 88.32,
+  nonwhite fraction 0.302732
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.3125% RMS noise is formally clean for close14 seed34 under the 4-source,
+45 mm Tx/Rx tangent acquisition: both rows select truth, both are strong, and
+both ambiguity intervals collapse to the single x264/z90/r8 point. This is an
+edge-clean result, not a wide-margin result. In the nominal row, x263/r8 is
+just outside the ambiguity threshold by about 6.27e-06 absolute misfit. The
+clean-to-interval transition is now bracketed between seed34-clean 15.3125% RMS
+and seed34-ambiguous 15.625% RMS, while the replicated clean level remains
+15% RMS until a higher level is replicated. A 15.46875% seed34 midpoint is the
+next finer bracket if needed.
+```
+
+## 346: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise15.46875 Bracket Probe
+
+Purpose:
+
+```text
+test a 15.46875% RMS noise midpoint between the edge-clean 15.3125% seed34
+result and the seed34-ambiguous 15.625% bracket result.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p46875_seed34|source_mismatch_noise15p46875_seed34
+  --update-case-label source_mismatch_noise15p46875_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/346_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15p46875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1385.4 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p46875_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise15p46875_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p46875_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.15784e-03 worse (1.4809% relative).
+  first non-r8 branch x265/r7.5 is +2.57742e-03 worse (3.2965% relative).
+
+high-band objective, noise15p46875_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04732e-03 worse (10.4918% relative).
+  first non-r8 branch x264/r7.5 is +3.60008e-03 worse (36.0650% relative).
+
+base objective, source_mismatch_noise15p46875_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.33564e-03 worse (1.9392% relative).
+  first non-r8 branch x265/r7.5 is +4.93502e-03 worse (4.0974% relative).
+
+high-band objective, source_mismatch_noise15p46875_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05738e-03 worse (12.6693% relative).
+  first non-r8 branch x264/r7.5 is +6.01058e-03 worse (37.0131% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 88.04,
+  nonwhite fraction 0.299639
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.46875% RMS noise is point-correct but not clean for close14 seed34 under
+the 4-source, 45 mm Tx/Rx tangent acquisition. The nominal row again contains
+two near-best same-radius x candidates, x263/r8 and truth x264/r8, so it needs
+interval reporting. The source-mismatch row remains zero-ambiguity. The seed34
+transition is now bracketed between 15.3125% edge-clean and 15.46875%
+ambiguous. Since 15.3125% is already edge-clean, the next useful step is
+replicating 15.3125% on seed13 before treating it as anything more than a
+single-seed bracket point.
+```
+
+## 347: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed13 Noise15.3125 Replicate
+
+Purpose:
+
+```text
+replicate the edge-clean 15.3125% RMS seed34 bracket point on seed13 before
+treating 15.3125% as more than a single-seed clean result.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p3125_seed13|source_mismatch_noise15p3125_seed13
+  --update-case-label source_mismatch_noise15p3125_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/347_coordinate_optimizer_close14_seed13_sources4_txrx45_noise15p3125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1396.8 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p3125_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p3125_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p3125_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +1.48538e-03 worse (1.9117% relative).
+  first non-r8 branch x265/r7.5 is +2.50741e-03 worse (3.2270% relative).
+
+high-band objective, noise15p3125_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +1.46558e-03 worse (14.0899% relative).
+  first non-r8 branch x265/r7.5 is +3.72508e-03 worse (35.8126% relative).
+
+base objective, source_mismatch_noise15p3125_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +2.26056e-03 worse (1.8976% relative).
+  first non-r8 branch x265/r7.5 is +5.12840e-03 worse (4.3051% relative).
+
+high-band objective, source_mismatch_noise15p3125_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +2.04431e-03 worse (11.6514% relative).
+  first non-r8 branch x264/r7.5 is +6.35430e-03 worse (36.2160% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 87.77,
+  nonwhite fraction 0.295211
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.3125% RMS noise replicates cleanly on close14 seed13 under the 4-source,
+45 mm Tx/Rx tangent acquisition. Both rows select truth, both are strong, and
+both ambiguity intervals collapse to the single x264/z90/r8 point. This is
+less edge-like than the seed34 clean result: the nearest same-radius x263/r8
+competitor is 3.20e-04 absolute misfit above the nominal ambiguity cutoff and
+4.74e-04 above the source-mismatch cutoff. With seed34 and seed13 now clean,
+the next useful step is a 15.3125% seed21 replicate before aggregating or
+promoting 15.3125% above the current replicated-clean 15% RMS level.
+```
+
+## 348: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed21 Noise15.3125 Replicate
+
+Purpose:
+
+```text
+complete the 15.3125% RMS close14 tangent replicate set by running seed21
+after seed34 and seed13 both recovered clean single-point confidence intervals.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p3125_seed21|source_mismatch_noise15p3125_seed21
+  --update-case-label source_mismatch_noise15p3125_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/348_coordinate_optimizer_close14_seed21_sources4_txrx45_noise15p3125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1413.9 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p3125_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p3125_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p3125_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.38683e-03 worse (1.8171% relative).
+  first non-r8 branch x265/r7.5 is +2.40183e-03 worse (3.1470% relative).
+
+high-band objective, noise15p3125_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.14798e-03 worse (12.5512% relative).
+  first non-r8 branch x264/r7.5 is +3.53912e-03 worse (38.6945% relative).
+
+base objective, source_mismatch_noise15p3125_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +2.00486e-03 worse (1.6695% relative).
+  first non-r8 branch x264/r7.5 is +4.90149e-03 worse (4.0817% relative).
+
+high-band objective, source_mismatch_noise15p3125_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.56326e-03 worse (8.8367% relative).
+  first non-r8 branch x264/r7.5 is +5.73058e-03 worse (32.3935% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 87.80,
+  nonwhite fraction 0.296015
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.3125% RMS noise also replicates cleanly on close14 seed21 under the
+4-source, 45 mm Tx/Rx tangent acquisition. Both rows select truth, both are
+strong, and both ambiguity intervals collapse to the single x264/z90/r8 point.
+The nearest same-radius x263/r8 competitor remains outside the ambiguity
+cutoff by 2.42e-04 absolute misfit in the nominal row and 2.04e-04 in the
+source-mismatch row. Seed34, seed13, and seed21 now all have clean 15.3125%
+point-and-interval results. Aggregate 345/347/348 next before promoting
+15.3125% above the current replicated-clean 15% RMS guidance.
+```
+
+## 349: Close-14 Sources=4, Tx/Rx Offset 45 mm, Noise15.3125 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the close14 15.3125% RMS seed34/seed13/seed21 tangent replicates
+and decide whether 15.3125% RMS can replace 15% RMS as the replicated clean
+noise level.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  --run-name coordinate_confidence_close14_sources4_txrx45_noise15p3125_seed_replicates
+  --outdir outputs/experiments/349_coordinate_confidence_close14_sources4_txrx45_noise15p3125_seed_replicates
+  outputs/experiments/345_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/347_.../data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/348_.../data/multi_rebar_coordinate_optimizer_summary.json
+```
+
+Output:
+
+```text
+outputs/experiments/349_coordinate_confidence_close14_sources4_txrx45_noise15p3125_seed_replicates
+```
+
+Aggregate result:
+
+```text
+rows: 6
+truth-geometry rows: 6
+confidence labels: strong=6
+fallback warning rows: 0
+x-ambiguity rows: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius margin abs min/mean/max:
+  2.40183e-03 / 3.74438e-03 / 5.12840e-03
+acquisition group:
+  4 sources, Tx/Rx offset 45 mm: rows=6, truth rows=6, x ambiguity=0
+
+weakest base lateral gaps:
+  nominal: 1.5082% (seed34, x263/r8)
+  source mismatch: 1.6695% (seed21, x263/r8)
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255, std 73.30,
+  nonwhite fraction 0.189795
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255, std 33.79,
+  nonwhite fraction 0.044199
+FIGURE_NOTES.md reports rows=6, truth rows=6, strong=6, and x-ambiguity rows=0.
+```
+
+Interpretation:
+
+```text
+15.3125% RMS noise is now a replicated clean close14 tangent operating point
+under the 4-source, 45 mm Tx/Rx acquisition. Across seeds 34, 13, and 21, all
+six rows select truth, all six are strong, and no near-best x/z/r ambiguity
+interval remains. Promote 15.3125% RMS as the clean noise guidance for this
+acquisition, replacing the previous 15% RMS guidance. Keep 15.46875% RMS as a
+seed34 point-correct but interval-reporting bracket until additional evidence
+shows otherwise. If the goal is to tighten the clean-to-interval transition,
+run a 15.390625% seed34 midpoint between replicated-clean 15.3125% and
+seed34-ambiguous 15.46875%.
+```
+
+## 350: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise15.390625 Bracket Probe
+
+Purpose:
+
+```text
+test a 15.390625% RMS noise midpoint between replicated-clean 15.3125% and
+seed34-ambiguous 15.46875% to tighten the clean-to-interval transition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p390625_seed34|source_mismatch_noise15p390625_seed34
+  --update-case-label source_mismatch_noise15p390625_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/350_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15p390625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1359.3 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p390625_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise15p390625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p390625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.15876e-03 worse (1.4944% relative).
+  first non-r8 branch x265/r7.5 is +2.57935e-03 worse (3.3265% relative).
+
+high-band objective, noise15p390625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04736e-03 worse (10.5028% relative).
+  first non-r8 branch x264/r7.5 is +3.60031e-03 worse (36.1034% relative).
+
+base objective, source_mismatch_noise15p390625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.33782e-03 worse (1.9561% relative).
+  first non-r8 branch x265/r7.5 is +4.94047e-03 worse (4.1339% relative).
+
+high-band objective, source_mismatch_noise15p390625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05738e-03 worse (12.6730% relative).
+  first non-r8 branch x264/r7.5 is +6.01119e-03 worse (37.0275% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 87.70,
+  nonwhite fraction 0.295126
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.390625% RMS noise is point-correct but not clean for close14 seed34 under
+the 4-source, 45 mm Tx/Rx tangent acquisition. Both rows select truth and both
+have strong radius margins, but the nominal row has two near-best same-radius
+x candidates: truth x264/r8 and x263/r8. The ambiguity is extremely close:
+x263/r8 is only 4.33e-06 absolute misfit below the ambiguity cutoff. The
+seed34 transition is now bracketed between replicated-clean 15.3125% and
+seed34-ambiguous 15.390625%. The next midpoint is 15.3515625% RMS if the goal
+is to tighten the transition further.
+```
+
+## 351: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise15.3515625 Bracket Probe
+
+Purpose:
+
+```text
+test a 15.3515625% RMS noise midpoint between replicated-clean 15.3125% and
+seed34-ambiguous 15.390625% to tighten the clean-to-interval transition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p3515625_seed34|source_mismatch_noise15p3515625_seed34
+  --update-case-label source_mismatch_noise15p3515625_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/351_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15p3515625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1404.7 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p3515625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p3515625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p3515625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.15922e-03 worse (1.5013% relative).
+  first non-r8 branch x265/r7.5 is +2.58031e-03 worse (3.3417% relative).
+
+high-band objective, noise15p3515625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04738e-03 worse (10.5083% relative).
+  first non-r8 branch x264/r7.5 is +3.60042e-03 worse (36.1226% relative).
+
+base objective, source_mismatch_noise15p3515625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.33890e-03 worse (1.9647% relative).
+  first non-r8 branch x265/r7.5 is +4.94319e-03 worse (4.1523% relative).
+
+high-band objective, source_mismatch_noise15p3515625_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05738e-03 worse (12.6748% relative).
+  first non-r8 branch x264/r7.5 is +6.01150e-03 worse (37.0347% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 87.36,
+  nonwhite fraction 0.291538
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.3515625% RMS noise is formally clean for close14 seed34 under the
+4-source, 45 mm Tx/Rx tangent acquisition. Both rows select truth, both are
+strong, and both ambiguity intervals collapse to the single x264/z90/r8 point.
+This is an edge-clean result, not a wide-margin result: the nominal x263/r8
+competitor is only 9.75e-07 absolute misfit above the ambiguity cutoff. The
+seed34 transition is now bracketed between edge-clean 15.3515625% and
+ambiguous 15.390625%. The next midpoint is 15.37109375% RMS if the goal is to
+locate the single-seed transition more tightly. Do not promote beyond the
+replicated-clean 15.3125% RMS guidance from this single edge-clean result.
+```
+
+## 352: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise15.37109375 Bracket Probe
+
+Purpose:
+
+```text
+test a 15.37109375% RMS noise midpoint between edge-clean 15.3515625% and
+seed34-ambiguous 15.390625% to further localize the single-seed transition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p37109375_seed34|source_mismatch_noise15p37109375_seed34
+  --update-case-label source_mismatch_noise15p37109375_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/352_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15p37109375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1404.3 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p37109375_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise15p37109375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p37109375_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.15899e-03 worse (1.4978% relative).
+  first non-r8 branch x265/r7.5 is +2.57983e-03 worse (3.3341% relative).
+
+high-band objective, noise15p37109375_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04737e-03 worse (10.5055% relative).
+  first non-r8 branch x264/r7.5 is +3.60037e-03 worse (36.1130% relative).
+
+base objective, source_mismatch_noise15p37109375_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.33836e-03 worse (1.9604% relative).
+  first non-r8 branch x265/r7.5 is +4.94183e-03 worse (4.1431% relative).
+
+high-band objective, source_mismatch_noise15p37109375_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05738e-03 worse (12.6739% relative).
+  first non-r8 branch x264/r7.5 is +6.01135e-03 worse (37.0311% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 87.00,
+  nonwhite fraction 0.287933
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.37109375% RMS noise is point-correct but not clean for close14 seed34 under
+the 4-source, 45 mm Tx/Rx tangent acquisition. Both rows select truth and both
+have strong radius margins, but the nominal row keeps the x263/r8 to x264/r8
+ambiguity interval. The ambiguity is again tiny: x263/r8 is 1.67e-06 absolute
+misfit below the ambiguity cutoff. The single-seed seed34 transition is now
+bracketed between 15.3515625% edge-clean and 15.37109375% ambiguous. The next
+midpoint is 15.361328125% RMS if tighter single-seed localization remains
+worth the runtime. The replicated clean guidance remains 15.3125% RMS.
+```
+
+## 353: Close-14 Sources=4, Tx/Rx Offset 45 mm, Seed34 Noise15.361328125 Bracket Probe
+
+Purpose:
+
+```text
+test a 15.361328125% RMS noise midpoint between edge-clean 15.3515625% and
+seed34-ambiguous 15.37109375% to decide whether more bisection is useful.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p361328125_seed34|source_mismatch_noise15p361328125_seed34
+  --update-case-label source_mismatch_noise15p361328125_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/353_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15p361328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1397.5 s
+sources: 4
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p361328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise15p361328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.15911e-03 worse (1.4995% relative).
+  first non-r8 branch x265/r7.5 is +2.58007e-03 worse (3.3379% relative).
+
+high-band objective, noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.04738e-03 worse (10.5069% relative).
+  first non-r8 branch x264/r7.5 is +3.60039e-03 worse (36.1178% relative).
+
+base objective, source_mismatch_noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.33863e-03 worse (1.9625% relative).
+  first non-r8 branch x265/r7.5 is +4.94251e-03 worse (4.1477% relative).
+
+high-band objective, source_mismatch_noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.05738e-03 worse (12.6743% relative).
+  first non-r8 branch x264/r7.5 is +6.01142e-03 worse (37.0329% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 86.65,
+  nonwhite fraction 0.284438
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+15.361328125% RMS noise is point-correct but not clean for close14 seed34
+under the 4-source, 45 mm Tx/Rx tangent acquisition. Both rows select truth
+and both are strong, but the nominal row again includes the same-radius x263/r8
+competitor inside the ambiguity threshold. The margin is tiny: x263/r8 is only
+3.49e-07 absolute misfit below the ambiguity cutoff. The single-seed seed34
+transition is bracketed between 15.3515625% edge-clean and 15.361328125%
+ambiguous, a 0.009765625 percentage-point RMS-noise interval. Stop bisection
+for now: the practical replicated clean guidance remains 15.3125% RMS, and the
+15.35%-level single-seed boundary is too threshold-sensitive to promote.
+```
+
+## 354: Close-14 Sources=5, Tx/Rx Offset 45 mm, Seed34 Noise15.361328125 Acquisition-Density Rescue
+
+Purpose:
+
+```text
+test whether adding one scan/source position collapses the 4-source
+15.361328125% RMS x-ambiguity interval without changing Tx/Rx offset,
+frequency, or objective variants.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 5 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p361328125_seed34|source_mismatch_noise15p361328125_seed34
+  --update-case-label source_mismatch_noise15p361328125_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/354_coordinate_optimizer_close14_seed34_sources5_txrx45_noise15p361328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1685.7 s
+sources: 5
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p361328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-265, radius interval 8-8
+  source_mismatch_noise15p361328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-265, radius interval 8-8
+
+base objective, noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.29275e-03 worse (1.8645% relative).
+  first non-r8 branch x265/r7.5 is +1.49998e-03 worse (2.1634% relative).
+
+high-band objective, noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.29091e-03 worse (10.6225% relative).
+  first non-r8 branch x265/r7.5 is +1.61186e-03 worse (13.2634% relative).
+
+base objective, source_mismatch_noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.79138e-03 worse (2.0411% relative).
+  first non-r8 branch x265/r7.5 is +2.44987e-03 worse (2.7914% relative).
+
+high-band objective, source_mismatch_noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.70806e-03 worse (10.1454% relative).
+  first non-r8 branch x265/r7.5 is +2.48499e-03 worse (14.7602% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255, std 87.91,
+  nonwhite fraction 0.296626
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Adding a fifth source does not rescue the 15.361328125% close14 tangent
+ambiguity. The optimizer still selects truth and both rows keep strong radius
+labels, but the ambiguity interval shifts to the high-x side: x264/r8 and
+x265/r8 are both near-best in both nominal and source-mismatch rows. The
+extra source also narrows the best-vs-next-radius margins relative to the
+4-source case. Treat sources=5 as point-correct but not clean at this noise
+level. The next acquisition-density dose-response check, if pursued, should be
+sources=7 rather than more single-source bisection.
+```
+
+## 355: Close-14 Sources=7, Tx/Rx Offset 45 mm, Seed34 Noise15.361328125 Acquisition-Density Rescue
+
+Purpose:
+
+```text
+test whether a larger acquisition-density increase collapses the sources=4 and
+sources=5 15.361328125% RMS x-ambiguity interval without changing Tx/Rx
+offset, frequency, or objective variants.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 7 --tx-rx-offset-mm 45 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p361328125_seed34|source_mismatch_noise15p361328125_seed34
+  --update-case-label source_mismatch_noise15p361328125_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/355_coordinate_optimizer_close14_seed34_sources7_txrx45_noise15p361328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 2327.1 s
+sources: 7
+tx_rx_offset_mm: 45.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p361328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise15p361328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +8.15291e-04 worse (1.1765% relative) and remains inside the
+    ambiguity cutoff by 2.24197e-04.
+  x265/r8 is +1.59867e-03 worse (2.3069% relative).
+  first non-r8 branch x265/r7.5 is +2.55729e-03 worse (3.6902% relative).
+
+high-band objective, noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +6.95865e-04 worse (6.2267% relative).
+  x265/r8 is +2.08627e-03 worse (18.6683% relative).
+  first non-r8 branch x265/r7.5 is +3.15095e-03 worse (28.1953% relative).
+
+base objective, source_mismatch_noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.40736e-03 worse (1.5030% relative) and sits only
+    2.79198e-06 outside the ambiguity cutoff.
+  x265/r8 is +2.56741e-03 worse (2.7418% relative).
+  first non-r8 branch x265/r7.5 is +4.39931e-03 worse (4.6982% relative).
+
+high-band objective, source_mismatch_noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.15118e-03 worse (7.1127% relative).
+  x265/r8 is +3.06463e-03 worse (18.9350% relative).
+  first non-r8 branch x265/r7.5 is +4.83048e-03 worse (29.8454% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.206,63.895,90.434), nonwhite fraction 0.293338
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Adding seven sources improves the 15.361328125% close14 tangent case but does
+not make it replicated-clean. The point estimate is correct and radius
+identifiability is strong in both rows. Compared with sources=5, the ambiguity
+shifts back from the high-x side to the low-x side and the source-mismatch row
+formally collapses to x=264 only. However, the nominal row still keeps x263/r8
+inside the ambiguity cutoff, and the source-mismatch x263/r8 competitor clears
+the cutoff by only 2.79e-06. Treat sources=7 as a partial rescue but still an
+edge interval result at this noise level. Do not promote 15.361328125% RMS as
+clean; keep the practical replicated-clean close14 guidance at 15.3125% RMS
+under the 4-source, 45 mm Tx/Rx acquisition.
+```
+
+## 356: Close-14 Seed34 Noise15.361328125 Sources 4/5/7 Aggregate
+
+Purpose:
+
+```text
+aggregate the same seed34 close14 15.361328125% RMS boundary case across
+sources=4, sources=5, and sources=7 so the acquisition-density branch has one
+decision table for point correctness, x-ambiguity rows, and radius margins.
+```
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_coordinate_confidence_aggregate.py \
+  outputs/experiments/353_coordinate_optimizer_close14_seed34_sources4_txrx45_noise15p361328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json \
+  outputs/experiments/354_coordinate_optimizer_close14_seed34_sources5_txrx45_noise15p361328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json \
+  outputs/experiments/355_coordinate_optimizer_close14_seed34_sources7_txrx45_noise15p361328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json \
+  --run-name coordinate_confidence_close14_seed34_noise15p361328125_sources4_5_7_aggregate \
+  --outdir outputs/experiments/356_coordinate_confidence_close14_seed34_noise15p361328125_sources4_5_7_aggregate
+```
+
+Output:
+
+```text
+outputs/experiments/356_coordinate_confidence_close14_seed34_noise15p361328125_sources4_5_7_aggregate
+```
+
+Aggregate result:
+
+| Metric | Value |
+| --- | ---: |
+| Confidence rows | 6 |
+| Rows with true x/z/r | 6 |
+| Strong labels | 6 |
+| Fallback warning rows | 0 |
+| Rows with nonzero x ambiguity | 4 |
+| Max x/z/r ambiguity width | 1.0 / 0.0 / 0.0 mm |
+| Radius margin min | 1.49998e-03 |
+| Radius margin mean | 3.07151e-03 |
+| Radius margin max | 4.94251e-03 |
+
+Source-count summary:
+
+| Sources | Rows true x/z/r | Rows with x ambiguity | Radius margin min | Radius margin mean | Radius margin max |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 4 | 2/2 | 1 | 2.58007e-03 | 3.76129e-03 | 4.94251e-03 |
+| 5 | 2/2 | 2 | 1.49998e-03 | 1.97493e-03 | 2.44987e-03 |
+| 7 | 2/2 | 1 | 2.55729e-03 | 3.47830e-03 | 4.39931e-03 |
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px,
+  std=(76.541,53.664,69.246), nonwhite fraction 0.164430
+coordinate_ambiguity_widths.png: 1720x971 px,
+  std=(46.881,41.744,37.631), nonwhite fraction 0.090259
+FIGURE_NOTES.md exists and reports source-count and ambiguity summaries.
+```
+
+Interpretation:
+
+```text
+The source-count dose response confirms the acquisition-density branch should
+stop here. All three source counts remain point-correct with strong radius
+labels, but none gives a replicated-clean zero-ambiguity result at
+15.361328125% RMS. Five sources is worse than four and seven in this specific
+boundary case: both rows keep x ambiguity and the radius margins are smallest.
+Seven sources partially recovers margin and collapses the source-mismatch row,
+but the nominal row still has a 1 mm x interval. Keep 15.3125% RMS as the
+replicated-clean close14 tangent guidance under the 4-source, 45 mm Tx/Rx
+acquisition. Treat 15.361328125% RMS as point-correct but interval-reporting
+unless a new physics/objective lever is introduced.
+```
+
+## 357: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise15.361328125 Acquisition-Geometry Rescue
+
+Purpose:
+
+```text
+test a distinct acquisition-geometry lever after source-count escalation failed:
+keep the baseline 4 sources and raise Tx/Rx offset from 45 mm to 50 mm for the
+same seed34 close14 15.361328125% RMS boundary case.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p361328125_seed34|source_mismatch_noise15p361328125_seed34
+  --update-case-label source_mismatch_noise15p361328125_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/357_coordinate_optimizer_close14_seed34_sources4_txrx50_noise15p361328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1410.8 s
+sources: 4
+tx_rx_offset_mm: 50.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p361328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p361328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.38289e-03 worse (2.3291% relative) and clears the ambiguity
+    cutoff by 4.92278e-04.
+  x265/r8 is +2.00473e-03 worse (3.3764% relative).
+  first non-r8 branch x265/r7.5 is +2.22991e-03 worse (3.7557% relative).
+
+high-band objective, noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.57554e-03 worse (17.4923% relative).
+  x265/r8 is +2.91816e-03 worse (32.3987% relative).
+  first non-r8 branch x264/z85/r5 is +3.22520e-03 worse (35.8075% relative).
+
+base objective, source_mismatch_noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.50918e-03 worse (2.7315% relative) and clears the ambiguity
+    cutoff by 1.13127e-03.
+  x265/r8 is +4.28195e-03 worse (4.6613% relative).
+  first non-r8 branch x265/r7.5 is +4.55064e-03 worse (4.9538% relative).
+
+high-band objective, source_mismatch_noise15p361328125_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.65974e-03 worse (18.4834% relative).
+  x265/r8 is +5.53699e-03 worse (38.4783% relative).
+  first non-r8 branch x264/r7.5 is +5.70055e-03 worse (39.6150% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(100.429,62.943,88.903), nonwhite fraction 0.277907
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+The 50 mm Tx/Rx acquisition geometry rescues the seed34 15.361328125% close14
+boundary case where 45 mm with 4/5/7 sources remained interval-reporting. The
+point estimate is true, both rows are strong, and both x ambiguity intervals
+collapse to the single true x=264 mm point. The nominal x263/r8 competitor is
+outside the ambiguity cutoff by 4.92e-04, so this is meaningfully cleaner than
+the edge-clean 15.3515625% 45 mm result. Replicate Tx/Rx=50 on seeds 13 and
+21 before promoting 15.361328125% RMS as a clean operating point under the
+larger offset acquisition.
+```
+
+## 358: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise15.361328125 Replicate
+
+Purpose:
+
+```text
+replicate the clean seed34 Tx/Rx=50 acquisition-geometry rescue on seed13
+before promoting the larger-offset 15.361328125% RMS close14 operating point.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p361328125_seed13|source_mismatch_noise15p361328125_seed13
+  --update-case-label source_mismatch_noise15p361328125_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/358_coordinate_optimizer_close14_seed13_sources4_txrx50_noise15p361328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1421.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p361328125_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p361328125_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p361328125_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +1.56653e-03 worse (2.6109% relative) and clears the ambiguity
+    cutoff by 6.66518e-04.
+  x265/r8 is +1.78813e-03 worse (2.9802% relative).
+  first non-r8 branch x265/r7.5 is +2.17772e-03 worse (3.6295% relative).
+
+high-band objective, noise15p361328125_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +1.77712e-03 worse (19.0350% relative).
+  x265/r8 is +2.67052e-03 worse (28.6043% relative).
+  first non-r8 branch x264/z85/r5 is +2.89944e-03 worse (31.0562% relative).
+
+base objective, source_mismatch_noise15p361328125_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +2.62365e-03 worse (2.8426% relative) and clears the ambiguity
+    cutoff by 1.23917e-03.
+  x265/r8 is +4.20787e-03 worse (4.5590% relative).
+  first non-r8 branch x265/r7.5 is +4.72250e-03 worse (5.1165% relative).
+
+high-band objective, source_mismatch_noise15p361328125_seed13:
+  truth x264/r8 is best.
+  x263/r8 is +2.92186e-03 worse (19.1712% relative).
+  x265/r8 is +5.35063e-03 worse (35.1071% relative).
+  first non-r8 branch x265/r7.5 is +6.08894e-03 worse (39.9514% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.834,62.621,88.390), nonwhite fraction 0.273018
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean Tx/Rx=50 acquisition-geometry rescue. Both rows
+are true, strong, and zero-ambiguity in x/z/r. The nearest x263/r8 competitor
+clears the ambiguity cutoff by a larger nominal margin than seed34. Run seed21
+at the same 4-source, 50 mm Tx/Rx, 15.361328125% RMS setting before aggregate
+promotion.
+```
+
+## 359: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise15.361328125 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 Tx/Rx=50 replicate set for the close14
+15.361328125% RMS acquisition-geometry rescue before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p361328125_seed21|source_mismatch_noise15p361328125_seed21
+  --update-case-label source_mismatch_noise15p361328125_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/359_coordinate_optimizer_close14_seed21_sources4_txrx50_noise15p361328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1395.1 s
+sources: 4
+tx_rx_offset_mm: 50.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p361328125_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p361328125_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p361328125_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.58751e-03 worse (2.6938% relative) and clears the ambiguity
+    cutoff by 7.03537e-04.
+  x265/r8 is +1.80664e-03 worse (3.0657% relative).
+  first non-r8 branch x265/r7.5 is +2.08630e-03 worse (3.5402% relative).
+
+high-band objective, noise15p361328125_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +1.70327e-03 worse (20.6263% relative).
+  x265/r8 is +2.80484e-03 worse (33.9661% relative).
+  first non-r8 branch x265/r7.5 is +3.17453e-03 worse (38.4430% relative).
+
+base objective, source_mismatch_noise15p361328125_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +2.26086e-03 worse (2.4460% relative) and clears the ambiguity
+    cutoff by 8.74399e-04.
+  x265/r8 is +4.54734e-03 worse (4.9197% relative).
+  first non-r8 branch x265/r7.5 is +4.68706e-03 worse (5.0709% relative).
+
+high-band objective, source_mismatch_noise15p361328125_seed21:
+  truth x264/r8 is best.
+  x263/r8 is +2.19692e-03 worse (14.6876% relative).
+  x265/r8 is +6.00544e-03 worse (40.1496% relative).
+  first non-r8 branch x264/r7.5 is +5.58420e-03 worse (37.3334% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.532,62.459,88.130), nonwhite fraction 0.270578
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean Tx/Rx=50 replicate set: all seed21 rows are true,
+strong, and zero-ambiguity in x/z/r. The nearest x263/r8 competitor clears the
+ambiguity cutoff by meaningful margins in both nominal and source-mismatch
+rows. Aggregate 357-359 next; if the aggregate confirms 6/6 true, strong,
+zero-ambiguity rows, promote 50 mm Tx/Rx as the replicated larger-offset
+rescue for the close14 15.361328125% RMS boundary.
+```
+
+## 360: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise15.361328125 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 Tx/Rx=50 replicate set and decide whether the
+larger-offset acquisition should be promoted as a clean close14
+15.361328125% RMS operating point.
+```
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_coordinate_confidence_aggregate.py \
+  outputs/experiments/357_coordinate_optimizer_close14_seed34_sources4_txrx50_noise15p361328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json \
+  outputs/experiments/358_coordinate_optimizer_close14_seed13_sources4_txrx50_noise15p361328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json \
+  outputs/experiments/359_coordinate_optimizer_close14_seed21_sources4_txrx50_noise15p361328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json \
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise15p361328125_seed_replicates \
+  --outdir outputs/experiments/360_coordinate_confidence_close14_sources4_txrx50_noise15p361328125_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/360_coordinate_confidence_close14_sources4_txrx50_noise15p361328125_seed_replicates
+```
+
+Aggregate result:
+
+| Metric | Value |
+| --- | ---: |
+| Confidence rows | 6 |
+| Rows with true x/z/r | 6 |
+| Strong labels | 6 |
+| Fallback warning rows | 0 |
+| Rows with nonzero x ambiguity | 0 |
+| Max x/z/r ambiguity width | 0.0 / 0.0 / 0.0 mm |
+| Radius margin min | 2.08630e-03 |
+| Radius margin mean | 3.40902e-03 |
+| Radius margin max | 4.72250e-03 |
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px,
+  std=(80.556,55.560,72.624), nonwhite fraction 0.179731
+coordinate_ambiguity_widths.png: 1720x971 px,
+  std=(34.597,34.514,34.726), nonwhite fraction 0.053285
+FIGURE_NOTES.md exists and reports 6 rows, strong=6, x-ambiguity rows=0.
+```
+
+Interpretation:
+
+```text
+Tx/Rx=50 mm is now a replicated clean larger-offset rescue for the close14
+tangent 15.361328125% RMS boundary. It fixes the interval behavior that
+remained under 45 mm Tx/Rx with 4, 5, and 7 sources: all six replicated rows
+are truth geometry, all six are strong, and no row retains x/z/r ambiguity.
+Promote 4 sources with 50 mm Tx/Rx as a clean operating point at
+15.361328125% RMS, while keeping the cheaper 45 mm Tx/Rx guidance at
+15.3125% RMS for replicated clean operation.
+```
+
+## 361: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise15.46875 Bracket Probe
+
+Purpose:
+
+```text
+test whether the replicated Tx/Rx=50 acquisition can also clean the next old
+45 mm ambiguous bracket, 15.46875% RMS noise on seed34.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p46875_seed34|source_mismatch_noise15p46875_seed34
+  --update-case-label source_mismatch_noise15p46875_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/361_coordinate_optimizer_close14_seed34_sources4_txrx50_noise15p46875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1390.3 s
+sources: 4
+tx_rx_offset_mm: 50.0
+truth x positions: [190,250,264] mm
+truth radii: [5,6,8] mm
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p46875_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p46875_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p46875_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.38186e-03 worse (2.3010% relative) and clears the ambiguity
+    cutoff by 4.81039e-04.
+  x265/r8 is +2.00334e-03 worse (3.3359% relative).
+  first non-r8 branch x265/r7.5 is +2.22819e-03 worse (3.7103% relative).
+
+high-band objective, noise15p46875_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +1.57571e-03 worse (17.4723% relative).
+  x265/r8 is +2.91800e-03 worse (32.3564% relative).
+  first non-r8 branch x264/z85/r5 is +3.22666e-03 worse (35.7790% relative).
+
+base objective, source_mismatch_noise15p46875_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.50676e-03 worse (2.6998% relative) and clears the ambiguity
+    cutoff by 1.11404e-03.
+  x265/r8 is +4.27705e-03 worse (4.6065% relative).
+  first non-r8 branch x265/r7.5 is +4.54524e-03 worse (4.8953% relative).
+
+high-band objective, source_mismatch_noise15p46875_seed34:
+  truth x264/r8 is best.
+  x263/r8 is +2.65980e-03 worse (18.4767% relative).
+  x265/r8 is +5.53695e-03 worse (38.4633% relative).
+  first non-r8 branch x264/r7.5 is +5.69971e-03 worse (39.5940% relative).
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.017,63.766,90.265), nonwhite fraction 0.291144
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+The 50 mm Tx/Rx acquisition cleans the 15.46875% RMS seed34 bracket that was
+interval-reporting under 45 mm Tx/Rx. This is a seed34 bracket pass, not yet a
+promoted operating point. Replicate 15.46875% RMS at Tx/Rx=50 on seeds 13 and
+21 before promoting this higher noise level.
+```
+
+## 362: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise15.46875 Replicate
+
+Purpose:
+
+```text
+replicate the clean seed34 15.46875% RMS Tx/Rx=50 bracket on seed13 before
+promoting the higher-noise larger-offset operating point.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p46875_seed13|source_mismatch_noise15p46875_seed13
+  --update-case-label source_mismatch_noise15p46875_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/362_coordinate_optimizer_close14_seed13_sources4_txrx50_noise15p46875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1404.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p46875_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p46875_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p46875_seed13:
+  x263/r8 is +1.56664e-03 worse (2.5815% relative) and clears the ambiguity
+    cutoff by 6.56321e-04.
+  first non-r8 branch x265/r7.5 is +2.17566e-03 worse (3.5850% relative).
+
+base objective, source_mismatch_noise15p46875_seed13:
+  x263/r8 is +2.62190e-03 worse (2.8106% relative) and clears the ambiguity
+    cutoff by 1.22263e-03.
+  first non-r8 branch x265/r7.5 is +4.71812e-03 worse (5.0578% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.77870e-03 worse nominal and +2.92374e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.465,63.466,89.788), nonwhite fraction 0.286256
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the 15.46875% RMS Tx/Rx=50 seed34 pass. Both rows are true,
+strong, and zero-ambiguity in x/z/r, with x263/r8 comfortably outside the
+ambiguity cutoff. Run seed21 next before aggregate promotion.
+```
+
+## 363: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise15.46875 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 15.46875% RMS Tx/Rx=50
+close14 bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p46875_seed21|source_mismatch_noise15p46875_seed21
+  --update-case-label source_mismatch_noise15p46875_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/363_coordinate_optimizer_close14_seed21_sources4_txrx50_noise15p46875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1357.1 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p46875_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p46875_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p46875_seed21:
+  x263/r8 is +1.58775e-03 worse (2.6636% relative) and clears the ambiguity
+    cutoff by 6.93601e-04.
+  first non-r8 branch x265/r7.5 is +2.08368e-03 worse (3.4955% relative).
+
+base objective, source_mismatch_noise15p46875_seed21:
+  x263/r8 is +2.25698e-03 worse (2.4159% relative) and clears the ambiguity
+    cutoff by 8.55662e-04.
+  first non-r8 branch x264/r7.5 is +4.68220e-03 worse (5.0119% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.70433e-03 worse nominal and +2.19374e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(100.994,63.213,89.383), nonwhite fraction 0.282189
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 15.46875% RMS Tx/Rx=50 replicate set. All seed21
+rows are true, strong, and zero-ambiguity in x/z/r. Aggregate 361-363 next; if
+the aggregate remains 6/6 true, strong, and zero-ambiguity, promote
+15.46875% RMS under 4-source 50 mm Tx/Rx.
+```
+
+## 364: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise15.46875 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 15.46875% RMS Tx/Rx=50 close14 replicate set and
+decide whether the larger-offset acquisition can be promoted at this higher
+noise bracket.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/361_coordinate_optimizer_close14_seed34_sources4_txrx50_noise15p46875_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/362_coordinate_optimizer_close14_seed13_sources4_txrx50_noise15p46875_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/363_coordinate_optimizer_close14_seed21_sources4_txrx50_noise15p46875_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise15p46875_seed_replicates
+  --outdir outputs/experiments/364_coordinate_confidence_close14_sources4_txrx50_noise15p46875_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/364_coordinate_confidence_close14_sources4_txrx50_noise15p46875_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 2.08368e-03 / 3.40552e-03 / 4.71812e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(83.018,56.592,74.663), nonwhite fraction 0.189485
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(34.067,33.982,34.198), nonwhite fraction 0.050680
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 15.46875% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 15.46875% RMS as the current clean operating
+point for the larger-offset acquisition. The next stress test is the 15.625%
+RMS bracket under the same acquisition.
+```
+
+## 365: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise15.625 Probe
+
+Purpose:
+
+```text
+test the next close14 tangent noise bracket, 15.625% RMS, after 15.46875% RMS
+was replicated clean under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p625_seed34|source_mismatch_noise15p625_seed34
+  --update-case-label source_mismatch_noise15p625_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/365_coordinate_optimizer_close14_seed34_sources4_txrx50_noise15p625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1405.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p625_seed34:
+  x263/r8 is +1.38034e-03 worse (2.2610% relative) and clears the ambiguity
+    cutoff by 4.64584e-04.
+  first non-r8 branch x265/r7.5 is +2.22567e-03 worse (3.6456% relative).
+
+base objective, source_mismatch_noise15p625_seed34:
+  x263/r8 is +2.50321e-03 worse (2.6547% relative) and clears the ambiguity
+    cutoff by 1.08882e-03.
+  first non-r8 branch x265/r7.5 is +4.53734e-03 worse (4.8120% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.57596e-03 worse nominal and +2.65989e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.677,64.100,90.829), nonwhite fraction 0.296965
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 15.625% RMS under the 4-source, 50 mm Tx/Rx acquisition:
+both rows selected the true x264/z90/r8 target-2 geometry, both were strong,
+and x/z/r ambiguity widths were zero. This is not yet a promoted operating
+point because it is only one seed. Replicate 15.625% RMS on seeds 13 and 21,
+then aggregate 365 plus those replicates before promoting the bracket.
+```
+
+## 366: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise15.625 Replicate
+
+Purpose:
+
+```text
+replicate the 15.625% RMS seed34 clean result on seed13 before deciding
+whether the larger-offset acquisition can be promoted at this bracket.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p625_seed13|source_mismatch_noise15p625_seed13
+  --update-case-label source_mismatch_noise15p625_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/366_coordinate_optimizer_close14_seed13_sources4_txrx50_noise15p625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1410.1 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p625_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p625_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p625_seed13:
+  x263/r8 is +1.56679e-03 worse (2.5396% relative) and clears the ambiguity
+    cutoff by 6.41374e-04.
+  first non-r8 branch x265/r7.5 is +2.17266e-03 worse (3.5217% relative).
+
+base objective, source_mismatch_noise15p625_seed13:
+  x263/r8 is +2.61934e-03 worse (2.7651% relative) and clears the ambiguity
+    cutoff by 1.19842e-03.
+  first non-r8 branch x265/r7.5 is +4.71172e-03 worse (4.9739% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.78099e-03 worse nominal and +2.92647e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.098,63.785,90.329), nonwhite fraction 0.291673
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean 15.625% RMS Tx/Rx=50 result. Both seed13 rows are
+true, strong, and zero-ambiguity in x/z/r. Run seed21 next; if it also remains
+clean, aggregate 365-367 before promoting the 15.625% RMS bracket.
+```
+
+## 367: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise15.625 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 15.625% RMS Tx/Rx=50 close14
+bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise15p625_seed21|source_mismatch_noise15p625_seed21
+  --update-case-label source_mismatch_noise15p625_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/367_coordinate_optimizer_close14_seed21_sources4_txrx50_noise15p625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1410.8 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise15p625_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise15p625_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise15p625_seed21:
+  x263/r8 is +1.58810e-03 worse (2.6204% relative) and clears the ambiguity
+    cutoff by 6.79034e-04.
+  first non-r8 branch x265/r7.5 is +2.07985e-03 worse (3.4318% relative).
+
+base objective, source_mismatch_noise15p625_seed21:
+  x263/r8 is +2.25130e-03 worse (2.3731% relative) and clears the ambiguity
+    cutoff by 8.28265e-04.
+  first non-r8 branch x264/r7.5 is +4.67350e-03 worse (4.9263% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.70587e-03 worse nominal and +2.18912e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.780,63.616,90.055), nonwhite fraction 0.288825
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 15.625% RMS Tx/Rx=50 replicate set. All seed21
+rows are true, strong, and zero-ambiguity in x/z/r. Aggregate 365-367 next; if
+the aggregate remains 6/6 true, strong, and zero-ambiguity, promote
+15.625% RMS under 4-source 50 mm Tx/Rx.
+```
+
+## 368: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise15.625 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 15.625% RMS Tx/Rx=50 close14 replicate set and
+decide whether the larger-offset acquisition can be promoted at this higher
+noise bracket.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/365_coordinate_optimizer_close14_seed34_sources4_txrx50_noise15p625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/366_coordinate_optimizer_close14_seed13_sources4_txrx50_noise15p625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/367_coordinate_optimizer_close14_seed21_sources4_txrx50_noise15p625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise15p625_seed_replicates
+  --outdir outputs/experiments/368_coordinate_confidence_close14_sources4_txrx50_noise15p625_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/368_coordinate_confidence_close14_sources4_txrx50_noise15p625_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 2.07985e-03 / 3.40012e-03 / 4.71172e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(84.341,57.131,75.755), nonwhite fraction 0.195244
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(33.714,33.628,33.847), nonwhite fraction 0.049537
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 15.625% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 15.625% RMS as the current clean operating
+point for the larger-offset acquisition. The next stress test is 16.25% RMS
+under the same acquisition.
+```
+
+## 369: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise16.25 Probe
+
+Purpose:
+
+```text
+test the old 45 mm ambiguous 16.25% RMS close14 bracket under the larger
+4-source, 50 mm Tx/Rx acquisition after 15.625% RMS was replicated clean.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise16p25_seed34|source_mismatch_noise16p25_seed34
+  --update-case-label source_mismatch_noise16p25_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/369_coordinate_optimizer_close14_seed34_sources4_txrx50_noise16p25_objectives
+```
+
+Result:
+
+```text
+elapsed: 1402.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise16p25_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise16p25_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise16p25_seed34:
+  x263/r8 is +1.37419e-03 worse (2.1104% relative) and clears the ambiguity
+    cutoff by 3.97482e-04.
+  first non-r8 branch x265/r7.5 is +2.21541e-03 worse (3.4024% relative).
+
+base objective, source_mismatch_noise16p25_seed34:
+  x263/r8 is +2.48872e-03 worse (2.4846% relative) and clears the ambiguity
+    cutoff by 9.86205e-04.
+  first non-r8 branch x265/r7.5 is +4.50528e-03 worse (4.4977% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.57695e-03 worse nominal and +2.66023e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(103.107,64.323,91.197), nonwhite fraction 0.300881
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 16.25% RMS under the 4-source, 50 mm Tx/Rx acquisition,
+although the nominal x263/r8 ambiguity-clearance margin is smaller than at
+15.625% RMS. This is evidence that the larger offset also rescues the old
+45 mm ambiguous 16.25% bracket, but it is only one seed. Replicate on seeds 13
+and 21 before promoting 16.25% RMS.
+```
+
+## 370: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise16.25 Replicate
+
+Purpose:
+
+```text
+replicate the 16.25% RMS seed34 clean result on seed13 before deciding whether
+the larger-offset acquisition can be promoted at this bracket.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise16p25_seed13|source_mismatch_noise16p25_seed13
+  --update-case-label source_mismatch_noise16p25_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/370_coordinate_optimizer_close14_seed13_sources4_txrx50_noise16p25_objectives
+```
+
+Result:
+
+```text
+elapsed: 1404.1 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise16p25_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise16p25_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise16p25_seed13:
+  x263/r8 is +1.56721e-03 worse (2.3819% relative) and clears the ambiguity
+    cutoff by 5.80244e-04.
+  first non-r8 branch x265/r7.5 is +2.16047e-03 worse (3.2835% relative).
+
+base objective, source_mismatch_noise16p25_seed13:
+  x263/r8 is +2.60875e-03 worse (2.5933% relative) and clears the ambiguity
+    cutoff by 1.09980e-03.
+  first non-r8 branch x265/r7.5 is +4.68555e-03 worse (4.6578% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.79016e-03 worse nominal and +2.93741e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.452,63.968,90.632), nonwhite fraction 0.294774
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean 16.25% RMS Tx/Rx=50 result. Both seed13 rows are
+true, strong, and zero-ambiguity in x/z/r. Run seed21 next; if it also remains
+clean, aggregate 369-371 before promoting the 16.25% RMS bracket.
+```
+
+## 371: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise16.25 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 16.25% RMS Tx/Rx=50 close14
+bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise16p25_seed21|source_mismatch_noise16p25_seed21
+  --update-case-label source_mismatch_noise16p25_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/371_coordinate_optimizer_close14_seed21_sources4_txrx50_noise16p25_objectives
+```
+
+Result:
+
+```text
+elapsed: 1410.2 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise16p25_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise16p25_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise16p25_seed21:
+  x263/r8 is +1.58931e-03 worse (2.4580% relative) and clears the ambiguity
+    cutoff by 6.19416e-04.
+  first non-r8 branch x265/r7.5 is +2.06439e-03 worse (3.1927% relative).
+
+base objective, source_mismatch_noise16p25_seed21:
+  x263/r8 is +2.22844e-03 worse (2.2116% relative) and clears the ambiguity
+    cutoff by 7.17037e-04.
+  first non-r8 branch x264/r7.5 is +4.63823e-03 worse (4.6032% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.71204e-03 worse nominal and +2.17061e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.140,63.801,90.364), nonwhite fraction 0.291926
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 16.25% RMS Tx/Rx=50 replicate set. All seed21
+rows are true, strong, and zero-ambiguity in x/z/r. Aggregate 369-371 next; if
+the aggregate remains 6/6 true, strong, and zero-ambiguity, promote
+16.25% RMS under 4-source 50 mm Tx/Rx.
+```
+
+## 372: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise16.25 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 16.25% RMS Tx/Rx=50 close14 replicate set and
+decide whether the larger-offset acquisition can be promoted at this higher
+noise bracket.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/369_coordinate_optimizer_close14_seed34_sources4_txrx50_noise16p25_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/370_coordinate_optimizer_close14_seed13_sources4_txrx50_noise16p25_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/371_coordinate_optimizer_close14_seed21_sources4_txrx50_noise16p25_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise16p25_seed_replicates
+  --outdir outputs/experiments/372_coordinate_confidence_close14_sources4_txrx50_noise16p25_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/372_coordinate_confidence_close14_sources4_txrx50_noise16p25_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 2.06439e-03 / 3.37822e-03 / 4.68555e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(84.874,57.342,76.194), nonwhite fraction 0.197485
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(33.546,33.460,33.680), nonwhite fraction 0.048903
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 16.25% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 16.25% RMS as the current clean operating
+point for the larger-offset acquisition. The next stress test is 17.5% RMS
+under the same acquisition.
+```
+
+## 373: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise17.5 Probe
+
+Purpose:
+
+```text
+test the old 45 mm x-ambiguous 17.5% RMS close14 bracket under the larger
+4-source, 50 mm Tx/Rx acquisition after 16.25% RMS was replicated clean.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise17p5_seed34|source_mismatch_noise17p5_seed34
+  --update-case-label source_mismatch_noise17p5_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/373_coordinate_optimizer_close14_seed34_sources4_txrx50_noise17p5_objectives
+```
+
+Result:
+
+```text
+elapsed: 1410.6 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise17p5_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise17p5_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise17p5_seed34:
+  x263/r8 is +1.36135e-03 worse (1.8497% relative) and clears the ambiguity
+    cutoff by 2.57343e-04.
+  first non-r8 branch x265/r7.5 is +2.19405e-03 worse (2.9810% relative).
+
+base objective, source_mismatch_noise17p5_seed34:
+  x263/r8 is +2.45843e-03 worse (2.1879% relative) and clears the ambiguity
+    cutoff by 7.72955e-04.
+  first non-r8 branch x265/r7.5 is +4.43901e-03 worse (3.9505% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.57892e-03 worse nominal and +2.66089e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(103.441,64.489,91.482), nonwhite fraction 0.303935
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 17.5% RMS under the 4-source, 50 mm Tx/Rx acquisition,
+turning the old 45 mm x-ambiguous bracket into a single-candidate interval.
+The nominal x263/r8 clearance margin is only 2.57e-04, so this is a tight
+clean result. Replicate on seeds 13 and 21 before promoting 17.5% RMS.
+```
+
+## 374: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise17.5 Replicate
+
+Purpose:
+
+```text
+replicate the tight 17.5% RMS seed34 clean result on seed13 before deciding
+whether the larger-offset acquisition can be promoted at this bracket.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise17p5_seed13|source_mismatch_noise17p5_seed13
+  --update-case-label source_mismatch_noise17p5_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/374_coordinate_optimizer_close14_seed13_sources4_txrx50_noise17p5_objectives
+```
+
+Result:
+
+```text
+elapsed: 1403.4 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise17p5_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise17p5_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise17p5_seed13:
+  x263/r8 is +1.56725e-03 worse (2.1074% relative) and clears the ambiguity
+    cutoff by 4.51731e-04.
+  first non-r8 branch x265/r7.5 is +2.13534e-03 worse (2.8713% relative).
+
+base objective, source_mismatch_noise17p5_seed13:
+  x263/r8 is +2.58603e-03 worse (2.2932% relative) and clears the ambiguity
+    cutoff by 8.94461e-04.
+  first non-r8 branch x265/r7.5 is +4.63075e-03 worse (4.1063% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.80849e-03 worse nominal and +2.95923e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.799,64.141,90.928), nonwhite fraction 0.297821
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean 17.5% RMS Tx/Rx=50 result. Both seed13 rows are
+true, strong, and zero-ambiguity in x/z/r. Run seed21 next; if it also remains
+clean, aggregate 373-375 before promoting the 17.5% RMS bracket.
+```
+
+## 375: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise17.5 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 17.5% RMS Tx/Rx=50 close14
+bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise17p5_seed21|source_mismatch_noise17p5_seed21
+  --update-case-label source_mismatch_noise17p5_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/375_coordinate_optimizer_close14_seed21_sources4_txrx50_noise17p5_objectives
+```
+
+Result:
+
+```text
+elapsed: 1401.7 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise17p5_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise17p5_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise17p5_seed21:
+  x263/r8 is +1.59089e-03 worse (2.1753% relative) and clears the ambiguity
+    cutoff by 4.93889e-04.
+  first non-r8 branch x265/r7.5 is +2.03284e-03 worse (2.7796% relative).
+
+base objective, source_mismatch_noise17p5_seed21:
+  x263/r8 is +2.18194e-03 worse (1.9311% relative) and clears the ambiguity
+    cutoff by 4.87133e-04.
+  first non-r8 branch x264/r7.5 is +4.56560e-03 worse (4.0408% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.72435e-03 worse nominal and +2.13358e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.536,64.000,90.702), nonwhite fraction 0.295381
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 17.5% RMS Tx/Rx=50 replicate set. All seed21 rows
+are true, strong, and zero-ambiguity in x/z/r. Aggregate 373-375 next; if the
+aggregate remains 6/6 true, strong, and zero-ambiguity, promote 17.5% RMS
+under 4-source 50 mm Tx/Rx.
+```
+
+## 376: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise17.5 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 17.5% RMS Tx/Rx=50 close14 replicate set and
+decide whether the larger-offset acquisition can be promoted at this old
+45 mm x-ambiguous bracket.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/373_coordinate_optimizer_close14_seed34_sources4_txrx50_noise17p5_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/374_coordinate_optimizer_close14_seed13_sources4_txrx50_noise17p5_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/375_coordinate_optimizer_close14_seed21_sources4_txrx50_noise17p5_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise17p5_seed_replicates
+  --outdir outputs/experiments/376_coordinate_confidence_close14_sources4_txrx50_noise17p5_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/376_coordinate_confidence_close14_sources4_txrx50_noise17p5_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 2.03284e-03 / 3.33293e-03 / 4.63075e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1719x971 px, dynamic range 255,
+  std=(85.488,57.581,76.699), nonwhite fraction 0.199960
+coordinate_ambiguity_widths.png: 1719x971 px, dynamic range 255,
+  std=(33.325,33.238,33.460), nonwhite fraction 0.048089
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 17.5% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 17.5% RMS as the current clean operating
+point for the larger-offset acquisition. The next stress test is 20% RMS
+under the same acquisition.
+```
+
+## 377: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise20 Probe
+
+Purpose:
+
+```text
+test the old 45 mm point-correct but x-ambiguous 20% RMS close14 bracket under
+the larger 4-source, 50 mm Tx/Rx acquisition after 17.5% RMS was replicated
+clean.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise20_seed34|source_mismatch_noise20_seed34
+  --update-case-label source_mismatch_noise20_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/377_coordinate_optimizer_close14_seed34_sources4_txrx50_noise20_objectives
+```
+
+Result:
+
+```text
+elapsed: 1411.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise20_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise20_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise20_seed34:
+  x263/r8 is +1.33372e-03 worse (1.4511% relative), but remains inside the
+    ambiguity cutoff by 4.49246e-05.
+  first non-r8 branch x265/r7.5 is +2.14823e-03 worse (2.3373% relative).
+
+base objective, source_mismatch_noise20_seed34:
+  x263/r8 is +2.39318e-03 worse (1.7300% relative) and clears the ambiguity
+    cutoff by 3.18133e-04.
+  first non-r8 branch x265/r7.5 is +4.29904e-03 worse (3.1077% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.58283e-03 worse nominal and +2.66213e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(104.297,64.935,92.216), nonwhite fraction 0.312208
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+The 20% RMS close14 bracket under 4-source, 50 mm Tx/Rx is point-correct but
+not clean. Both rows select the true x264/z90/r8 geometry and have strong
+radius margins, but the nominal row keeps a 263-264 mm x interval because
+x263/r8 remains just inside the ambiguity cutoff. Do not replicate 20% RMS as
+a clean candidate. The clean-to-ambiguous transition is now bracketed between
+replicated-clean 17.5% RMS and seed34 x-ambiguous 20% RMS. Run 18.75% RMS
+seed34 next.
+```
+
+## 378: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise18.75 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 17.5% RMS and seed34 x-ambiguous
+20% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise18p75_seed34|source_mismatch_noise18p75_seed34
+  --update-case-label source_mismatch_noise18p75_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/378_coordinate_optimizer_close14_seed34_sources4_txrx50_noise18p75_objectives
+```
+
+Result:
+
+```text
+elapsed: 1411.4 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise18p75_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise18p75_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise18p75_seed34:
+  x263/r8 is +1.34784e-03 worse (1.6329% relative) and clears the ambiguity
+    cutoff by 1.09705e-04.
+  first non-r8 branch x265/r7.5 is +2.17163e-03 worse (2.6309% relative).
+
+base objective, source_mismatch_noise18p75_seed34:
+  x263/r8 is +2.42653e-03 worse (1.9395% relative) and clears the ambiguity
+    cutoff by 5.49909e-04.
+  first non-r8 branch x265/r7.5 is +4.37016e-03 worse (3.4931% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.58088e-03 worse nominal and +2.66152e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(103.192,64.367,91.270), nonwhite fraction 0.301657
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 18.75% RMS under the 4-source, 50 mm Tx/Rx acquisition, but
+the nominal x263/r8 ambiguity-clearance margin is very small: 1.10e-04. This
+keeps 18.75% RMS in the clean-candidate branch, but it is too tight to promote
+from one seed. Replicate on seeds 13 and 21 before promoting 18.75% RMS.
+```
+
+## 379: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise18.75 Replicate
+
+Purpose:
+
+```text
+replicate the tight 18.75% RMS seed34 clean result on seed13 before deciding
+whether the larger-offset acquisition can be promoted at this bracket.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise18p75_seed13|source_mismatch_noise18p75_seed13
+  --update-case-label source_mismatch_noise18p75_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/379_coordinate_optimizer_close14_seed13_sources4_txrx50_noise18p75_objectives
+```
+
+Result:
+
+```text
+elapsed: 1418.6 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise18p75_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise18p75_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise18p75_seed13:
+  x263/r8 is +1.56625e-03 worse (1.8781% relative) and clears the ambiguity
+    cutoff by 3.15291e-04.
+  first non-r8 branch x265/r7.5 is +2.10925e-03 worse (2.5292% relative).
+
+base objective, source_mismatch_noise18p75_seed13:
+  x263/r8 is +2.56141e-03 worse (2.0413% relative) and clears the ambiguity
+    cutoff by 6.79216e-04.
+  first non-r8 branch x265/r7.5 is +4.57292e-03 worse (3.6444% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.82679e-03 worse nominal and +2.98101e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.497,63.991,90.670), nonwhite fraction 0.295144
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean 18.75% RMS Tx/Rx=50 result. Both seed13 rows are
+true, strong, and zero-ambiguity in x/z/r. Run seed21 next; if it also remains
+clean, aggregate 378-380 before promoting the 18.75% RMS bracket.
+```
+
+## 380: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise18.75 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 18.75% RMS Tx/Rx=50 close14
+bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise18p75_seed21|source_mismatch_noise18p75_seed21
+  --update-case-label source_mismatch_noise18p75_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/380_coordinate_optimizer_close14_seed21_sources4_txrx50_noise18p75_objectives
+```
+
+Result:
+
+```text
+elapsed: 1410.2 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise18p75_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise18p75_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise18p75_seed21:
+  x263/r8 is +1.59138e-03 worse (1.9391% relative) and clears the ambiguity
+    cutoff by 3.60376e-04.
+  first non-r8 branch x265/r7.5 is +2.00052e-03 worse (2.4377% relative).
+
+base objective, source_mismatch_noise18p75_seed21:
+  x263/r8 is +2.13456e-03 worse (1.6974% relative) and clears the ambiguity
+    cutoff by 2.48204e-04.
+  first non-r8 branch x264/r7.5 is +4.49045e-03 worse (3.5707% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  x263/r8 is +1.73664e-03 worse nominal and +2.09652e-03 worse under
+    source mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.164,63.786,90.377), nonwhite fraction 0.291890
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 18.75% RMS Tx/Rx=50 replicate set. All seed21 rows
+are true, strong, and zero-ambiguity in x/z/r. Aggregate 378-380 next; if the
+aggregate remains 6/6 true, strong, and zero-ambiguity, promote 18.75% RMS
+under 4-source 50 mm Tx/Rx.
+```
+
+## 381: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise18.75 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 18.75% RMS Tx/Rx=50 close14 replicate set and
+decide whether the larger-offset acquisition can be promoted at this midpoint
+between replicated-clean 17.5% and seed34-ambiguous 20%.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/378_coordinate_optimizer_close14_seed34_sources4_txrx50_noise18p75_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/379_coordinate_optimizer_close14_seed13_sources4_txrx50_noise18p75_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/380_coordinate_optimizer_close14_seed21_sources4_txrx50_noise18p75_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise18p75_seed_replicates
+  --outdir outputs/experiments/381_coordinate_confidence_close14_sources4_txrx50_noise18p75_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/381_coordinate_confidence_close14_sources4_txrx50_noise18p75_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 2.00052e-03 / 3.28582e-03 / 4.57292e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(84.800,57.291,76.127), nonwhite fraction 0.196944
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(33.525,33.438,33.658), nonwhite fraction 0.048877
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 18.75% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 18.75% RMS as the current clean operating
+point for the larger-offset acquisition. The clean-to-ambiguous transition is
+now bracketed between replicated-clean 18.75% RMS and seed34 x-ambiguous
+20% RMS. The next midpoint is 19.375% RMS seed34.
+```
+
+## 382: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.375 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 18.75% RMS and seed34 x-ambiguous
+20% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p375_seed34|source_mismatch_noise19p375_seed34
+  --update-case-label source_mismatch_noise19p375_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/382_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1399.6 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p375_seed34:
+  x263/r8 is +1.34086e-03 worse (1.5381% relative) and clears the ambiguity
+    cutoff by 3.32320e-05.
+  first non-r8 branch x265/r7.5 is +2.16005e-03 worse (2.4778% relative).
+
+base objective, source_mismatch_noise19p375_seed34:
+  x263/r8 is +2.41003e-03 worse (1.8304% relative) and clears the ambiguity
+    cutoff by 4.35046e-04.
+  first non-r8 branch x265/r7.5 is +4.33487e-03 worse (3.2923% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.27972e-03 nominal and +5.66871e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.849,64.189,90.977), nonwhite fraction 0.298548
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 remains clean at 19.375% RMS under the 4-source, 50 mm Tx/Rx
+acquisition, but this is the tightest clean seed34 midpoint so far. The
+nominal x263/r8 competitor clears the ambiguity cutoff by only 3.32e-05,
+smaller than the 18.75% seed34 clearance of 1.10e-04 and close to the
+20% seed34 failure where x263/r8 stayed inside the cutoff by 4.49e-05.
+Do not promote 19.375% RMS from one seed. Replicate seeds 13 and 21 before
+deciding whether 19.375% RMS becomes the next clean bracket or the transition
+narrows around this point.
+```
+
+## 383: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise19.375 Replicate
+
+Purpose:
+
+```text
+replicate the very tight 19.375% RMS seed34 clean result on seed13 before
+deciding whether the bracket can be promoted.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p375_seed13|source_mismatch_noise19p375_seed13
+  --update-case-label source_mismatch_noise19p375_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/383_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1407.1 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p375_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p375_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p375_seed13:
+  x263/r8 is +1.56536e-03 worse (1.7773% relative) and clears the ambiguity
+    cutoff by 2.44255e-04.
+  first non-r8 branch x265/r7.5 is +2.09587e-03 worse (2.3797% relative).
+
+base objective, source_mismatch_noise19p375_seed13:
+  x263/r8 is +2.54843e-03 worse (1.9304% relative) and clears the ambiguity
+    cutoff by 5.68210e-04.
+  first non-r8 branch x265/r7.5 is +4.54297e-03 worse (3.4413% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +2.86888e-03 nominal and +6.13471e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.096,63.781,90.327), nonwhite fraction 0.291623
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean 19.375% RMS Tx/Rx=50 result. Both rows are true,
+strong, and zero-ambiguity in x/z/r. Seed13 has more nominal cutoff clearance
+than seed34, but the promoted claim still needs seed21 because seed34 was very
+tight. Run seed21 next; if it remains clean, aggregate 382-384 before
+promoting 19.375% RMS.
+```
+
+## 384: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise19.375 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 19.375% RMS Tx/Rx=50 close14
+bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p375_seed21|source_mismatch_noise19p375_seed21
+  --update-case-label source_mismatch_noise19p375_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/384_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1391.7 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p375_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p375_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p375_seed21:
+  x263/r8 is +1.59123e-03 worse (1.8354% relative) and clears the ambiguity
+    cutoff by 2.90779e-04.
+  first non-r8 branch x265/r7.5 is +1.98410e-03 worse (2.2886% relative).
+
+base objective, source_mismatch_noise19p375_seed21:
+  x263/r8 is +2.11059e-03 worse (1.5950% relative) and clears the ambiguity
+    cutoff by 1.25693e-04.
+  first non-r8 branch x264/r7.5 is +4.45202e-03 worse (3.3644% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.12585e-03 nominal and +5.52140e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.813,63.622,90.080), nonwhite fraction 0.289186
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 19.375% RMS Tx/Rx=50 replicate set. Both rows are
+true, strong, and zero-ambiguity in x/z/r. The tighter source-mismatch
+x263/r8 clearance is 1.26e-04, still outside the ambiguity cutoff. Aggregate
+382-384 next; if all six rows remain true, strong, and zero-ambiguity, promote
+19.375% RMS under 4-source 50 mm Tx/Rx.
+```
+
+## 385: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise19.375 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 19.375% RMS Tx/Rx=50 close14 replicate set and
+decide whether the larger-offset acquisition can be promoted at this midpoint
+between replicated-clean 18.75% and seed34-ambiguous 20%.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/382_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/383_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/384_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise19p375_seed_replicates
+  --outdir outputs/experiments/385_coordinate_confidence_close14_sources4_txrx50_noise19p375_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/385_coordinate_confidence_close14_sources4_txrx50_noise19p375_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 1.98410e-03 / 3.26165e-03 / 4.54297e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(84.201,57.040,75.631), nonwhite fraction 0.194402
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(33.655,33.569,33.788), nonwhite fraction 0.049364
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 19.375% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 19.375% RMS as the current clean operating
+point for the larger-offset acquisition. The clean-to-ambiguous transition is
+now bracketed between replicated-clean 19.375% RMS and seed34 x-ambiguous
+20% RMS. The next midpoint is 19.6875% RMS seed34.
+```
+
+## 386: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.6875 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.375% RMS and seed34
+x-ambiguous 20% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p6875_seed34|source_mismatch_noise19p6875_seed34
+  --update-case-label source_mismatch_noise19p6875_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/386_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p6875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1403.4 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p6875_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise19p6875_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p6875_seed34:
+  x263/r8 is +1.33731e-03 worse (1.4937% relative) but remains inside the
+    ambiguity cutoff by 5.63989e-06.
+  first non-r8 branch x265/r7.5 is +2.15417e-03 worse (2.4061% relative).
+
+base objective, source_mismatch_noise19p6875_seed34:
+  x263/r8 is +2.40165e-03 worse (1.7792% relative) and clears the ambiguity
+    cutoff by 3.76838e-04.
+  first non-r8 branch x265/r7.5 is +4.31702e-03 worse (3.1981% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28395e-03 nominal and +5.66620e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.506,64.021,90.684), nonwhite fraction 0.295479
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+The 19.6875% RMS close14 bracket under 4-source, 50 mm Tx/Rx is point-correct
+but not clean. Both rows select the true x264/z90/r8 point and both radius
+margins are strong, but the nominal row retains a 263-264 mm x interval
+because x263/r8 remains just inside the ambiguity cutoff. Do not replicate
+19.6875% RMS as a clean candidate. The clean-to-ambiguous transition is now
+bracketed between replicated-clean 19.375% RMS and seed34 x-ambiguous
+19.6875% RMS. The next midpoint is 19.53125% RMS seed34.
+```
+
+## 387: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.53125 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.375% RMS and seed34
+x-ambiguous 19.6875% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p53125_seed34|source_mismatch_noise19p53125_seed34
+  --update-case-label source_mismatch_noise19p53125_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/387_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p53125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1404.5 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p53125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p53125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p53125_seed34:
+  x263/r8 is +1.33909e-03 worse (1.5157% relative) and clears the ambiguity
+    cutoff by 1.38481e-05.
+  first non-r8 branch x265/r7.5 is +2.15712e-03 worse (2.4416% relative).
+
+base objective, source_mismatch_noise19p53125_seed34:
+  x263/r8 is +2.40585e-03 worse (1.8045% relative) and clears the ambiguity
+    cutoff by 4.06005e-04.
+  first non-r8 branch x265/r7.5 is +4.32596e-03 worse (3.2447% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28184e-03 nominal and +5.66745e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(102.194,63.855,90.416), nonwhite fraction 0.292743
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 19.53125% RMS under the 4-source, 50 mm Tx/Rx acquisition,
+but it is extremely close to the ambiguity boundary. The nominal x263/r8
+competitor clears the ambiguity cutoff by only 1.38e-05, narrower than the
+19.375% seed34 clean clearance of 3.32e-05 and only slightly above the
+19.6875% seed34 ambiguous failure, where x263/r8 stayed inside by 5.64e-06.
+Do not promote 19.53125% RMS from one seed. Replicate seeds 13 and 21 before
+deciding whether 19.53125% RMS can become the next clean bracket.
+```
+
+## 388: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise19.53125 Replicate
+
+Purpose:
+
+```text
+replicate the extremely tight 19.53125% RMS seed34 clean result on seed13
+before deciding whether the bracket can be promoted.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p53125_seed13|source_mismatch_noise19p53125_seed13
+  --update-case-label source_mismatch_noise19p53125_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/388_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p53125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1413.6 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p53125_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p53125_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p53125_seed13:
+  x263/r8 is +1.56510e-03 worse (1.7534% relative) and clears the ambiguity
+    cutoff by 2.26213e-04.
+  first non-r8 branch x265/r7.5 is +2.09250e-03 worse (2.3443% relative).
+
+base objective, source_mismatch_noise19p53125_seed13:
+  x263/r8 is +2.54512e-03 worse (1.9041% relative) and clears the ambiguity
+    cutoff by 5.40129e-04.
+  first non-r8 branch x265/r7.5 is +4.53538e-03 worse (3.3931% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +2.86768e-03 nominal and +6.13647e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.462,63.459,89.784), nonwhite fraction 0.286227
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean 19.53125% RMS Tx/Rx=50 result. Both seed13 rows
+are true, strong, and zero-ambiguity in x/z/r. Run seed21 next; if it also
+remains clean, aggregate 387-389 before promoting 19.53125% RMS.
+```
+
+## 389: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise19.53125 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 19.53125% RMS Tx/Rx=50
+close14 bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p53125_seed21|source_mismatch_noise19p53125_seed21
+  --update-case-label source_mismatch_noise19p53125_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/389_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p53125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1409.3 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p53125_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p53125_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p53125_seed21:
+  x263/r8 is +1.59115e-03 worse (1.8108% relative) and clears the ambiguity
+    cutoff by 2.73094e-04.
+  first non-r8 branch x265/r7.5 is +1.97997e-03 worse (2.2533% relative).
+
+base objective, source_mismatch_noise19p53125_seed21:
+  x263/r8 is +2.10458e-03 worse (1.5707% relative) and clears the ambiguity
+    cutoff by 9.47706e-05.
+  first non-r8 branch x264/r7.5 is +4.44234e-03 worse (3.3155% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.12395e-03 nominal and +5.51894e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.168,63.291,89.527), nonwhite fraction 0.284191
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 19.53125% RMS Tx/Rx=50 replicate set. Both seed21
+rows are true, strong, and zero-ambiguity in x/z/r. The tighter
+source-mismatch x263/r8 clearance is 9.48e-05, still outside the ambiguity
+cutoff. Aggregate 387-389 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 19.53125% RMS under 4-source 50 mm Tx/Rx.
+```
+
+## 390: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise19.53125 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 19.53125% RMS Tx/Rx=50 close14 replicate set and
+decide whether the larger-offset acquisition can be promoted at this midpoint
+between replicated-clean 19.375% and seed34-ambiguous 19.6875%.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/387_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p53125_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/388_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p53125_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/389_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p53125_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise19p53125_seed_replicates
+  --outdir outputs/experiments/390_coordinate_confidence_close14_sources4_txrx50_noise19p53125_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/390_coordinate_confidence_close14_sources4_txrx50_noise19p53125_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 1.97997e-03 / 3.25554e-03 / 4.53538e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(82.844,56.472,74.506), nonwhite fraction 0.188811
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(33.976,33.891,34.108), nonwhite fraction 0.050605
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 19.53125% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 19.53125% RMS as the current clean operating
+point for the larger-offset acquisition. The clean-to-ambiguous transition is
+now bracketed between replicated-clean 19.53125% RMS and seed34 x-ambiguous
+19.6875% RMS. The next midpoint is 19.609375% RMS seed34.
+```
+
+## 391: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.609375 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.53125% RMS and seed34
+x-ambiguous 19.6875% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p609375_seed34|source_mismatch_noise19p609375_seed34
+  --update-case-label source_mismatch_noise19p609375_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/391_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p609375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1406.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p609375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p609375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p609375_seed34:
+  x263/r8 is +1.33820e-03 worse (1.5046% relative) and clears the ambiguity
+    cutoff by 4.11709e-06.
+  first non-r8 branch x265/r7.5 is +2.15564e-03 worse (2.4237% relative).
+
+base objective, source_mismatch_noise19p609375_seed34:
+  x263/r8 is +2.40375e-03 worse (1.7918% relative) and clears the ambiguity
+    cutoff by 3.91437e-04.
+  first non-r8 branch x265/r7.5 is +4.32149e-03 worse (3.2213% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28290e-03 nominal and +5.66683e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.793,63.656,90.074), nonwhite fraction 0.289273
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 19.609375% RMS under the 4-source, 50 mm Tx/Rx
+acquisition, but the result is almost on the ambiguity boundary. The nominal
+x263/r8 competitor clears the ambiguity cutoff by only 4.12e-06, smaller than
+the 19.53125% seed34 clearance of 1.38e-05 and just across the boundary from
+the 19.6875% seed34 ambiguous failure, where x263/r8 stayed inside by
+5.64e-06. Do not promote 19.609375% RMS from one seed. Replicate seeds 13 and
+21 before deciding whether 19.609375% RMS can become the next clean bracket.
+```
+
+## 392: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise19.609375 Replicate
+
+Purpose:
+
+```text
+replicate the boundary-tight 19.609375% RMS seed34 clean result on seed13
+before deciding whether the bracket can be promoted.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p609375_seed13|source_mismatch_noise19p609375_seed13
+  --update-case-label source_mismatch_noise19p609375_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/392_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p609375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1410.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p609375_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p609375_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p609375_seed13:
+  x263/r8 is +1.56496e-03 worse (1.7417% relative) and clears the ambiguity
+    cutoff by 2.17151e-04.
+  first non-r8 branch x265/r7.5 is +2.09080e-03 worse (2.3269% relative).
+
+base objective, source_mismatch_noise19p609375_seed13:
+  x263/r8 is +2.54345e-03 worse (1.8911% relative) and clears the ambiguity
+    cutoff by 5.26040e-04.
+  first non-r8 branch x265/r7.5 is +4.53157e-03 worse (3.3693% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +2.86708e-03 nominal and +6.13735e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.046,63.251,89.430), nonwhite fraction 0.282757
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean 19.609375% RMS Tx/Rx=50 result. Both seed13 rows
+are true, strong, and zero-ambiguity in x/z/r. Run seed21 next; if it also
+remains clean, aggregate 391-393 before promoting 19.609375% RMS.
+```
+
+## 393: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise19.609375 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 19.609375% RMS Tx/Rx=50
+close14 bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p609375_seed21|source_mismatch_noise19p609375_seed21
+  --update-case-label source_mismatch_noise19p609375_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/393_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p609375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1400.6 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p609375_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p609375_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p609375_seed21:
+  x263/r8 is +1.59110e-03 worse (1.7987% relative) and clears the ambiguity
+    cutoff by 2.64209e-04.
+  first non-r8 branch x265/r7.5 is +1.97790e-03 worse (2.2359% relative).
+
+base objective, source_mismatch_noise19p609375_seed21:
+  x263/r8 is +2.10157e-03 worse (1.5588% relative) and clears the ambiguity
+    cutoff by 7.92667e-05.
+  first non-r8 branch x264/r7.5 is +4.43748e-03 worse (3.2914% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.12300e-03 nominal and +5.51771e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(100.746,63.081,89.167), nonwhite fraction 0.280724
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 19.609375% RMS Tx/Rx=50 replicate set. Both seed21
+rows are true, strong, and zero-ambiguity in x/z/r. The tighter
+source-mismatch x263/r8 clearance is 7.93e-05, still outside the ambiguity
+cutoff. Aggregate 391-393 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 19.609375% RMS under 4-source 50 mm Tx/Rx.
+```
+
+## 394: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise19.609375 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 19.609375% RMS Tx/Rx=50 close14 replicate set and
+decide whether the larger-offset acquisition can be promoted at this midpoint
+between replicated-clean 19.53125% and seed34-ambiguous 19.6875%.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/391_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p609375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/392_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p609375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/393_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p609375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise19p609375_seed_replicates
+  --outdir outputs/experiments/394_coordinate_confidence_close14_sources4_txrx50_noise19p609375_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/394_coordinate_confidence_close14_sources4_txrx50_noise19p609375_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 1.97790e-03 / 3.25248e-03 / 4.53157e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(82.369,56.323,74.126), nonwhite fraction 0.186887
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(34.230,34.146,34.360), nonwhite fraction 0.051360
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 19.609375% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 19.609375% RMS as the current clean operating
+point for the larger-offset acquisition. The clean-to-ambiguous transition is
+now bracketed between replicated-clean 19.609375% RMS and seed34 x-ambiguous
+19.6875% RMS. The next midpoint is 19.6484375% RMS seed34.
+```
+
+## 395: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.6484375 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.609375% RMS and seed34
+x-ambiguous 19.6875% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p6484375_seed34|source_mismatch_noise19p6484375_seed34
+  --update-case-label source_mismatch_noise19p6484375_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/395_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p6484375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1394.1 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p6484375_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise19p6484375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p6484375_seed34:
+  x263/r8 is +1.33775e-03 worse (1.4992% relative) but remains inside the
+    ambiguity cutoff by 7.58164e-07.
+  first non-r8 branch x265/r7.5 is +2.15491e-03 worse (2.4149% relative).
+
+base objective, source_mismatch_noise19p6484375_seed34:
+  x263/r8 is +2.40270e-03 worse (1.7855% relative) and clears the ambiguity
+    cutoff by 3.84141e-04.
+  first non-r8 branch x265/r7.5 is +4.31925e-03 worse (3.2097% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28342e-03 nominal and +5.66651e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.474,63.494,89.801), nonwhite fraction 0.286561
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+The 19.6484375% RMS close14 bracket under 4-source, 50 mm Tx/Rx is
+point-correct but not clean. Both rows select the true x264/z90/r8 point and
+both radius margins are strong, but the nominal row retains a 263-264 mm x
+interval because x263/r8 remains just inside the ambiguity cutoff. Do not
+replicate 19.6484375% RMS as a clean candidate. The clean-to-ambiguous
+transition is now bracketed between replicated-clean 19.609375% RMS and seed34
+x-ambiguous 19.6484375% RMS. The next midpoint is 19.62890625% RMS seed34.
+```
+
+## 396: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.62890625 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.609375% RMS and seed34
+x-ambiguous 19.6484375% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p62890625_seed34|source_mismatch_noise19p62890625_seed34
+  --update-case-label source_mismatch_noise19p62890625_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/396_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p62890625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1428.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p62890625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p62890625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p62890625_seed34:
+  x263/r8 is +1.33798e-03 worse (1.5019% relative) and clears the ambiguity
+    cutoff by 1.68027e-06.
+  first non-r8 branch x265/r7.5 is +2.15528e-03 worse (2.4193% relative).
+
+base objective, source_mismatch_noise19p62890625_seed34:
+  x263/r8 is +2.40323e-03 worse (1.7886% relative) and clears the ambiguity
+    cutoff by 3.87790e-04.
+  first non-r8 branch x265/r7.5 is +4.32037e-03 worse (3.2155% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28316e-03 nominal and +5.66667e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(101.059,63.289,89.448), nonwhite fraction 0.283118
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 19.62890625% RMS under the 4-source, 50 mm Tx/Rx
+acquisition, but this is the tightest clean seed34 result observed in the
+transition bracket. The nominal x263/r8 competitor clears the ambiguity cutoff
+by only 1.68e-06, just across the boundary from 19.6484375%, where x263/r8
+stayed inside by 7.58e-07. Do not promote 19.62890625% RMS from one seed.
+Replicate seeds 13 and 21 before deciding whether it can become the next clean
+bracket.
+```
+
+## 397: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise19.62890625 Replicate
+
+Purpose:
+
+```text
+replicate the boundary-tight 19.62890625% RMS seed34 clean result on seed13
+before deciding whether the bracket can be promoted.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p62890625_seed13|source_mismatch_noise19p62890625_seed13
+  --update-case-label source_mismatch_noise19p62890625_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/397_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p62890625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1410.1 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p62890625_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p62890625_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p62890625_seed13:
+  x263/r8 is +1.56493e-03 worse (1.7387% relative) and clears the ambiguity
+    cutoff by 2.14881e-04.
+  first non-r8 branch x265/r7.5 is +2.09038e-03 worse (2.3226% relative).
+
+base objective, source_mismatch_noise19p62890625_seed13:
+  x263/r8 is +2.54303e-03 worse (1.8879% relative) and clears the ambiguity
+    cutoff by 5.22513e-04.
+  first non-r8 branch x265/r7.5 is +4.53061e-03 worse (3.3635% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +2.86694e-03 nominal and +6.13757e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(100.287,62.872,88.782), nonwhite fraction 0.276603
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 replicates the clean 19.62890625% RMS Tx/Rx=50 result. Both seed13
+rows are true, strong, and zero-ambiguity in x/z/r. Run seed21 next; if it
+also remains clean, aggregate 396-398 before promoting 19.62890625% RMS.
+```
+
+## 398: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise19.62890625 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set for the 19.62890625% RMS Tx/Rx=50
+close14 bracket before aggregate promotion.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p62890625_seed21|source_mismatch_noise19p62890625_seed21
+  --update-case-label source_mismatch_noise19p62890625_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/398_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p62890625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1408.7 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p62890625_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p62890625_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p62890625_seed21:
+  x263/r8 is +1.59109e-03 worse (1.7957% relative) and clears the ambiguity
+    cutoff by 2.61984e-04.
+  first non-r8 branch x265/r7.5 is +1.97739e-03 worse (2.2316% relative).
+
+base objective, source_mismatch_noise19p62890625_seed21:
+  x263/r8 is +2.10081e-03 worse (1.5558% relative) and clears the ambiguity
+    cutoff by 7.53863e-05.
+  first non-r8 branch x264/r7.5 is +4.43627e-03 worse (3.2854% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.12276e-03 nominal and +5.51740e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.975,62.696,88.510), nonwhite fraction 0.274569
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the clean 19.62890625% RMS Tx/Rx=50 replicate set. Both
+seed21 rows are true, strong, and zero-ambiguity in x/z/r. The tighter
+source-mismatch x263/r8 clearance is 7.54e-05, still outside the ambiguity
+cutoff. Aggregate 396-398 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 19.62890625% RMS under 4-source 50 mm Tx/Rx.
+```
+
+## 399: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise19.62890625 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 19.62890625% RMS Tx/Rx=50 close14 replicate set
+and decide whether the larger-offset acquisition can be promoted at this
+midpoint between replicated-clean 19.609375% and seed34-ambiguous
+19.6484375%.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/396_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p62890625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/397_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p62890625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/398_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p62890625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise19p62890625_seed_replicates
+  --outdir outputs/experiments/399_coordinate_confidence_close14_sources4_txrx50_noise19p62890625_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/399_coordinate_confidence_close14_sources4_txrx50_noise19p62890625_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 1.97739e-03 / 3.25172e-03 / 4.53061e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(81.025,55.816,73.028), nonwhite fraction 0.181641
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(34.671,34.588,34.800), nonwhite fraction 0.052833
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 19.62890625% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 19.62890625% RMS as the current clean
+operating point for the larger-offset acquisition. The clean-to-ambiguous
+transition is now bracketed between replicated-clean 19.62890625% RMS and
+seed34 x-ambiguous 19.6484375% RMS. The next midpoint is 19.638671875% RMS
+seed34.
+```
+
+## 400: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.638671875 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.62890625% RMS and seed34
+x-ambiguous 19.6484375% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p638671875_seed34|source_mismatch_noise19p638671875_seed34
+  --update-case-label source_mismatch_noise19p638671875_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/400_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p638671875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1407.6 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p638671875_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p638671875_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p638671875_seed34:
+  x263/r8 is +1.33786e-03 worse (1.5005% relative) and clears the ambiguity
+    cutoff by 4.61257e-07.
+  first non-r8 branch x265/r7.5 is +2.15509e-03 worse (2.4171% relative).
+
+base objective, source_mismatch_noise19p638671875_seed34:
+  x263/r8 is +2.40296e-03 worse (1.7870% relative) and clears the ambiguity
+    cutoff by 3.85966e-04.
+  first non-r8 branch x265/r7.5 is +4.31981e-03 worse (3.2126% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28329e-03 nominal and +5.66659e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(100.677,63.084,89.119), nonwhite fraction 0.279926
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 19.638671875% RMS under the 4-source, 50 mm Tx/Rx
+acquisition, but it is effectively on the ambiguity boundary. The nominal
+x263/r8 competitor clears the ambiguity cutoff by only 4.61e-07, smaller than
+the 19.62890625% seed34 clearance of 1.68e-06 and just across the boundary
+from the 19.6484375% seed34 ambiguous result. Do not promote 19.638671875%
+RMS from one seed. Replicate seeds 13 and 21 before deciding whether it can
+become the next clean bracket.
+```
+
+## 401: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise19.638671875 Replicate
+
+Purpose:
+
+```text
+replicate the boundary-clean 19.638671875% RMS seed34 midpoint on seed13
+under the 4-source, 50 mm Tx/Rx acquisition before deciding whether this
+near-limit noise level can be promoted.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p638671875_seed13|source_mismatch_noise19p638671875_seed13
+  --update-case-label source_mismatch_noise19p638671875_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/401_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p638671875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1401.6 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p638671875_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p638671875_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p638671875_seed13:
+  x263/r8 is +1.56491e-03 worse (1.7373% relative) and clears the ambiguity
+    cutoff by 2.13745e-04.
+  first non-r8 branch x265/r7.5 is +2.09017e-03 worse (2.3204% relative).
+
+base objective, source_mismatch_noise19p638671875_seed13:
+  x263/r8 is +2.54282e-03 worse (1.8863% relative) and clears the ambiguity
+    cutoff by 5.20748e-04.
+  first non-r8 branch x265/r7.5 is +4.53014e-03 worse (3.3605% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +2.86686e-03 nominal and +6.13768e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.889,62.658,88.439), nonwhite fraction 0.273410
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 also stays clean at 19.638671875% RMS under the 4-source, 50 mm
+Tx/Rx acquisition. Unlike the seed34 row, seed13 is not right on the cutoff:
+the nominal x263/r8 competitor clears the ambiguity threshold by 2.14e-04,
+and the source-mismatch row clears it by 5.21e-04. This supports continuing
+the replication instead of lowering the midpoint. Run seed21 next; if it also
+remains true, strong, and zero-width in x/z/r, aggregate 400-402 before
+promoting 19.638671875% RMS.
+```
+
+## 402: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise19.638671875 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set at 19.638671875% RMS under the
+4-source, 50 mm Tx/Rx acquisition before aggregating the near-boundary clean
+candidate.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p638671875_seed21|source_mismatch_noise19p638671875_seed21
+  --update-case-label source_mismatch_noise19p638671875_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/402_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p638671875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1414.7 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p638671875_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p638671875_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p638671875_seed21:
+  x263/r8 is +1.59109e-03 worse (1.7942% relative) and clears the ambiguity
+    cutoff by 2.60870e-04.
+  first non-r8 branch x265/r7.5 is +1.97713e-03 worse (2.2295% relative).
+
+base objective, source_mismatch_noise19p638671875_seed21:
+  x263/r8 is +2.10044e-03 worse (1.5544% relative) and clears the ambiguity
+    cutoff by 7.34455e-05.
+  first non-r8 branch x264/r7.5 is +4.43566e-03 worse (3.2824% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.12264e-03 nominal and +5.51725e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.623,62.506,88.206), nonwhite fraction 0.271785
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the 19.638671875% RMS replicate set cleanly. Both seed21
+rows selected truth x264/z90/r8, both were strong, and both ambiguity
+intervals collapsed to a single x/z/r candidate. The tightest seed21
+clearance is the source-mismatch x263/r8 competitor, which is still
+7.34e-05 outside the ambiguity cutoff. Aggregate 400-402 next; if all six
+rows remain true, strong, and zero-ambiguity, promote 19.638671875% RMS under
+4-source 50 mm Tx/Rx.
+```
+
+## 403: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise19.638671875 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 19.638671875% RMS Tx/Rx=50 close14 replicate set
+and decide whether this near-boundary level can be promoted above the
+previous replicated-clean 19.62890625% RMS operating point.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/400_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p638671875_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/401_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p638671875_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/402_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p638671875_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise19p638671875_seed_replicates
+  --outdir outputs/experiments/403_coordinate_confidence_close14_sources4_txrx50_noise19p638671875_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/403_coordinate_confidence_close14_sources4_txrx50_noise19p638671875_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 1.97713e-03 / 3.25133e-03 / 4.53014e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(80.415,55.528,72.514), nonwhite fraction 0.179197
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(34.707,34.623,34.835), nonwhite fraction 0.053370
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 19.638671875% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 19.638671875% RMS as the current clean
+operating point for the larger-offset acquisition. The clean-to-ambiguous
+transition is now bracketed between replicated-clean 19.638671875% RMS and
+seed34 x-ambiguous 19.6484375% RMS. The next midpoint is 19.6435546875% RMS
+seed34.
+```
+
+## 404: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.6435546875 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.638671875% RMS and seed34
+x-ambiguous 19.6484375% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p6435546875_seed34|source_mismatch_noise19p6435546875_seed34
+  --update-case-label source_mismatch_noise19p6435546875_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/404_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p6435546875_objectives
+```
+
+Result:
+
+```text
+elapsed: 1427.5 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p6435546875_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise19p6435546875_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p6435546875_seed34:
+  x263/r8 is +1.33781e-03 worse (1.4998% relative) but remains inside the
+    ambiguity cutoff by 1.48403e-07.
+  first non-r8 branch x265/r7.5 is +2.15500e-03 worse (2.4160% relative).
+
+base objective, source_mismatch_noise19p6435546875_seed34:
+  x263/r8 is +2.40283e-03 worse (1.7862% relative) and clears the ambiguity
+    cutoff by 3.85053e-04.
+  first non-r8 branch x265/r7.5 is +4.31953e-03 worse (3.2111% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28336e-03 nominal and +5.66655e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(100.242,62.862,88.746), nonwhite fraction 0.276452
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 at 19.6435546875% RMS is point-correct but not clean. The best point
+is still the true x264/z90/r8 and both radius labels are strong, but the
+nominal near-best interval widens to 263-264 mm because x263/r8 remains
+inside the ambiguity cutoff by 1.48e-07. Treat 19.6435546875% RMS as a new
+seed34 ambiguous upper bound. Do not replicate this level. The clean-to-
+ambiguous transition is now bracketed between replicated-clean 19.638671875%
+RMS and seed34-ambiguous 19.6435546875% RMS. Run the lower midpoint
+19.64111328125% RMS seed34 next.
+```
+
+## 405: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.64111328125 Midpoint
+
+Purpose:
+
+```text
+test the lower midpoint between replicated-clean 19.638671875% RMS and
+seed34 x-ambiguous 19.6435546875% RMS under the 4-source, 50 mm Tx/Rx
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p64111328125_seed34|source_mismatch_noise19p64111328125_seed34
+  --update-case-label source_mismatch_noise19p64111328125_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/405_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p64111328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1411.2 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p64111328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p64111328125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p64111328125_seed34:
+  x263/r8 is +1.33784e-03 worse (1.5002% relative) and clears the ambiguity
+    cutoff by 1.56439e-07.
+  first non-r8 branch x265/r7.5 is +2.15504e-03 worse (2.4165% relative).
+
+base objective, source_mismatch_noise19p64111328125_seed34:
+  x263/r8 is +2.40290e-03 worse (1.7866% relative) and clears the ambiguity
+    cutoff by 3.85510e-04.
+  first non-r8 branch x265/r7.5 is +4.31967e-03 worse (3.2118% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28332e-03 nominal and +5.66657e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.795,62.622,88.362), nonwhite fraction 0.272841
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is clean at 19.64111328125% RMS under the 4-source, 50 mm Tx/Rx
+acquisition, but only barely. The nominal x263/r8 competitor clears the
+ambiguity cutoff by 1.56e-07, almost symmetric with the 19.6435546875%
+ambiguous result where the same competitor was inside by 1.48e-07. Do not
+promote this level from one seed. Replicate seeds 13 and 21 before deciding
+whether 19.64111328125% RMS can become the next clean bracket.
+```
+
+## 406: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise19.64111328125 Replicate
+
+Purpose:
+
+```text
+replicate the boundary-clean 19.64111328125% RMS seed34 midpoint on seed13
+under the 4-source, 50 mm Tx/Rx acquisition before deciding whether this
+near-limit noise level can be promoted.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p64111328125_seed13|source_mismatch_noise19p64111328125_seed13
+  --update-case-label source_mismatch_noise19p64111328125_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/406_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p64111328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1424.9 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p64111328125_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p64111328125_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p64111328125_seed13:
+  x263/r8 is +1.56490e-03 worse (1.7369% relative) and clears the ambiguity
+    cutoff by 2.13461e-04.
+  first non-r8 branch x265/r7.5 is +2.09011e-03 worse (2.3199% relative).
+
+base objective, source_mismatch_noise19p64111328125_seed13:
+  x263/r8 is +2.54277e-03 worse (1.8859% relative) and clears the ambiguity
+    cutoff by 5.20307e-04.
+  first non-r8 branch x265/r7.5 is +4.53002e-03 worse (3.3598% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +2.86684e-03 nominal and +6.13771e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.027,62.207,87.699), nonwhite fraction 0.266745
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 stays clean at 19.64111328125% RMS under the 4-source, 50 mm Tx/Rx
+acquisition. Both rows selected truth x264/z90/r8, both were strong, and both
+near-best intervals collapsed to a single x/z/r candidate. Unlike the seed34
+row, seed13 has a comfortable nominal x263/r8 ambiguity clearance of
+2.13e-04. Run seed21 next; if it also remains clean, aggregate 405-407 before
+promoting 19.64111328125% RMS.
+```
+
+## 407: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise19.64111328125 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set at 19.64111328125% RMS under the
+4-source, 50 mm Tx/Rx acquisition before aggregating the near-boundary clean
+candidate.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p64111328125_seed21|source_mismatch_noise19p64111328125_seed21
+  --update-case-label source_mismatch_noise19p64111328125_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/407_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p64111328125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1416.4 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p64111328125_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p64111328125_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p64111328125_seed21:
+  x263/r8 is +1.59108e-03 worse (1.7938% relative) and clears the ambiguity
+    cutoff by 2.60592e-04.
+  first non-r8 branch x265/r7.5 is +1.97706e-03 worse (2.2289% relative).
+
+base objective, source_mismatch_noise19p64111328125_seed21:
+  x263/r8 is +2.10034e-03 worse (1.5540% relative) and clears the ambiguity
+    cutoff by 7.29602e-05.
+  first non-r8 branch x264/r7.5 is +4.43551e-03 worse (3.2817% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.12262e-03 nominal and +5.51721e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(98.698,62.021,87.412), nonwhite fraction 0.264710
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the 19.64111328125% RMS replicate set cleanly. Both seed21
+rows selected truth x264/z90/r8, both were strong, and both ambiguity
+intervals collapsed to a single x/z/r candidate. The tightest seed21
+clearance is the source-mismatch x263/r8 competitor, which is still
+7.30e-05 outside the ambiguity cutoff. Aggregate 405-407 next; if all six
+rows remain true, strong, and zero-ambiguity, promote 19.64111328125% RMS
+under 4-source 50 mm Tx/Rx.
+```
+
+## 408: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise19.64111328125 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 19.64111328125% RMS Tx/Rx=50 close14 replicate
+set and decide whether this near-boundary level can be promoted above the
+previous replicated-clean 19.638671875% RMS operating point.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/405_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p64111328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/406_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p64111328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/407_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p64111328125_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise19p64111328125_seed_replicates
+  --outdir outputs/experiments/408_coordinate_confidence_close14_sources4_txrx50_noise19p64111328125_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/408_coordinate_confidence_close14_sources4_txrx50_noise19p64111328125_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 1.97706e-03 / 3.25124e-03 / 4.53002e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(79.114,54.968,71.434), nonwhite fraction 0.174071
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(34.908,34.828,35.032), nonwhite fraction 0.054215
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 19.64111328125% RMS close14 tangent bracket is replicated clean under the
+4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and nominal/source
+mismatch rows, all six rows selected the true target-2 geometry x264/z90/r8,
+all six radius labels were strong, and the near-best intervals collapsed to a
+single x/z/r candidate. Promote 19.64111328125% RMS as the current clean
+operating point for the larger-offset acquisition. The clean-to-ambiguous
+transition is now bracketed between replicated-clean 19.64111328125% RMS and
+seed34 x-ambiguous 19.6435546875% RMS. The next midpoint is
+19.642333984375% RMS seed34.
+```
+
+## 409: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.642333984375 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.64111328125% RMS and seed34
+x-ambiguous 19.6435546875% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p642333984375_seed34|source_mismatch_noise19p642333984375_seed34
+  --update-case-label source_mismatch_noise19p642333984375_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/409_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p642333984375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1424.5 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p642333984375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p642333984375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p642333984375_seed34:
+  x263/r8 is +1.33782e-03 worse (1.5000% relative) and clears the ambiguity
+    cutoff by 4.02121e-09.
+  first non-r8 branch x265/r7.5 is +2.15502e-03 worse (2.4163% relative).
+
+base objective, source_mismatch_noise19p642333984375_seed34:
+  x263/r8 is +2.40286e-03 worse (1.7864% relative) and clears the ambiguity
+    cutoff by 3.85282e-04.
+  first non-r8 branch x265/r7.5 is +4.31960e-03 worse (3.2115% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28334e-03 nominal and +5.66656e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.497,62.477,88.108), nonwhite fraction 0.270655
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 is technically clean at 19.642333984375% RMS under the 4-source,
+50 mm Tx/Rx acquisition, but it is numerically on the x-ambiguity boundary.
+The nominal x263/r8 competitor clears the ambiguity cutoff by only 4.02e-09,
+between the 19.64111328125% clean clearance of 1.56e-07 and the
+19.6435546875% ambiguous miss of 1.48e-07. Do not promote this level from one
+seed. Replicate seeds 13 and 21 before deciding whether 19.642333984375% RMS
+can become the next clean bracket.
+```
+
+## 410: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed13 Noise19.642333984375 Replicate
+
+Purpose:
+
+```text
+replicate the razor-thin clean 19.642333984375% RMS seed34 midpoint on
+seed13 under the 4-source, 50 mm Tx/Rx acquisition before deciding whether
+this boundary level can be promoted.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p642333984375_seed13|source_mismatch_noise19p642333984375_seed13
+  --update-case-label source_mismatch_noise19p642333984375_seed13
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/410_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p642333984375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1418.4 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p642333984375_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p642333984375_seed13: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p642333984375_seed13:
+  x263/r8 is +1.56490e-03 worse (1.7367% relative) and clears the ambiguity
+    cutoff by 2.13319e-04.
+  first non-r8 branch x265/r7.5 is +2.09009e-03 worse (2.3196% relative).
+
+base objective, source_mismatch_noise19p642333984375_seed13:
+  x263/r8 is +2.54275e-03 worse (1.8857% relative) and clears the ambiguity
+    cutoff by 5.20087e-04.
+  first non-r8 branch x265/r7.5 is +4.52996e-03 worse (3.3594% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +2.86683e-03 nominal and +6.13772e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(98.721,62.058,87.439), nonwhite fraction 0.264552
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed13 stays clean at 19.642333984375% RMS under the 4-source, 50 mm Tx/Rx
+acquisition. Both rows selected truth x264/z90/r8, both were strong, and both
+near-best intervals collapsed to a single x/z/r candidate. Seed13 again has a
+comfortable nominal x263/r8 ambiguity clearance of 2.13e-04 even though seed34
+was only 4.02e-09 clear. Run seed21 next; if it also remains clean, aggregate
+409-411 before promoting 19.642333984375% RMS.
+```
+
+## 411: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed21 Noise19.642333984375 Replicate
+
+Purpose:
+
+```text
+complete the seed34/13/21 replicate set at 19.642333984375% RMS under the
+4-source, 50 mm Tx/Rx acquisition before aggregating the boundary-clean
+candidate.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p642333984375_seed21|source_mismatch_noise19p642333984375_seed21
+  --update-case-label source_mismatch_noise19p642333984375_seed21
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/411_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p642333984375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1399.7 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p642333984375_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+  source_mismatch_noise19p642333984375_seed21: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p642333984375_seed21:
+  x263/r8 is +1.59108e-03 worse (1.7936% relative) and clears the ambiguity
+    cutoff by 2.60453e-04.
+  first non-r8 branch x265/r7.5 is +1.97703e-03 worse (2.2287% relative).
+
+base objective, source_mismatch_noise19p642333984375_seed21:
+  x263/r8 is +2.10029e-03 worse (1.5538% relative) and clears the ambiguity
+    cutoff by 7.27175e-05.
+  first non-r8 branch x264/r7.5 is +4.43543e-03 worse (3.2813% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.12260e-03 nominal and +5.51719e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(98.333,61.841,87.102), nonwhite fraction 0.262109
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed21 completes the 19.642333984375% RMS replicate set cleanly. Both seed21
+rows selected truth x264/z90/r8, both were strong, and both ambiguity
+intervals collapsed to a single x/z/r candidate. The tightest seed21
+clearance is the source-mismatch x263/r8 competitor, which is still
+7.27e-05 outside the ambiguity cutoff. Aggregate 409-411 next; if all six
+rows remain true, strong, and zero-ambiguity, promote 19.642333984375% RMS
+under 4-source 50 mm Tx/Rx.
+```
+
+## 412: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise19.642333984375 Seed Aggregate
+
+Purpose:
+
+```text
+aggregate the seed34/13/21 19.642333984375% RMS Tx/Rx=50 close14 replicate
+set and decide whether this boundary-clean level can be promoted above the
+previous replicated-clean 19.64111328125% RMS operating point.
+```
+
+Command:
+
+```text
+python -u run_coordinate_confidence_aggregate.py
+  outputs/experiments/409_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p642333984375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/410_coordinate_optimizer_close14_seed13_sources4_txrx50_noise19p642333984375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/411_coordinate_optimizer_close14_seed21_sources4_txrx50_noise19p642333984375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --run-name coordinate_confidence_close14_sources4_txrx50_noise19p642333984375_seed_replicates
+  --outdir outputs/experiments/412_coordinate_confidence_close14_sources4_txrx50_noise19p642333984375_seed_replicates
+```
+
+Output:
+
+```text
+outputs/experiments/412_coordinate_confidence_close14_sources4_txrx50_noise19p642333984375_seed_replicates
+```
+
+Result:
+
+```text
+row_count: 6
+truth_geometry_count: 6
+confidence_label_counts: strong=6
+fallback_warning_count: 0
+x_ambiguity_row_count: 0
+max x/z/r ambiguity widths: 0.0 / 0.0 / 0.0 mm
+radius_margin_abs min/mean/max: 1.97703e-03 / 3.25119e-03 / 4.52996e-03
+
+acquisition summary:
+  4 sources, Tx/Rx offset 50 mm: rows=6, truth rows=6, x ambiguity rows=0
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png: 1720x971 px, dynamic range 255,
+  std=(78.450,54.729,70.896), nonwhite fraction 0.171782
+coordinate_ambiguity_widths.png: 1720x971 px, dynamic range 255,
+  std=(35.145,35.063,35.271), nonwhite fraction 0.055218
+FIGURE_NOTES.md exists and reports strong=6 and zero x-ambiguity rows.
+```
+
+Interpretation:
+
+```text
+The 19.642333984375% RMS close14 tangent bracket is replicated clean under
+the 4-source, 50 mm Tx/Rx acquisition. Across seeds 34/13/21 and
+nominal/source mismatch rows, all six rows selected the true target-2
+geometry x264/z90/r8, all six radius labels were strong, and the near-best
+intervals collapsed to a single x/z/r candidate. Promote 19.642333984375%
+RMS as the current clean operating point for the larger-offset acquisition.
+The clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34 x-ambiguous 19.6435546875% RMS. The next
+midpoint is 19.6429443359375% RMS seed34.
+```
+
+## 413: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.6429443359375 Midpoint
+
+Purpose:
+
+```text
+test the midpoint between replicated-clean 19.642333984375% RMS and seed34
+x-ambiguous 19.6435546875% RMS under the 4-source, 50 mm Tx/Rx acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p6429443359375_seed34|source_mismatch_noise19p6429443359375_seed34
+  --update-case-label source_mismatch_noise19p6429443359375_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/413_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p6429443359375_objectives
+```
+
+Result:
+
+```text
+elapsed: 1301.5 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p6429443359375_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise19p6429443359375_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p6429443359375_seed34:
+  x263/r8 is +1.33782e-03 worse (1.4999% relative) but remains inside the
+    ambiguity cutoff by 7.21902e-08.
+  first non-r8 branch x265/r7.5 is +2.15501e-03 worse (2.4161% relative).
+
+base objective, source_mismatch_noise19p6429443359375_seed34:
+  x263/r8 is +2.40285e-03 worse (1.7863% relative) and clears the ambiguity
+    cutoff by 3.85167e-04.
+  first non-r8 branch x265/r7.5 is +4.31957e-03 worse (3.2113% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28335e-03 nominal and +5.66656e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(99.040,62.242,87.717), nonwhite fraction 0.267126
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 at 19.6429443359375% RMS is point-correct but not clean. The best
+point is still the true x264/z90/r8 and both radius labels are strong, but
+the nominal near-best interval widens to 263-264 mm because x263/r8 remains
+inside the ambiguity cutoff by 7.22e-08. Treat 19.6429443359375% RMS as a
+new seed34 ambiguous upper bound. Do not replicate this level. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34-ambiguous 19.6429443359375% RMS. Run the
+lower midpoint 19.64263916015625% RMS seed34 next.
+```
+
+## 414: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.64263916015625 Midpoint
+
+Purpose:
+
+```text
+test the lower midpoint between replicated-clean 19.642333984375% RMS and
+seed34 x-ambiguous 19.6429443359375% RMS under the 4-source, 50 mm Tx/Rx
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p64263916015625_seed34|source_mismatch_noise19p64263916015625_seed34
+  --update-case-label source_mismatch_noise19p64263916015625_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/414_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p64263916015625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1289.5 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p64263916015625_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise19p64263916015625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p64263916015625_seed34:
+  x263/r8 is +1.33782e-03 worse (1.5000% relative) but remains inside the
+    ambiguity cutoff by 3.40843e-08.
+  first non-r8 branch x265/r7.5 is +2.15502e-03 worse (2.4162% relative).
+
+base objective, source_mismatch_noise19p64263916015625_seed34:
+  x263/r8 is +2.40286e-03 worse (1.7864% relative) and clears the ambiguity
+    cutoff by 3.85225e-04.
+  first non-r8 branch x265/r7.5 is +4.31959e-03 worse (3.2114% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28335e-03 nominal and +5.66656e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(98.524,61.981,87.276), nonwhite fraction 0.263245
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 at 19.64263916015625% RMS is point-correct but not clean. The best
+point is still the true x264/z90/r8 and both radius labels are strong, but
+the nominal near-best interval widens to 263-264 mm because x263/r8 remains
+inside the ambiguity cutoff by 3.41e-08. Treat 19.64263916015625% RMS as the
+new seed34 ambiguous upper bound. Do not replicate this level. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34-ambiguous 19.64263916015625% RMS. Run the
+lower midpoint 19.642486572265625% RMS seed34 next.
+```
+
+## 415: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.642486572265625 Midpoint
+
+Purpose:
+
+```text
+test the lower midpoint between replicated-clean 19.642333984375% RMS and
+seed34 x-ambiguous 19.64263916015625% RMS under the 4-source, 50 mm Tx/Rx
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p642486572265625_seed34|source_mismatch_noise19p642486572265625_seed34
+  --update-case-label source_mismatch_noise19p642486572265625_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/415_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p642486572265625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1291.0 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p642486572265625_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise19p642486572265625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p642486572265625_seed34:
+  x263/r8 is +1.33782e-03 worse (1.5000% relative) but remains inside the
+    ambiguity cutoff by 1.50315e-08.
+  first non-r8 branch x265/r7.5 is +2.15502e-03 worse (2.4162% relative).
+
+base objective, source_mismatch_noise19p642486572265625_seed34:
+  x263/r8 is +2.40286e-03 worse (1.7864% relative) and clears the ambiguity
+    cutoff by 3.85253e-04.
+  first non-r8 branch x265/r7.5 is +4.31960e-03 worse (3.2114% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28334e-03 nominal and +5.66656e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(98.101,61.765,86.914), nonwhite fraction 0.260159
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 at 19.642486572265625% RMS is point-correct but not clean. The best
+point is still the true x264/z90/r8 and both radius labels are strong, but
+the nominal near-best interval widens to 263-264 mm because x263/r8 remains
+inside the ambiguity cutoff by 1.50e-08. Treat 19.642486572265625% RMS as the
+new seed34 ambiguous upper bound. Do not replicate this level. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34-ambiguous 19.642486572265625% RMS. Run the
+lower midpoint 19.6424102783203125% RMS seed34 next.
+```
+
+## 416: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.6424102783203125 Midpoint
+
+Purpose:
+
+```text
+test the lower midpoint between replicated-clean 19.642333984375% RMS and
+seed34 x-ambiguous 19.642486572265625% RMS under the 4-source, 50 mm Tx/Rx
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p6424102783203125_seed34|source_mismatch_noise19p6424102783203125_seed34
+  --update-case-label source_mismatch_noise19p6424102783203125_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/416_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p6424102783203125_objectives
+```
+
+Result:
+
+```text
+elapsed: 1391.2 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p6424102783203125_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise19p6424102783203125_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p6424102783203125_seed34:
+  x263/r8 is +1.33782e-03 worse (1.5000% relative) but remains inside the
+    ambiguity cutoff by 5.50513e-09.
+  first non-r8 branch x265/r7.5 is +2.15502e-03 worse (2.4163% relative).
+
+base objective, source_mismatch_noise19p6424102783203125_seed34:
+  x263/r8 is +2.40286e-03 worse (1.7864% relative) and clears the ambiguity
+    cutoff by 3.85267e-04.
+  first non-r8 branch x265/r7.5 is +4.31960e-03 worse (3.2114% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28334e-03 nominal and +5.66656e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(97.720,61.559,86.585), nonwhite fraction 0.257398
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 at 19.6424102783203125% RMS is point-correct but not clean. The best
+point is still the true x264/z90/r8 and both radius labels are strong, but
+the nominal near-best interval widens to 263-264 mm because x263/r8 remains
+inside the ambiguity cutoff by 5.51e-09. Treat 19.6424102783203125% RMS as
+the new seed34 ambiguous upper bound. Do not replicate this level. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34-ambiguous 19.6424102783203125% RMS. Run the
+lower midpoint 19.64237213134765625% RMS seed34 next.
+```
+
+## 417: Close-14 Sources=4, Tx/Rx Offset 50 mm, Seed34 Noise19.64237213134765625 Midpoint
+
+Purpose:
+
+```text
+test the lower midpoint between replicated-clean 19.642333984375% RMS and
+seed34 x-ambiguous 19.6424102783203125% RMS under the 4-source, 50 mm Tx/Rx
+acquisition.
+```
+
+Command:
+
+```text
+python -u run_multi_rebar_coordinate_optimizer.py --backend gpu-cpml
+  --grid-step-mm 1 --sources 4 --tx-rx-offset-mm 50 --frequency-ghz 1.5
+  --true-x-values-mm 190,250,264 --true-z-values-mm 90,90,90
+  --truth-radius-values-mm 5,6,8 --initial-x-values-mm 190,250,264
+  --initial-z-values-mm 90,90,85 --initial-radius-values-mm 6,6,6
+  --target-indices 2 --passes 1 --x-offsets-mm=-2:2:1
+  --z-offsets-mm=0,5,10 --radius-offsets-mm=-1:2:0.5
+  --replication-cases noise19p64237213134765625_seed34|source_mismatch_noise19p64237213134765625_seed34
+  --update-case-label source_mismatch_noise19p64237213134765625_seed34
+  --diagnostic-objective-variants base|highband --top-k 20
+  --revisit-weak-high-radius-targets --revisit-broad-radius-ambiguity-targets
+```
+
+Output:
+
+```text
+outputs/experiments/417_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p64237213134765625_objectives
+```
+
+Result:
+
+```text
+elapsed: 1413.1 s
+sources: 4
+tx_rx_offset_mm: 50.0
+final state: x=[190,250,264], z=[90,90,90], r=[6,6,8]
+objective top-candidate rows: 80
+no radius-ambiguity revisit targets found.
+
+confidence rows:
+  noise19p64237213134765625_seed34: best x=264,z=90,r=8, strong,
+    x interval 263-264, radius interval 8-8
+  source_mismatch_noise19p64237213134765625_seed34: best x=264,z=90,r=8, strong,
+    x interval 264-264, radius interval 8-8
+
+base objective, noise19p64237213134765625_seed34:
+  x263/r8 is +1.33782e-03 worse (1.5000% relative) but remains inside the
+    ambiguity cutoff by 7.41956e-10.
+  first non-r8 branch x265/r7.5 is +2.15502e-03 worse (2.4163% relative).
+
+base objective, source_mismatch_noise19p64237213134765625_seed34:
+  x263/r8 is +2.40286e-03 worse (1.7864% relative) and clears the ambiguity
+    cutoff by 3.85274e-04.
+  first non-r8 branch x265/r7.5 is +4.31960e-03 worse (3.2115% relative).
+
+high-band objective:
+  truth x264/r8 is best in both rows.
+  radius margin is +3.28334e-03 nominal and +5.66656e-03 under source
+    mismatch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_margins.png: 1549x903 px, dynamic range 255,
+  std=(97.279,61.326,86.207), nonwhite fraction 0.254226
+FIGURE_NOTES.md exists and reports strong=2.
+```
+
+Interpretation:
+
+```text
+Seed34 at 19.64237213134765625% RMS is point-correct but not clean. The best
+point is still the true x264/z90/r8 and both radius labels are strong, but
+the nominal near-best interval widens to 263-264 mm because x263/r8 remains
+inside the ambiguity cutoff by 7.42e-10. This is essentially the numerical
+edge of the configured ambiguity rule. Treat 19.64237213134765625% RMS as the
+final seed34 ambiguous upper bound for this bracket. The replicated-clean
+level remains 19.642333984375% RMS; further bisection is not decision-useful
+because the cutoff margin is already below 1e-09.
+```
+
+## 418: Close-14 Sources=4, Tx/Rx Offset 50 mm, Noise Boundary Summary
+
+Purpose:
+
+```text
+package the final seed34 clean-to-ambiguous noise bracket for close-14 target 2
+under 4-source, 50 mm Tx/Rx acquisition without running another FDTD sweep.
+```
+
+Command:
+
+```text
+python run_coordinate_noise_boundary_summary.py
+  outputs/experiments/409_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p642333984375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/413_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p6429443359375_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/414_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p64263916015625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/415_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p642486572265625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/416_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p6424102783203125_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  outputs/experiments/417_coordinate_optimizer_close14_seed34_sources4_txrx50_noise19p64237213134765625_objectives/data/multi_rebar_coordinate_optimizer_summary.json
+  --clean-aggregate-json outputs/experiments/412_coordinate_confidence_close14_sources4_txrx50_noise19p642333984375_seed_replicates/data/coordinate_confidence_aggregate.json
+  --promoted-clean-noise-rms-percent 19.642333984375
+  --run-name coordinate_confidence_close14_txrx50_noise_boundary_summary
+```
+
+Output:
+
+```text
+outputs/experiments/418_coordinate_confidence_close14_txrx50_noise_boundary_summary
+```
+
+Result:
+
+```text
+rows summarized: 6
+clean seed34 row count: 1
+point-correct-not-clean row count: 5
+promoted replicated-clean endpoint: 19.642333984375% RMS
+final ambiguous upper endpoint: 19.642372131347656% RMS
+final bracket width: 3.814697265625e-05% RMS
+final ambiguous upper experiment: 417
+final nominal x263/r8 margin to cutoff: -7.419559550081445e-10
+stop tolerance: 1.0e-09
+stop_due_to_numerical_edge: true
+
+clean aggregate from experiment 412:
+  rows=6
+  truth_geometry_count=6
+  x_ambiguity_row_count=0
+  fallback_warning_count=0
+  confidence_label_counts={strong: 6}
+  radius_margin_abs min/mean/max =
+    0.0019770301650875455 / 0.0032511884908621356 / 0.004529957610464208
+```
+
+Plot validation:
+
+```text
+noise_boundary_cutoff_margin.png: 1804x937 px, dynamic range 255,
+  std=(31.696,31.880,32.332), nonwhite fraction 0.033482
+noise_boundary_x_ambiguity_widths.png: 1804x903 px, dynamic range 255,
+  std=(71.869,56.978,42.355), nonwhite fraction 0.203486
+noise_boundary_radius_margins.png: 1923x937 px, dynamic range 255,
+  std=(74.779,56.178,86.824), nonwhite fraction 0.380883
+FIGURE_NOTES.md explains RMS, Tx/Rx, cutoff margin, x ambiguity widths, and
+radius-margin evidence.
+```
+
+Interpretation:
+
+```text
+Experiment 418 turns the final bracket into a reusable decision artifact. The
+cutoff-margin plot shows experiment 409 barely clean at +4.02121e-09, while
+experiment 417 is barely ambiguous at -7.41956e-10. The ambiguity-width plot
+confirms that only the nominal row opens to a 1 mm x interval above the clean
+endpoint; the source-mismatch row stays collapsed. The radius-margin plot
+confirms that radius evidence stays strong, so the boundary is a lateral
+position ambiguity, not a radius failure. Keep 19.642333984375% RMS as the
+promoted close-14 target-2 operating point under 4 sources and 50 mm Tx/Rx.
+Do not spend more GPU time on this scalar noise bracket unless the ambiguity
+rule itself changes.
+```
+
+## 419: Variable-Radius Staged Pipeline Replay Plan
+
+Purpose:
+
+```text
+extend the packaged variable-radius staged summary with a dry-run replay plan
+that captures the detection, assignment/location, focused polish, refined
+focused polish, joint-radius, and summary commands from their run manifests.
+```
+
+Command:
+
+```text
+python run_variable_radius_staged_pipeline_summary.py
+  --run-name variable_radius_staged_pipeline_seed13_21_34_sources7_replay_plan
+  --case seed13|...216 detection...|...225 location...|...227 focused...|...222 joint...|...254 sources7 refined...
+  --case seed21|...230 detection...|...233 location...|...234 focused...|...235 joint...|...255 sources7 refined...
+  --case seed34_sources7|...239 detection...|...242 location...|...243 focused...|...247 joint...|...252 sources7 refined...
+```
+
+Output:
+
+```text
+outputs/experiments/419_variable_radius_staged_pipeline_seed13_21_34_sources7_replay_plan
+```
+
+Result:
+
+```text
+case count: 3
+replay plan stage_count: 15
+replay plan command_available_count: 15
+replay command plan:
+  data/staged_variable_radius_replay_commands.txt
+replay plan JSON:
+  data/staged_variable_radius_replay_plan.json
+
+focused_policy by case:
+  seed13: use_refined_focus_for_point_x
+  seed21: use_refined_focus_for_point_x
+  seed34_sources7: use_refined_focus_for_point_x
+
+focused x ambiguity:
+  standard 5-source focused stage: 2 x-ambiguity rows per seed
+  refined 7-source focused stage: 0 x-ambiguity rows per seed
+
+joint radius:
+  truth tuple rank: 1 / 1 / 1
+  joint max x/z/r error: 0 / 0 / 0 mm for all three cases
+```
+
+Plot validation:
+
+```text
+staged_variable_radius_pipeline_errors.png: 1753x971 px, dynamic range 255,
+  std=(41.032,39.552,56.961), nonwhite fraction 0.101624
+FIGURE_NOTES.md explains the staged error plot and per-case acquisition
+settings.
+```
+
+Interpretation:
+
+```text
+Experiment 419 closes the packaging gap called out after the staged
+variable-radius policy work. The summary still reports the same scientific
+result as experiment 257: the economical 5-source focused stage carries a
+target-2 x interval, the 7-source focused refinement collapses that interval
+for all three seeds, and the joint-radius stage ranks the true [5,6,8] tuple
+first. The new artifact is operational: a replay JSON and non-executable text
+command plan list all 15 stage commands from their original manifests. This is
+not a GPU rerun and should be treated as the dry-run orchestration package for
+future staged variable-radius replications.
+```

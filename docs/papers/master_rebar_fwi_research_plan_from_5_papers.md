@@ -1431,7 +1431,8 @@ and residual back-propagation products. Previous single-rebar experiments
 052-062 have scientifically labelled GIFs and validation metadata. Stage 9
 animations 100-104 were regenerated or supplemented with Tx/Rx markers.
 Experiment 056 now has material-aware forward animation support for the actual
-low-conductivity steel candidate.
+low-conductivity steel candidate, and experiment 420 adds the matching
+true-vs-candidate material comparison GIF.
 ```
 
 ### Stage 10A: Detection-To-FWI Seed Layer
@@ -2739,9 +2740,9 @@ first close the shallow r=4 mm high-band ambiguity:
    whether source scaling is absorbing radius information,
 4. [x] test whether small material/source-property changes explain the same
    shallow-radius objective valley,
-5. [ ] add material/source animation examples only when they correspond to actual
+5. [x] add material/source animation examples only when they correspond to actual
    candidate branches,
-6. [ ] keep a handoff matrix separating location accuracy, radius confidence,
+6. [x] keep a handoff matrix separating location accuracy, radius confidence,
    source mismatch, material ambiguity, visualization evidence, and runtime.
 ```
 
@@ -3808,8 +3809,831 @@ below the 1.5% ambiguity threshold. The practical recommendation is now
 Next robust-offset decision:
 
 ```text
-run one seed34 probe at 35 mm Tx/Rx with the same 4-source scan to see whether
-there is a smaller robust default between the borderline 30 mm and robust
-40 mm settings. If 35 mm shows 40 mm-like margins, replicate it; otherwise
-keep 40 mm as the robust default and move to geometry-separation stress tests.
+experiment 286 tested 35 mm Tx/Rx on seed34 and passed as a strong
+truth-geometry run. The weakest base lateral gap was 4.71%, comparable to the
+40 mm seed34 result and much stronger than the 30 mm seed34 result.
+Experiment 287 replicated seed13 with weakest base lateral gap 4.64%.
+Experiment 288 replicated seed21 with weakest base lateral gap 4.64%.
+Experiment 289 aggregated the three 35 mm seeds: 6/6 rows were truth geometry,
+all were strong, no row had x ambiguity, and the radius margin mean was
+5.18816e-03. Promote 35 mm to the robust close50 default. Keep 30 mm as the
+minimum replicated margin-aware setting, 25 mm as the failed lower bound, and
+40 mm as the extra-conservative backup.
+```
+
+Next geometry-stress decision:
+
+```text
+experiment 290 moved from acquisition-offset thresholding to geometry-
+separation stress with close45 target 2: 4 sources, 35 mm Tx/Rx,
+x=[190,250,295] mm, z=[90,90,90] mm, radii=[5,6,8] mm. Seed34 passed strongly:
+truth geometry, strong labels, x interval 295-295 mm, and weakest base lateral
+gap 4.64%. Experiment 291 replicated seed13 with truth geometry, strong
+labels, x interval 295-295 mm, and weakest base lateral gap 4.44%.
+Experiment 292 completed seed21 with truth geometry, strong labels, and
+weakest base lateral gap 4.15%. Experiment 293 aggregated close45: 6/6 rows
+were truth geometry, all were strong, and no row had x ambiguity. Treat
+close45 as replicated under the 4-source 35 mm robust acquisition.
+```
+
+Next geometry-stress decision:
+
+```text
+run a close40 seed34 probe with the same robust acquisition: 4 sources,
+35 mm Tx/Rx, x=[190,250,290] mm, z=[90,90,90] mm, radii=[5,6,8] mm. If it
+passes, replicate seeds 13 and 21; if it fails, compare against the
+extra-conservative 40 mm offset before setting the geometry-separation limit.
+Experiment 294 completed the close40 seed34 probe as a strong pass: truth
+geometry, x interval 290-290 mm, and weakest base lateral gap 6.61%. Replicate
+close40 on seeds 13 and 21 before moving the geometry-stress branch tighter.
+Experiment 295 replicated seed13 as another strong pass with x interval
+290-290 mm and weakest base lateral gap 6.31%. Experiment 296 completed
+seed21 as another strong pass with x interval 290-290 mm and weakest base
+lateral gap 6.31% nominal / 8.03% under source mismatch. Experiment 297
+aggregated close40 across seeds 34, 13, and 21: 6/6 rows were truth geometry,
+all were strong, no row had x ambiguity, and the radius margin mean was
+7.41450e-03. Treat close40 as replicated under the 4-source 35 mm robust
+acquisition. Run a close35 seed34 probe next with x=[190,250,285] mm using
+the same acquisition; if it fails, compare against the extra-conservative
+40 mm Tx/Rx offset before setting the geometry-separation limit. Experiment
+298 completed the close35 seed34 probe as a strong pass: truth geometry,
+x interval 285-285 mm, no revisit, and weakest base lateral gap 7.28%.
+Experiment 299 replicated seed13 as another strong pass with x interval
+285-285 mm and weakest base lateral gap 7.55%. Experiment 300 completed
+seed21 as another strong pass with x interval 285-285 mm and weakest base
+lateral gap 7.20%. Experiment 301 aggregated close35 across seeds 34, 13,
+and 21: 6/6 rows were truth geometry, all were strong, no row had x
+ambiguity, and the radius margin mean was 5.74808e-03. Treat close35 as
+replicated under the 4-source 35 mm robust acquisition. Run a close30 seed34
+probe next with x=[190,250,280] mm using the same acquisition; if it fails,
+compare against the extra-conservative 40 mm Tx/Rx offset before setting the
+geometry-separation limit. Experiment 302 completed the close30 seed34 probe
+as a truth-geometry pass with strong labels and zero x ambiguity, but the
+nearest competitor is now a coupled x=281 mm, r=7.5 mm branch only 2.44% worse
+under the nominal base objective. Treat close30 as a margin-aware pass and
+replicate seeds 13 and 21 before calling it validated. Experiment 303
+replicated seed13 as another truth-geometry, strong-label pass with zero x
+ambiguity; the same x=281 mm, r=7.5 mm branch was 2.66% worse under nominal
+base and 3.54% worse under source mismatch. Experiment 304 completed seed21
+as another truth-geometry, strong-label pass with zero x ambiguity; the
+coupled x=281 mm, r=7.5 mm branch was 2.18% worse under nominal base and
+3.67% worse under source mismatch. Experiment 305 aggregated close30 across
+seeds 34, 13, and 21: 6/6 rows were truth geometry, all were strong, no row
+had x ambiguity, and the radius margin mean was 2.43348e-03. Treat close30 as
+the current tightest replicated 35 mm-offset result with margin-aware
+reporting. Run a close25 seed34 lower-bound probe with x=[190,250,275] mm
+before claiming close30 as the final geometry-separation limit. Experiment
+306 ran that close25 seed34 lower-bound probe and failed as a robust point
+estimate: all four main/revisit rows were weak, x/r ambiguity remained
+275-276 mm and 7.5-8.0 mm, and the nominal case selected the shifted
+x=276 mm, r=7.5 mm branch over truth. Treat close30 as the tightest replicated
+35 mm-offset result unless an extra-conservative 40 mm Tx/Rx close25 seed34
+probe rescues the geometry. Experiment 307 ran that 40 mm-offset rescue probe
+and partially rescued seed34: both cases selected truth and no revisit was
+triggered, but the nominal row was only moderate, retained a 275-276 mm /
+7.5-8.0 mm near-best interval, and the x276/r7.5 branch was only 1.24% worse
+under the base objective. Experiment 308 replicated seed13 as the same
+40 mm-offset rescue pattern: both cases selected truth and no revisit was
+triggered, but the nominal row stayed moderate with the same 275-276 mm /
+7.5-8.0 mm near-best interval and the x276/r7.5 branch only 1.35% worse under
+the base objective. Experiment 309 completed seed21 as another truth-selected
+40 mm run, but its nominal row was weak and the x276/r7.5 branch was only
+0.9647% worse under the base objective. Experiment 310 aggregated seeds 34,
+13, and 21: 6/6 rows selected truth geometry, but confidence was mixed
+(strong=3, moderate=2, weak=1), three rows retained 1 mm x ambiguity, and the
+radius-margin mean was only 1.13331e-03. Treat close25 with 40 mm Tx/Rx as a
+margin-aware lower-bound recovery mode, not as the clean geometry-separation
+limit. Keep close30 under the 35 mm robust acquisition as the tightest
+replicated zero-ambiguity result, and run a close28 35 mm Tx/Rx bracket probe
+to locate the transition between close30 pass and close25 fail. Experiment
+311 ran the close28 seed34 bracket and selected truth in both observed cases
+without a revisit, but the nominal row was weak, kept a 278-279 mm /
+7.5-8.0 mm ambiguity interval, and the high-band x279/r7.5 branch was only
+0.2796% above truth. Treat close28 as a transition-band point recovery that
+requires seed replication and aggregate ambiguity reporting, not as a
+validated geometry limit yet. Experiment 312 replicated seed13 as another
+truth-selected close28 run with no revisit; the nominal row improved to
+moderate, but still retained the same 278-279 mm / 7.5-8.0 mm ambiguity
+interval and the base x279/r7.5 branch was only 0.8714% above truth. Run
+seed21 and aggregate 311-313 before making any close28 policy statement.
+Experiment 313 completed seed21 as another truth-selected close28 run, but the
+nominal row was weak, kept the same 278-279 mm / 7.5-8.0 mm ambiguity
+interval, and the high-band diagnostic ranked the shifted x279/r7.5 branch
+above truth by 0.5322%. Experiment 314 aggregated seeds 34, 13, and 21:
+6/6 rows selected truth geometry, but confidence was mixed (strong=3,
+moderate=1, weak=2), three rows retained 1 mm x ambiguity, and the
+radius-margin mean was only 9.92343e-04. Keep close30 as the tightest
+replicated clean 35 mm-offset result. Classify close28 as a transition-band
+point-recovery mode that requires interval reporting. Experiment 315 tested
+whether a 40 mm Tx/Rx offset could clean close28 seed34. It improved the
+landscape: truth won both base and high-band diagnostics, and the nominal
+high-band gap rose from 0.2796% to 4.8776%. But the nominal base gap was still
+only 1.2088%, so the row remained moderate with a 278-279 mm / 7.5-8.0 mm
+ambiguity interval. Test a 45 mm Tx/Rx seed34 probe before deciding whether
+close28 can be made clean by extra-conservative acquisition. Experiment 316
+tested 45 mm Tx/Rx on seed34 and cleaned the close28 result: both rows were
+strong, no x/radius ambiguity remained, and the nearest competitor became the
+same-x x278/r7.5 branch with nominal base gap 5.4584%. Experiment 317
+replicated seed13 as another clean 45 mm run: both rows were strong, no
+ambiguity remained, and the weakest base gap was 5.4497%. Experiment 318
+completed seed21 as the third clean 45 mm run: both rows were strong, no
+x/radius ambiguity remained, every base/high-band diagnostic objective ranked
+truth first, and the weakest base gap was 5.3608%. Aggregate 316-318 next; if
+the six-row aggregate remains all-strong with zero ambiguity, promote 45 mm
+Tx/Rx as a replicated clean close28 acquisition rescue while reporting the
+increased acquisition offset relative to the clean close30 35 mm-offset limit.
+Experiment 319 aggregated the 45 mm seed replicates: 6/6 rows selected truth
+geometry, all six rows were strong, no row retained x/z/r ambiguity, and the
+radius-margin mean rose to 3.20759e-03. Treat 45 mm Tx/Rx as a replicated
+clean close28 acquisition rescue. Keep close30 as the tightest replicated clean
+result under the standard 35 mm Tx/Rx offset, and report close28 as requiring
+the larger 45 mm acquisition geometry. Run a close25 seed34 45 mm Tx/Rx
+lower-bound rescue probe next to test whether 45 mm brackets between close25
+and close28 or can push the clean separation limit lower. Experiment 320 ran
+that close25 seed34 45 mm probe and passed cleanly: both rows were strong, no
+x/radius ambiguity remained, all base/high-band diagnostics ranked truth
+first, and the weakest base lateral gap was 4.1200% against the x274/r8
+competitor. Replicate close25 45 mm Tx/Rx on seeds 13 and 21 before lowering
+the clean separation guidance. Experiment 321 replicated seed13 as another
+clean pass: both rows were strong, no ambiguity remained, all base/high-band
+diagnostics ranked truth first, and the weakest base lateral gap was 4.2551%.
+Run seed21 and aggregate 320-322 before promoting close25 under the 45 mm
+Tx/Rx acquisition. Experiment 322 completed seed21 as another clean pass:
+both rows were strong, no x/radius ambiguity remained, all base/high-band
+diagnostics ranked truth first, and the weakest base lateral gap was 4.3456%.
+Aggregate 320-322 next; if all six rows stay truth-selected, strong, and
+zero-ambiguity, promote close25 as clean under 45 mm Tx/Rx while preserving the
+distinction from the standard 35 mm acquisition. Experiment 323 aggregated the
+close25 45 mm seed replicates: 6/6 rows selected truth geometry, all six rows
+were strong, no row retained x/z/r ambiguity, and the radius-margin mean was
+3.64800e-03. Promote close25 as a clean replicated result under the
+extra-conservative 45 mm Tx/Rx acquisition. Keep close30 as the tightest clean
+replicated result under the standard 35 mm Tx/Rx acquisition. Run a close20
+seed34 45 mm Tx/Rx lower-bound probe next; if it fails, close25 is the current
+practical 45 mm clean limit, and if it passes, replicate before lowering the
+guidance again. Experiment 324 ran the close20 seed34 45 mm probe and passed
+cleanly: both rows were strong, no ambiguity remained, all base/high-band
+diagnostics ranked truth first, and the weakest base lateral gap was 2.7705%
+against x269/r8. Replicate close20 45 mm Tx/Rx on seeds 13 and 21 before
+promoting it. Experiment 325 replicated seed13 as another clean pass: both
+rows were strong, no ambiguity remained, all base/high-band diagnostics ranked
+truth first, and the weakest base lateral gap was 3.2599%. Run seed21 and
+aggregate 324-326 before promoting close20 under 45 mm Tx/Rx. Experiment 326
+completed seed21 as another clean pass: both rows were strong, no ambiguity
+remained, all base/high-band diagnostics ranked truth first, and the weakest
+base lateral gap was 3.0737%. Experiment 327 aggregated the close20 45 mm seed
+replicates: 6/6 rows selected truth geometry, all six rows were strong, no row
+retained x/z/r ambiguity, and the radius-margin mean was 3.97425e-03. Promote
+close20 as clean under 45 mm Tx/Rx. Keep close30 as the tightest clean result
+under the standard 35 mm acquisition, and report close20 as requiring the
+extra-conservative 45 mm acquisition. Run a close15 seed34 45 mm Tx/Rx
+lower-bound probe next. This is a near-touching case with about 1 mm gap
+between the 6 mm and 8 mm bars, so failure would bracket the 45 mm clean limit
+near close20, while a clean pass would require seed replication. Experiment
+328 ran that close15 seed34 45 mm probe and passed cleanly: both rows were
+strong, no x/z/r ambiguity remained, all base/high-band diagnostics ranked
+truth first, and the weakest base lateral gap was 2.9713% against x264/r8.
+The first smaller-radius branch was farther away: x266/r7.5 was 6.9892% worse
+under nominal base and x265/r7.5 was 37.8211% worse under high-band source
+mismatch. Replicate close15 45 mm Tx/Rx on seeds 13 and 21 before promoting
+this near-touching case as a clean 45 mm acquisition limit. Experiment 329
+replicated seed13 as another clean close15 pass: both rows were strong, no
+ambiguity interval remained, all base/high-band diagnostics ranked truth first,
+and the weakest base lateral gap was 3.5259% against x264/r8. Run seed21 and
+aggregate 328-330 before promoting close15 under 45 mm Tx/Rx. Experiment 330
+completed seed21 as another clean close15 pass: both rows were strong, no
+ambiguity interval remained, all base/high-band diagnostics ranked truth first,
+and the weakest base lateral gap was 3.3777% against x264/r8. Aggregate
+328-330 next; if all six rows remain truth-selected, strong, and zero-ambiguity,
+promote close15 as a clean near-touching result under 45 mm Tx/Rx. Experiment
+331 aggregated the close15 45 mm seed replicates: 6/6 rows selected truth
+geometry, all six rows were strong, no row retained x/z/r ambiguity, and the
+radius-margin mean was 4.00048e-03. Promote close15 as a clean replicated
+near-touching result under the extra-conservative 45 mm Tx/Rx acquisition.
+Keep close30 as the tightest clean replicated result under the standard
+35 mm acquisition. Run a close14 seed34 45 mm Tx/Rx tangent lower-bound probe
+next; if it fails, close15 is the current practical 45 mm clean limit, and if
+it passes, replicate before lowering the guidance again. Experiment 332 ran the
+close14 seed34 tangent probe and passed cleanly: both rows were strong, no
+ambiguity interval remained, all base/high-band diagnostics ranked truth first,
+and the weakest base lateral gap was 3.0986% against x263/r8. Replicate close14
+45 mm Tx/Rx on seeds 13 and 21 before promoting this tangent geometry as a
+clean 45 mm acquisition limit. Experiment 333 replicated seed13 as another
+clean close14 tangent pass: both rows were strong, no ambiguity interval
+remained, all base/high-band diagnostics ranked truth first, and the weakest
+base lateral gap was 3.6243% against x263/r8. Run seed21 and aggregate 332-334
+before promoting close14 under 45 mm Tx/Rx. Experiment 334 completed seed21 as
+another clean close14 tangent pass: both rows were strong, no ambiguity
+interval remained, all base/high-band diagnostics ranked truth first, and the
+weakest base lateral gap was 3.5299% against x263/r8. Aggregate 332-334 next;
+if all six rows remain truth-selected, strong, and zero-ambiguity, promote
+close14 as clean under 45 mm Tx/Rx. Experiment 335 aggregated the close14
+45 mm seed replicates: 6/6 rows selected truth geometry, all six rows were
+strong, no row retained x/z/r ambiguity, and the radius-margin mean was
+3.97836e-03. Promote close14 as the clean physical spacing floor under the
+4-source, 45 mm Tx/Rx acquisition. Do not probe smaller truth spacing for this
+radius pair as a separate-bar geometry because close13 would overlap the
+6 mm and 8 mm circles. Move next to acquisition-cost probes: run a close14
+seed34 sources=3, Tx/Rx=45 mm diagnostic; if it fails, 4 sources remain the
+minimum clean tangent acquisition, and if it passes, replicate before lowering
+the source-count guidance. Experiment 336 ran that sources=3 cost probe. It was
+faster, but it failed as a clean geometry update: the source-mismatch row chose
+x265/r8 while truth x264/r8 was only 0.1702% worse, and both rows retained a
+264-265 mm x-ambiguity interval. Keep sources=4 as the minimum clean close14
+tangent acquisition under 45 mm Tx/Rx. Experiment 337 tested 20% RMS noise on
+the close14 4-source 45 mm tangent case. It preserved truth-selected point
+recovery in both rows, but both rows retained a 263-264 mm x-ambiguity interval.
+Treat 20% noise as interval-reporting robustness, not clean zero-ambiguity
+operation. Run a 15% noise seed34 probe next to bracket the clean noise
+threshold between the replicated 10% clean result and the 20% interval result.
+Experiment 338 ran that 15% RMS noise seed34 probe and recovered the clean
+truth point in both rows: both were strong, both selected x264/z90/r8, and the
+ambiguity interval collapsed to that single truth point. Treat 15% as a clean
+seed34 bracket result, not yet as a replicated noise-robust operating point.
+Replicate 15% noise on seeds 13 and 21 before promoting the close14 tangent
+acquisition above the already replicated 10% RMS clean noise level. Experiment
+339 replicated 15% RMS noise on seed13 and stayed clean: both rows selected
+x264/z90/r8, both were strong, and no ambiguity interval remained. Run seed21
+next; if it also stays clean, aggregate 338-340 and promote 15% RMS as a
+replicated clean close14 tangent noise level. Experiment 340 completed seed21
+and also stayed clean: both rows selected x264/z90/r8, both were strong, and
+no ambiguity interval remained. Aggregate 338-340 next; if the six-row
+aggregate confirms all truth-selected, strong, zero-ambiguity rows, promote
+15% RMS as the replicated clean close14 tangent noise level while keeping
+20% RMS as point-correct but interval-reporting. Experiment 341 aggregated
+338-340 and confirmed the six-row result: 6/6 rows selected truth geometry, all
+six were strong, no row retained x/z/r ambiguity, and the radius-margin mean
+was 3.76005e-03. Promote 15% RMS as the replicated clean close14 tangent noise
+level under the 4-source, 45 mm Tx/Rx acquisition. Keep 20% RMS as
+point-correct but interval-reporting. If a tighter noise threshold is needed,
+run a 17.5% RMS seed34 bracket before replicating higher noise levels.
+Experiment 342 ran that 17.5% RMS seed34 bracket and recovered the truth point
+in both rows with strong radius labels, but the nominal row retained a
+263-264 mm x-ambiguity interval around the same-radius x263/r8 competitor.
+Treat 17.5% RMS as point-correct but not clean. The clean-to-interval
+transition is now bracketed between replicated-clean 15% RMS and
+seed34-ambiguous 17.5% RMS. Run a 16.25% RMS seed34 bracket next if the
+threshold needs a tighter midpoint. Experiment 343 ran the 16.25% RMS seed34
+midpoint and again recovered truth in both rows with strong radius labels, but
+the nominal row retained the same 263-264 mm x-ambiguity interval. Treat
+16.25% RMS as point-correct but not clean. The clean-to-interval transition is
+now bracketed between replicated-clean 15% RMS and seed34-ambiguous 16.25% RMS.
+Run a 15.625% RMS seed34 midpoint if the threshold needs further tightening.
+Experiment 344 ran that 15.625% RMS seed34 midpoint and again recovered truth
+with strong radius labels, but the nominal row still retained the x263-r8 /
+x264-r8 ambiguity interval. Treat 15.625% RMS as point-correct but not clean.
+The clean-to-interval transition is now bracketed tightly between
+replicated-clean 15% RMS and seed34-ambiguous 15.625% RMS. Run a 15.3125% RMS
+seed34 midpoint only if the threshold needs finer resolution. Experiment 345
+ran that 15.3125% RMS seed34 midpoint and was formally clean: both rows
+selected x264/z90/r8, both were strong, and no ambiguity interval remained.
+This was an edge-clean result because the nominal x263/r8 competitor sat only
+about 6.27e-06 absolute misfit above the ambiguity cutoff. The seed34
+clean-to-interval transition is now bracketed between clean 15.3125% RMS and
+ambiguous 15.625% RMS. Keep the replicated clean noise level at 15% RMS unless
+a higher bracket is replicated. Experiment 346 ran the 15.46875% RMS midpoint
+and recovered truth, but the nominal row returned to a 263-264 mm x-ambiguity
+interval. Treat 15.46875% RMS as point-correct but not clean. The seed34
+transition is now bracketed between 15.3125% edge-clean and 15.46875%
+ambiguous. Since 15.3125% is already edge-clean, the next useful step is
+replicating 15.3125% on seed13 before treating it as more than a single-seed
+bracket point. Experiment 347 replicated 15.3125% RMS on seed13 and stayed
+clean: both nominal and source-mismatch rows selected x264/z90/r8, both were
+strong, and both ambiguity intervals collapsed to the single truth point. This
+replicate is less edge-like than seed34 because the x263/r8 competitor sits
+3.20e-04 to 4.74e-04 absolute misfit above the ambiguity cutoff. Run seed21 at
+15.3125% RMS before aggregating or promoting 15.3125% above the current
+replicated-clean 15% RMS guidance. Experiment 348 ran seed21 at 15.3125% RMS
+and also stayed clean: both rows selected x264/z90/r8 with strong labels and
+single-point ambiguity intervals. The nearest x263/r8 competitor stayed
+2.04e-04 to 2.42e-04 absolute misfit above the ambiguity cutoff. The
+seed34/seed13/seed21 15.3125% RMS set is now ready for aggregate reporting
+before promoting 15.3125% beyond the current replicated-clean 15% RMS level.
+Experiment 349 aggregated the 15.3125% seed34/seed13/seed21 set: all six rows
+selected truth geometry, all six labels were strong, and all x/z/r ambiguity
+widths were zero. Promote 15.3125% RMS as the replicated clean close14 tangent
+noise level under the 4-source, 45 mm Tx/Rx acquisition. Keep 15.46875% RMS as
+a seed34 point-correct but interval-reporting bracket. If the goal is tighter
+threshold localization, run a 15.390625% seed34 midpoint between
+replicated-clean 15.3125% and seed34-ambiguous 15.46875%. Experiment 350 ran
+that 15.390625% seed34 midpoint and recovered truth with strong labels, but
+the nominal row retained the x263/r8 to x264/r8 ambiguity interval. It is only
+4.33e-06 absolute misfit inside the ambiguity cutoff, so it is an edge
+interval result. The seed34 transition is now bracketed between
+replicated-clean 15.3125% and seed34-ambiguous 15.390625%. Run 15.3515625% RMS
+as the next seed34 midpoint if tighter transition localization is still useful.
+Experiment 351 ran that 15.3515625% midpoint and was formally clean, but only
+by an edge margin: the nominal x263/r8 competitor sat 9.75e-07 absolute misfit
+above the ambiguity cutoff. Keep the promoted replicated-clean guidance at
+15.3125% RMS. The single-seed seed34 transition is now bracketed between
+edge-clean 15.3515625% and ambiguous 15.390625%; run 15.37109375% RMS only if
+the goal remains single-seed transition localization. Experiment 352 ran
+15.37109375% RMS and recovered truth with strong labels, but the nominal row
+again retained the x263/r8 to x264/r8 ambiguity interval. The x263/r8
+competitor was only 1.67e-06 absolute misfit inside the ambiguity cutoff. The
+single-seed transition is now bracketed between edge-clean 15.3515625% and
+ambiguous 15.37109375%; 15.361328125% RMS is the next midpoint only if the
+remaining value is tighter threshold localization. Keep the replicated clean
+guidance at 15.3125% RMS. Experiment 353 ran 15.361328125% RMS and was
+point-correct but not clean: the nominal x263/r8 competitor was only 3.49e-07
+absolute misfit inside the ambiguity cutoff. The seed34 boundary is now
+localized between 15.3515625% edge-clean and 15.361328125% ambiguous. Stop
+bisection for now; the practical, replicated clean guidance remains 15.3125%
+RMS, and the 15.35%-level boundary is too threshold-sensitive to promote.
+Experiment 354 changed the acquisition instead of the threshold: sources=5 at
+15.361328125% still selected truth, but both rows retained a 264-265 mm
+x-ambiguity interval and the radius margins narrowed. A fifth source does not
+rescue this edge case. If acquisition-density rescue remains useful, test
+sources=7 next; otherwise keep 4 sources and 15.3125% RMS as the practical
+clean guidance. Experiment 355 ran sources=7 at the same 15.361328125% RMS
+noise level and again selected truth with strong radius labels. It improved
+the acquisition-density result, because the source-mismatch row collapsed to
+x=264 only and the nearest x263/r8 competitor missed the cutoff, but only by
+2.79e-06 absolute misfit. The nominal row still retained a 263-264 mm
+x-ambiguity interval, with x263/r8 inside the cutoff by 2.24e-04. Treat
+sources=7 as a partial rescue, not a clean promoted operating point. Stop the
+acquisition-density rescue branch here unless a new acquisition idea is being
+tested; keep the replicated clean close14 guidance at 15.3125% RMS under the
+4-source, 45 mm Tx/Rx acquisition. Experiment 356 aggregated the sources=4,
+5, and 7 dose-response rows at the same seed34 15.361328125% RMS boundary.
+All six rows were point-correct and strong, but four of six rows retained a
+1 mm x-ambiguity interval. Five sources was the weakest setting, with two
+x-ambiguity rows and the smallest radius margins. Seven sources recovered some
+margin and improved the source-mismatch row, but still left nominal x
+ambiguous. This closes the source-count branch: do not spend more GPU time on
+source-count escalation for this boundary unless a new physics/objective lever
+is introduced. Experiment 357 tested that new lever by keeping 4 sources but
+raising the Tx/Rx offset from 45 mm to 50 mm at the same seed34
+15.361328125% RMS boundary. This cleaned the case: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nearest nominal x263/r8 competitor cleared the ambiguity cutoff by
+4.92e-04. Replicate the 50 mm Tx/Rx setting on seeds 13 and 21 before
+promoting 15.361328125% RMS as clean under the larger-offset acquisition.
+Experiment 358 replicated the 50 mm Tx/Rx result on seed13: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nominal x263/r8 competitor cleared the ambiguity cutoff by 6.67e-04. Run
+seed21 next; if it also stays clean, aggregate 357-359 and promote the larger
+50 mm offset as a replicated rescue for the 15.361328125% RMS close14 boundary.
+Experiment 359 completed seed21 and again stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nominal x263/r8 competitor cleared the ambiguity cutoff by 7.04e-04.
+Aggregate 357-359 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 4 sources with 50 mm Tx/Rx as the replicated
+larger-offset rescue for 15.361328125% RMS close14 tangent operation.
+Experiment 360 aggregated the seed34/13/21 Tx/Rx=50 set and confirmed the
+replicated rescue: all six rows selected truth geometry, all six were strong,
+and all x/z/r ambiguity widths were zero. Promote 4 sources with 50 mm Tx/Rx
+as a clean close14 tangent operating point at 15.361328125% RMS. Keep the
+cheaper 45 mm Tx/Rx guidance at 15.3125% RMS for replicated clean operation;
+use the larger 50 mm offset when the extra noise margin is worth the
+acquisition cost. Experiment 361 tested the next old 45 mm ambiguous bracket,
+15.46875% RMS seed34, under the 50 mm Tx/Rx acquisition. It also cleaned:
+both rows selected x264/z90/r8, both were strong, both x intervals collapsed
+to 264-264 mm, and the nearest nominal x263/r8 competitor cleared the
+ambiguity cutoff by 4.81e-04. Replicate 15.46875% RMS under Tx/Rx=50 on seeds
+13 and 21 before promoting this higher noise level. Experiment 362 replicated
+seed13 cleanly: both rows selected x264/z90/r8, both were strong, both x
+intervals collapsed to 264-264 mm, and the nominal x263/r8 competitor cleared
+the ambiguity cutoff by 6.56e-04. Run seed21 next and then aggregate 361-363
+if it also remains clean. Experiment 363 completed seed21 and also stayed
+clean: both rows selected x264/z90/r8, both were strong, both x intervals
+collapsed to 264-264 mm, and the nominal x263/r8 competitor cleared the
+ambiguity cutoff by 6.94e-04. Experiment 364 aggregated 361-363 and confirmed
+the replicated clean result: all six rows selected truth geometry, all six were
+strong, and all x/z/r ambiguity widths were zero. Promote 15.46875% RMS under
+4-source 50 mm Tx/Rx as the current larger-offset close14 clean operating
+point. Experiment 365 tested the next stress bracket, 15.625% RMS seed34,
+under the same acquisition. It also cleaned: both rows selected x264/z90/r8,
+both were strong, both x intervals collapsed to 264-264 mm, and the nearest
+nominal x263/r8 competitor cleared the ambiguity cutoff by 4.65e-04. Do not
+promote 15.625% RMS yet. Experiment 366 replicated seed13 cleanly: both rows
+selected x264/z90/r8, both were strong, both x intervals collapsed to
+264-264 mm, and the nominal x263/r8 competitor cleared the ambiguity cutoff
+by 6.41e-04. Experiment 367 completed seed21 and also stayed clean: both rows
+selected x264/z90/r8, both were strong, both x intervals collapsed to
+264-264 mm, and the nominal x263/r8 competitor cleared the ambiguity cutoff
+by 6.79e-04. Experiment 368 aggregated 365-367 and confirmed the replicated
+clean result: all six rows selected truth geometry, all six were strong, and
+all x/z/r ambiguity widths were zero. Promote 15.625% RMS under 4-source
+50 mm Tx/Rx as the current larger-offset close14 clean operating point. The
+next stress test is 16.25% RMS under the same acquisition. Experiment 369 ran
+that seed34 16.25% RMS probe and stayed clean: both rows selected x264/z90/r8,
+both were strong, both x intervals collapsed to 264-264 mm, and the nearest
+nominal x263/r8 competitor cleared the ambiguity cutoff by 3.97e-04. This
+margin is smaller than at 15.625% RMS, so replicate seeds 13 and 21 before
+promoting 16.25% RMS. Experiment 370 replicated seed13 cleanly: both rows
+selected x264/z90/r8, both were strong, both x intervals collapsed to
+264-264 mm, and the nominal x263/r8 competitor cleared the ambiguity cutoff
+by 5.80e-04. Run seed21 next; if it also remains clean, aggregate 369-371
+before promoting 16.25% RMS. Experiment 371 completed seed21 and also stayed
+clean: both rows selected x264/z90/r8, both were strong, both x intervals
+collapsed to 264-264 mm, and the nominal x263/r8 competitor cleared the
+ambiguity cutoff by 6.19e-04. Aggregate 369-371 next; if all six rows remain
+true, strong, and zero-ambiguity, promote 16.25% RMS under 4-source 50 mm
+Tx/Rx. Experiment 372 aggregated 369-371 and confirmed the replicated clean
+result: all six rows selected truth geometry, all six were strong, and all
+x/z/r ambiguity widths were zero. Promote 16.25% RMS under 4-source 50 mm
+Tx/Rx as the current larger-offset close14 clean operating point. The next
+stress test is 17.5% RMS under the same acquisition. Experiment 373 ran that
+seed34 17.5% RMS probe and stayed clean: both rows selected x264/z90/r8, both
+were strong, both x intervals collapsed to 264-264 mm, and the nearest nominal
+x263/r8 competitor cleared the ambiguity cutoff by 2.57e-04. This rescues the
+old 45 mm x-ambiguous bracket, but the nominal clearance margin is tight, so
+replicate seeds 13 and 21 before promoting 17.5% RMS. Experiment 374
+replicated seed13 cleanly: both rows selected x264/z90/r8, both were strong,
+both x intervals collapsed to 264-264 mm, and the nominal x263/r8 competitor
+cleared the ambiguity cutoff by 4.52e-04. Run seed21 next; if it also remains
+clean, aggregate 373-375 before promoting 17.5% RMS. Experiment 375 completed
+seed21 and also stayed clean: both rows selected x264/z90/r8, both were
+strong, both x intervals collapsed to 264-264 mm, and the tighter
+source-mismatch x263/r8 competitor cleared the ambiguity cutoff by 4.87e-04.
+Aggregate 373-375 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 17.5% RMS under 4-source 50 mm Tx/Rx. Experiment 376
+aggregated 373-375 and confirmed the replicated clean result: all six rows
+selected truth geometry, all six were strong, and all x/z/r ambiguity widths
+were zero. Promote 17.5% RMS under 4-source 50 mm Tx/Rx as the current
+larger-offset close14 clean operating point. The next stress test is 20% RMS
+under the same acquisition. Experiment 377 ran that seed34 20% RMS probe. It
+selected the true x264/z90/r8 point in both rows and kept strong radius
+margins, but the nominal row retained a 263-264 mm x interval: x263/r8 stayed
+inside the ambiguity cutoff by 4.49e-05. Treat 20% RMS under 50 mm Tx/Rx as
+point-correct but not clean. The clean-to-ambiguous transition is now bracketed
+between replicated-clean 17.5% RMS and seed34-ambiguous 20% RMS. Run 18.75%
+RMS seed34 next. Experiment 378 ran that midpoint and stayed clean: both rows
+selected x264/z90/r8, both were strong, both x intervals collapsed to
+264-264 mm, and the nearest nominal x263/r8 competitor cleared the ambiguity
+cutoff by 1.10e-04. This is a tight clean result. Replicate seeds 13 and 21
+before promoting 18.75% RMS. Experiment 379 replicated seed13 cleanly: both
+rows selected x264/z90/r8, both were strong, both x intervals collapsed to
+264-264 mm, and the nominal x263/r8 competitor cleared the ambiguity cutoff by
+3.15e-04. Run seed21 next; if it also remains clean, aggregate 378-380 before
+promoting 18.75% RMS. Experiment 380 completed seed21 and also stayed clean:
+both rows selected x264/z90/r8, both were strong, both x intervals collapsed
+to 264-264 mm, and the tighter source-mismatch x263/r8 competitor cleared the
+ambiguity cutoff by 2.48e-04. Aggregate 378-380 next; if all six rows remain
+true, strong, and zero-ambiguity, promote 18.75% RMS under 4-source 50 mm
+Tx/Rx. Experiment 381 aggregated 378-380 and confirmed the replicated clean
+result: all six rows selected truth geometry, all six were strong, and all
+x/z/r ambiguity widths were zero. Promote 18.75% RMS under 4-source 50 mm
+Tx/Rx as the current larger-offset close14 clean operating point. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+18.75% RMS and seed34-ambiguous 20% RMS. Run 19.375% RMS seed34 next.
+Experiment 382 ran that midpoint and stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nominal x263/r8 competitor cleared the ambiguity cutoff by 3.32e-05. This
+is the tightest clean seed34 result in the larger-offset bracket and remains
+very close to the 20% seed34 x-ambiguous failure, so do not promote from one
+seed. Replicate 19.375% RMS on seeds 13 and 21 before deciding whether to
+promote the level or continue bracketing the transition.
+Experiment 383 replicated seed13 cleanly: both rows selected x264/z90/r8,
+both were strong, both x intervals collapsed to 264-264 mm, and the nominal
+x263/r8 competitor cleared the ambiguity cutoff by 2.44e-04. Run seed21 next;
+if it also remains clean, aggregate 382-384 before promoting 19.375% RMS.
+Experiment 384 completed seed21 and also stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the tighter source-mismatch x263/r8 competitor cleared the ambiguity cutoff by
+1.26e-04. Aggregate 382-384 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 19.375% RMS under 4-source 50 mm Tx/Rx.
+Experiment 385 aggregated 382-384 and confirmed the replicated clean result:
+all six rows selected truth geometry, all six were strong, and all x/z/r
+ambiguity widths were zero. Promote 19.375% RMS under 4-source 50 mm Tx/Rx as
+the current larger-offset close14 clean operating point. The clean-to-ambiguous
+transition is now bracketed between replicated-clean 19.375% RMS and seed34
+x-ambiguous 20% RMS. Run 19.6875% RMS seed34 next.
+Experiment 386 ran that midpoint. It selected the true x264/z90/r8 point in
+both rows and kept strong radius margins, but the nominal row retained a
+263-264 mm x interval because x263/r8 stayed inside the ambiguity cutoff by
+5.64e-06. Treat 19.6875% RMS as point-correct but not clean. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.375% RMS and seed34-ambiguous 19.6875% RMS. Run 19.53125% RMS seed34 next.
+Experiment 387 ran that midpoint and stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nominal x263/r8 competitor cleared the ambiguity cutoff by 1.38e-05. This
+is an extremely tight clean result, so do not promote from one seed. Replicate
+19.53125% RMS on seeds 13 and 21 before deciding whether to promote it.
+Experiment 388 replicated seed13 cleanly: both rows selected x264/z90/r8,
+both were strong, both x intervals collapsed to 264-264 mm, and the nominal
+x263/r8 competitor cleared the ambiguity cutoff by 2.26e-04. Run seed21 next;
+if it also remains clean, aggregate 387-389 before promoting 19.53125% RMS.
+Experiment 389 completed seed21 and also stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the tighter source-mismatch x263/r8 competitor cleared the ambiguity cutoff by
+9.48e-05. Aggregate 387-389 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 19.53125% RMS under 4-source 50 mm Tx/Rx.
+Experiment 390 aggregated 387-389 and confirmed the replicated clean result:
+all six rows selected truth geometry, all six were strong, and all x/z/r
+ambiguity widths were zero. Promote 19.53125% RMS under 4-source 50 mm Tx/Rx
+as the current larger-offset close14 clean operating point. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.53125% RMS and seed34-ambiguous 19.6875% RMS. Run 19.609375% RMS seed34
+next.
+Experiment 391 ran that midpoint and stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nominal x263/r8 competitor cleared the ambiguity cutoff by 4.12e-06. This
+is the tightest clean seed34 result so far and is almost on the ambiguity
+boundary, so do not promote from one seed. Replicate 19.609375% RMS on seeds
+13 and 21 before deciding whether to promote it.
+Experiment 392 replicated seed13 cleanly: both rows selected x264/z90/r8,
+both were strong, both x intervals collapsed to 264-264 mm, and the nominal
+x263/r8 competitor cleared the ambiguity cutoff by 2.17e-04. Run seed21 next;
+if it also remains clean, aggregate 391-393 before promoting 19.609375% RMS.
+Experiment 393 completed seed21 and also stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the tighter source-mismatch x263/r8 competitor cleared the ambiguity cutoff by
+7.93e-05. Aggregate 391-393 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 19.609375% RMS under 4-source 50 mm Tx/Rx.
+Experiment 394 aggregated 391-393 and confirmed the replicated clean result:
+all six rows selected truth geometry, all six were strong, and all x/z/r
+ambiguity widths were zero. Promote 19.609375% RMS under 4-source 50 mm Tx/Rx
+as the current larger-offset close14 clean operating point. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.609375% RMS and seed34-ambiguous 19.6875% RMS. Run 19.6484375% RMS seed34
+next.
+Experiment 395 ran that midpoint. It selected the true x264/z90/r8 point in
+both rows and kept strong radius margins, but the nominal row retained a
+263-264 mm x interval because x263/r8 stayed inside the ambiguity cutoff by
+7.58e-07. Treat 19.6484375% RMS as point-correct but not clean. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.609375% RMS and seed34-ambiguous 19.6484375% RMS. Run 19.62890625% RMS
+seed34 next.
+Experiment 396 ran that midpoint and stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nominal x263/r8 competitor cleared the ambiguity cutoff by 1.68e-06. This
+is the tightest clean seed34 result so far, so do not promote from one seed.
+Replicate 19.62890625% RMS on seeds 13 and 21 before deciding whether to
+promote it.
+Experiment 397 replicated seed13 cleanly: both rows selected x264/z90/r8,
+both were strong, both x intervals collapsed to 264-264 mm, and the nominal
+x263/r8 competitor cleared the ambiguity cutoff by 2.15e-04. Run seed21 next;
+if it also remains clean, aggregate 396-398 before promoting 19.62890625% RMS.
+Experiment 398 completed seed21 and also stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the tighter source-mismatch x263/r8 competitor cleared the ambiguity cutoff by
+7.54e-05. Aggregate 396-398 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 19.62890625% RMS under 4-source 50 mm Tx/Rx.
+Experiment 399 aggregated 396-398 and confirmed the replicated clean result:
+all six rows selected truth geometry, all six were strong, and all x/z/r
+ambiguity widths were zero. Promote 19.62890625% RMS under 4-source 50 mm
+Tx/Rx as the current larger-offset close14 clean operating point. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.62890625% RMS and seed34-ambiguous 19.6484375% RMS. Run 19.638671875% RMS
+seed34 next.
+Experiment 400 ran that midpoint and stayed clean: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nominal x263/r8 competitor cleared the ambiguity cutoff by 4.61e-07. This
+is effectively on the ambiguity boundary, so do not promote from one seed.
+Replicate 19.638671875% RMS on seeds 13 and 21 before deciding whether to
+promote it. Experiment 401 replicated seed13 cleanly: both rows selected
+x264/z90/r8, both were strong, both x intervals collapsed to 264-264 mm, and
+the nominal x263/r8 competitor cleared the ambiguity cutoff by 2.14e-04. Run
+seed21 next; if it also remains clean, aggregate 400-402 before promoting
+19.638671875% RMS. Experiment 402 completed seed21 and also stayed clean:
+both rows selected x264/z90/r8, both were strong, both x intervals collapsed
+to 264-264 mm, and the tighter source-mismatch x263/r8 competitor cleared the
+ambiguity cutoff by 7.34e-05. Aggregate 400-402 next; if all six rows remain
+true, strong, and zero-ambiguity, promote 19.638671875% RMS under 4-source
+50 mm Tx/Rx. Experiment 403 aggregated 400-402 and confirmed the replicated
+clean result: all six rows selected truth geometry, all six were strong, and
+all x/z/r ambiguity widths were zero. Promote 19.638671875% RMS under
+4-source 50 mm Tx/Rx as the current larger-offset close14 clean operating
+point. The clean-to-ambiguous transition is now bracketed between
+replicated-clean 19.638671875% RMS and seed34-ambiguous 19.6484375% RMS. Run
+19.6435546875% RMS seed34 next. Experiment 404 ran that midpoint. It
+selected the true x264/z90/r8 point in both rows and kept strong radius
+margins, but the nominal row retained a 263-264 mm x interval because x263/r8
+stayed inside the ambiguity cutoff by 1.48e-07. Treat 19.6435546875% RMS as
+point-correct but not clean. The clean-to-ambiguous transition is now
+bracketed between replicated-clean 19.638671875% RMS and seed34-ambiguous
+19.6435546875% RMS. Run 19.64111328125% RMS seed34 next. Experiment 405 ran
+that lower midpoint and stayed clean: both rows selected x264/z90/r8, both
+were strong, both x intervals collapsed to 264-264 mm, and the nominal
+x263/r8 competitor cleared the ambiguity cutoff by 1.56e-07. This is
+effectively on the boundary, so do not promote from one seed. Replicate
+19.64111328125% RMS on seeds 13 and 21 before deciding whether to promote it.
+Experiment 406 replicated seed13 cleanly: both rows selected x264/z90/r8,
+both were strong, both x intervals collapsed to 264-264 mm, and the nominal
+x263/r8 competitor cleared the ambiguity cutoff by 2.13e-04. Run seed21 next;
+if it also remains clean, aggregate 405-407 before promoting
+19.64111328125% RMS. Experiment 407 completed seed21 and also stayed clean:
+both rows selected x264/z90/r8, both were strong, both x intervals collapsed
+to 264-264 mm, and the tighter source-mismatch x263/r8 competitor cleared the
+ambiguity cutoff by 7.30e-05. Aggregate 405-407 next; if all six rows remain
+true, strong, and zero-ambiguity, promote 19.64111328125% RMS under 4-source
+50 mm Tx/Rx. Experiment 408 aggregated 405-407 and confirmed the replicated
+clean result: all six rows selected truth geometry, all six were strong, and
+all x/z/r ambiguity widths were zero. Promote 19.64111328125% RMS under
+4-source 50 mm Tx/Rx as the current larger-offset close14 clean operating
+point. The clean-to-ambiguous transition is now bracketed between
+replicated-clean 19.64111328125% RMS and seed34-ambiguous 19.6435546875% RMS.
+Run 19.642333984375% RMS seed34 next. Experiment 409 ran that midpoint and
+stayed technically clean: both rows selected x264/z90/r8, both were strong,
+both x intervals collapsed to 264-264 mm, and the nominal x263/r8 competitor
+cleared the ambiguity cutoff by only 4.02e-09. This is numerically on the
+boundary, so do not promote from one seed. Replicate 19.642333984375% RMS on
+seeds 13 and 21 before deciding whether to promote it. Experiment 410
+replicated seed13 cleanly: both rows selected x264/z90/r8, both were strong,
+both x intervals collapsed to 264-264 mm, and the nominal x263/r8 competitor
+cleared the ambiguity cutoff by 2.13e-04. Run seed21 next; if it also remains
+clean, aggregate 409-411 before promoting 19.642333984375% RMS. Experiment
+411 completed seed21 and also stayed clean: both rows selected x264/z90/r8,
+both were strong, both x intervals collapsed to 264-264 mm, and the tighter
+source-mismatch x263/r8 competitor cleared the ambiguity cutoff by 7.27e-05.
+Aggregate 409-411 next; if all six rows remain true, strong, and
+zero-ambiguity, promote 19.642333984375% RMS under 4-source 50 mm Tx/Rx.
+Experiment 412 aggregated 409-411 and confirmed the replicated clean result:
+all six rows selected truth geometry, all six were strong, and all x/z/r
+ambiguity widths were zero. Promote 19.642333984375% RMS under 4-source
+50 mm Tx/Rx as the current larger-offset close14 clean operating point. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34-ambiguous 19.6435546875% RMS. Run
+19.6429443359375% RMS seed34 next. Experiment 413 ran that midpoint. It
+selected the true x264/z90/r8 point in both rows and kept strong radius
+margins, but the nominal row retained a 263-264 mm x interval because x263/r8
+stayed inside the ambiguity cutoff by 7.22e-08. Treat 19.6429443359375% RMS
+as point-correct but not clean. The clean-to-ambiguous transition is now
+bracketed between replicated-clean 19.642333984375% RMS and seed34-ambiguous
+19.6429443359375% RMS. Run 19.64263916015625% RMS seed34 next. Experiment
+414 ran that lower midpoint. It again selected the true x264/z90/r8 point in
+both rows and kept strong radius margins, but the nominal row retained a
+263-264 mm x interval because x263/r8 stayed inside the ambiguity cutoff by
+3.41e-08. Treat 19.64263916015625% RMS as point-correct but not clean. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34-ambiguous 19.64263916015625% RMS. Run
+19.642486572265625% RMS seed34 next. Experiment 415 ran that lower midpoint.
+It again selected the true x264/z90/r8 point in both rows and kept strong
+radius margins, but the nominal row retained a 263-264 mm x interval because
+x263/r8 stayed inside the ambiguity cutoff by 1.50e-08. Treat
+19.642486572265625% RMS as point-correct but not clean. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34-ambiguous 19.642486572265625% RMS. Run
+19.6424102783203125% RMS seed34 next. Experiment 416 ran that lower
+midpoint. It again selected the true x264/z90/r8 point in both rows and kept
+strong radius margins, but the nominal row retained a 263-264 mm x interval
+because x263/r8 stayed inside the ambiguity cutoff by 5.51e-09. Treat
+19.6424102783203125% RMS as point-correct but not clean. The
+clean-to-ambiguous transition is now bracketed between replicated-clean
+19.642333984375% RMS and seed34-ambiguous 19.6424102783203125% RMS. Run
+19.64237213134765625% RMS seed34 next. Experiment 417 ran that lower
+midpoint. It again selected the true x264/z90/r8 point in both rows and kept
+strong radius margins, but the nominal row retained a 263-264 mm x interval
+because x263/r8 stayed inside the ambiguity cutoff by 7.42e-10. Treat
+19.64237213134765625% RMS as point-correct but not clean. This is essentially
+the numerical edge of the configured ambiguity rule. Keep replicated-clean
+19.642333984375% RMS as the promoted 4-source 50 mm Tx/Rx close14 operating
+point and stop bisection of this scalar bracket. Experiment 418 packaged this
+boundary into a CPU-only summary artifact: six seed34 rows, one clean endpoint,
+five point-correct-not-clean upper rows, final ambiguous upper
+19.642372131347656% RMS, bracket width 3.814697265625e-05% RMS, and final
+nominal x263/r8 cutoff margin -7.41956e-10. The figure set confirms the
+failure mode is lateral x ambiguity while radius margins remain strong, so the
+next stage should not spend more GPU time bisecting this scalar noise bracket.
+Experiment 419 returned to the staged variable-radius packaging branch and
+added a dry-run replay/orchestration plan to the packaged three-seed summary.
+It records 15/15 available stage commands from their run manifests, writes
+staged_variable_radius_replay_plan.json plus a non-executable command-plan
+text file, and preserves the prior policy result: all three cases use the
+7-source refined focused stage for point x and all three joint-radius stages
+rank the true [5,6,8] tuple first. This completes the immediate packaging gap
+without launching more GPU work. The handoff matrix in
+docs/experiments/48_research_handoff_matrix.md now separates location
+accuracy, radius confidence, source/material caveats, visualization evidence,
+runtime/cost, and next action across the main branches.
+Experiment 420 closed the remaining material/source visualization checklist
+item without opening a new physical inversion scene. The comparison runner now
+accepts true/candidate material overrides, and the generated GIF compares the
+experiment 056 true 1e7 S/m steel case against the actual same-radius
+1e5 S/m branch. The package also points to the already validated experiment
+052 source-mismatch comparison GIFs for the real wrong-radius source branches.
+The decision is to add future material/source animations only when a new
+objective matrix exposes a real competing branch.
+Experiment 421 opened the field-like source-shape calibration branch. It kept
+the accepted amplitude/time/frequency source-profile grid fixed, but injected a
+delayed secondary pulse into the observed wavelet. Nominal and controlled
+source-mismatch cases still selected r=6.0 mm, but the ringdown cases selected
+the high-radius bound r=7.8 mm, both without and with 5% noise. This is a real
+source-shape failure: the current low-dimensional source profile is not enough
+for delayed source ringing. The next diagnostic should allow a small modeled
+ringdown basis and verify whether that restores r=6.0 mm before any multi-rebar
+scaling.
+Experiment 422 ran that mitigation. It added modeled ringdown scales 0.0 and
+0.25 to the source-profile grid, keeping the same geometry candidates and the
+same four observed cases as experiment 421. Nominal and controlled source
+mismatch stayed at r=6.0 mm with modeled ringdown 0.0. The ringdown and
+ringdown+5% noise cases returned from the wrong r=7.8 mm branch to r=6.0 mm
+with modeled ringdown 0.25. The field/lab branch should treat source-shape
+profiling as a diagnostic calibration stage and replicate it across additional
+ringdown amplitudes/noise seeds before multi-rebar scaling.
+Experiment 423 ran the first amplitude/noise/source-mismatch scaling matrix
+with the same coarse modeled ringdown grid. Most rows stayed correct, including
+observed ringdown 0.30, 0.25 ringdown with 5% and 10% noise, and combined
+source mismatch plus 0.25 ringdown. The observed ringdown 0.20 row failed,
+selecting r=7.8 mm with modeled ringdown 0.25 and reduced global amplitude.
+The failure shows that a discrete ringdown grid is brittle: the source profile
+must fit primary-pulse and delayed-ringdown coefficients separately, not only
+choose a fixed ringdown shape and one global amplitude.
+Experiment 424 replaced the discrete ringdown choice with a linear
+primary/ringdown source-basis coefficient fit. On the same seven-case matrix as
+experiment 423, every row recovered r=6.0 mm. The previously failing
+ringdown020 row recovered a fitted ringdown scale of 0.20; ringdown030
+recovered 0.30; noisy and source-mismatch ringdown025 rows recovered about
+0.25. This promotes source-basis coefficient fitting as the source-shape
+diagnostic path and rejects the coarse discrete ringdown-grid path.
+Experiment 425 moved the coefficient-fit source-shape diagnostic into a narrow
+three-rebar local geometry gate. With the left rebar fixed at x=150 mm,
+z=90 mm and radii 5.8/6.0/6.2/7.4/7.8 mm, nominal, ringdown020,
+ringdown025+5% noise, and source-mismatch+ringdown025 cases all selected the
+true r=6.0 mm. The fitted source profiles recovered ringdown 0.20 and about
+0.25 where injected. This passes the first multi-rebar source-shape gate, but
+only for a narrow fixed-x/z window; the next scale step should be a compact
+x/z/r window, not a full 325-candidate Stage 4C sweep.
+Experiment 426 ran that compact x/z/r window for the same left target:
+x=149/150/151 mm, z=89/90/91 mm, and r=5.8/6.0/6.2 mm, for 27 candidates.
+All four source-shape cases again selected the true x=150 mm, z=90 mm,
+r=6.0 mm. The weakest radius margin stayed the same as the fixed-x/z gate,
+2.936e-04 for the ringdown020 row, and the closest competitor was still
+r=6.2 mm at the true x/z rather than a shifted-location branch. This supports
+the coefficient-fit source-shape method for a compact local multi-rebar window,
+but only for the left target with neighboring rebars fixed at truth. The next
+source-shape scale step should be a compact center-target or harder-seed
+replication before any full Stage 4C-sized source-shape sweep.
+Experiment 427 repeated the compact x/z/r source-shape window on the center
+target, using x=249/250/251 mm, z=89/90/91 mm, and r=5.8/6.0/6.2 mm. All four
+source-shape cases selected the true x=250 mm, z=90 mm, r=6.0 mm. The weakest
+row was the ringdown025+5% noise seed21 case, with a smaller but still positive
+radius margin of 2.353e-04 against r=6.2 mm. The nearest competitors again
+stayed at the true x/z with adjacent radius rather than shifting x or z. This
+passes the center compact-window gate and makes the right-target compact gate
+the next source-shape replication step.
+Experiment 428 completed the all-target compact-window source-shape pass by
+repeating the same x/z/r window on the right target: x=349/350/351 mm,
+z=89/90/91 mm, and r=5.8/6.0/6.2 mm. All four source-shape cases selected the
+true x=350 mm, z=90 mm, r=6.0 mm. The weakest right-target margin was
+2.446e-04 in the ringdown025+5% noise seed21 row, while the weakest all-target
+margin remained the center-target noisy-ringdown row from experiment 427 at
+2.353e-04. This closes the compact all-target source-shape gate. The next
+source-shape step should stress the center target with harder noise/source rows
+before a full Stage 4C-sized source-shape sweep.
+Experiment 429 ran that center-target hard-noise stress with the same compact
+x/z/r window. Ringdown025 with 10% noise for seeds 13 and 21 both selected the
+true x=250 mm, z=90 mm, r=6.0 mm; combined source mismatch, ringdown025, and
+5-10% noise also selected the truth. The weakest margin dropped to 1.813e-04 in
+the ringdown025_noise10_seed21 row, so noise tightens the radius separation but
+does not create a compact-window geometry failure. The next source-shape step
+should reintroduce the high-radius 7.4/7.8 mm candidates into the compact center
+window, because r=7.8 mm was the original single-rebar ringdown failure branch.
+Experiment 430 reintroduced those high-radius candidates in the compact center
+window: x=249/250/251 mm, z=89/90/91 mm, and
+r=5.8/6.0/6.2/7.4/7.8 mm. Nominal, ringdown020, ringdown025+10% noise seed21,
+and source-mismatch+ringdown025+10% noise seed13 all selected the true
+x=250 mm, z=90 mm, r=6.0 mm. The high-radius candidates did not enter the top
+eight for any row; the closest branch remained r=6.2 mm at true x/z. This
+closes the compact high-radius concern and makes a wider 5x5 x/z center window
+the next controlled scale step before any full Stage 4C-sized source-shape run.
+Experiment 431 ran that wider center window: x=248/249/250/251/252 mm,
+z=88/89/90/91/92 mm, and r=5.8/6.0/6.2/7.4/7.8 mm. All four rows still selected
+the true x=250 mm, z=90 mm, r=6.0 mm. The weakest margin remained 1.813e-04 in
+the ringdown025_noise10_seed21 row, and the nearest competitor remained
+r=6.2 mm at true x/z. The high-radius branches appeared only around ranks 9-12,
+mostly at z=92 mm, so the widened x/z window did not turn them into near-ties.
+The next source-shape step should use the full dense Stage 4C radius grid,
+5.4:7.8:0.2 mm, on this center target.
+Experiment 432 ran that dense Stage 4C center-target source-shape grid:
+x=248/249/250/251/252 mm, z=88/89/90/91/92 mm, and r=5.4:7.8:0.2 mm. All four
+rows selected the true x=250 mm, z=90 mm, r=6.0 mm. The weakest margin remained
+1.813e-04 in the ringdown025_noise10_seed21 row. The dense grid exposed a
+shifted-depth branch around z=91 mm and r=6.8-7.0 mm in the top candidates, but
+it stayed below true r=6.0 and adjacent r=6.2 at the true x/z. This passes the
+center dense source-shape gate. Next, run the same dense grid on the left target
+to check target asymmetry.
+Experiment 433 ran the same dense Stage 4C source-shape grid on the left target:
+x=148/149/150/151/152 mm, z=88/89/90/91/92 mm, and r=5.4:7.8:0.2 mm. All four
+rows selected the true x=150 mm, z=90 mm, r=6.0 mm. The weakest left-target
+margin was 2.675e-04 in the source-mismatch+ringdown025+10% noise row. The same
+secondary shifted-depth branch around z=91 mm and r=6.8-7.0 mm appeared in the
+top candidates, but it remained below true r=6.0 and adjacent r=6.2 at true
+x/z. This passes the left dense source-shape gate. Next, run the dense grid on
+the right target to complete all-target dense coverage.
+Experiment 434 completed that all-target dense coverage by running the same
+Stage 4C source-shape grid on the right target:
+x=348/349/350/351/352 mm, z=88/89/90/91/92 mm, and r=5.4:7.8:0.2 mm. All four
+rows selected the true x=350 mm, z=90 mm, r=6.0 mm. The weakest right-target
+margin was 2.288e-04 in the ringdown025_noise10_seed21 row. The same z=91 mm,
+r=6.8-7.0 mm branch appeared, but stayed secondary. The all-target dense
+source-shape gate passes; next build a CPU-only synthesis artifact for runs
+425-434 before choosing seed replication or a broader coupled-geometry test.
+Experiment 435 built that CPU-only synthesis artifact. It aggregates 40
+source-shape rows from experiments 425-434, and all 40 selected the true target
+x/z/r geometry. The weakest all-row and dense-grid margin is 1.813e-04 on the
+center target, ringdown025_noise10_seed21. The synthesis figures show that the
+dense Stage 4C secondary z=91 mm / r=6.8-7.0 mm branch is visible but not a
+near-tie. This closes the local fixed-neighbor multi-rebar source-shape gate.
+The next GPU branch should choose between seed replication and a coupled
+neighbor-geometry stress where neighboring rebars are no longer held at truth.
+Experiment 436 ran the first compact seed replication for the weakest center
+source-shape branch, using 10% noise seeds 34 and 55 for ringdown-only and
+source-mismatch+ringdown rows. All four rows selected the true x=250 mm,
+z=90 mm, r=6.0 mm. The source-mismatch seed55 row created a new weakest margin,
+1.006e-04 against r=6.2 at true x/z. This is still correct, but tight enough
+that the next source-shape GPU step should widen/high-radius-check seed55 before
+coupled-neighbor development.
 ```

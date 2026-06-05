@@ -15,6 +15,7 @@ from run_single_rebar_source_profiled_polish import (  # noqa: E402
     parse_frequency_weights,
     profile_frequency_keys,
     rank_candidates,
+    ringdown_component_wavelet,
     resolve_initial_params_mm,
     source_profiled_multifrequency_ls,
     write_candidate_csv,
@@ -53,6 +54,43 @@ def test_observed_wavelet_applies_amplitude_scale():
     scaled = observed_wavelet(time, 1.5e9, amplitude_scale=2.0)
 
     assert np.allclose(scaled, 2.0 * base)
+
+
+def test_observed_wavelet_ringdown_changes_shape_without_changing_default():
+    time = np.linspace(0.0, 3e-9, 256)
+    base = observed_wavelet(time, 1.5e9)
+    explicit_default = observed_wavelet(time, 1.5e9, ringdown_scale=0.0)
+    ringing = observed_wavelet(
+        time,
+        1.5e9,
+        ringdown_scale=0.25,
+        ringdown_delay_ps=180.0,
+        ringdown_frequency_scale=0.8,
+    )
+
+    assert np.allclose(explicit_default, base)
+    assert not np.allclose(ringing, base)
+    assert np.linalg.norm(ringing - base) > 0.0
+
+
+def test_ringdown_component_matches_observed_wavelet_difference():
+    time = np.linspace(0.0, 3e-9, 256)
+    base = observed_wavelet(time, 1.5e9)
+    component = ringdown_component_wavelet(
+        time,
+        1.5e9,
+        ringdown_delay_ps=180.0,
+        ringdown_frequency_scale=0.8,
+    )
+    ringing = observed_wavelet(
+        time,
+        1.5e9,
+        ringdown_scale=0.25,
+        ringdown_delay_ps=180.0,
+        ringdown_frequency_scale=0.8,
+    )
+
+    np.testing.assert_allclose(ringing - base, 0.25 * component)
 
 
 def test_format_mm_value_preserves_fine_radius_steps():
