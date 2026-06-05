@@ -81,6 +81,11 @@ def test_summarize_case_confidence_flattens_source_and_competitor():
                     "frequency_scale": 1.1,
                     "time_shift_ps": -50.0,
                     "amplitude_scale": 1.099,
+                    "ringdown_scale": 0.25,
+                    "ringdown_delay_ps": 180.0,
+                    "ringdown_frequency_scale": 0.8,
+                    "primary_coefficient": 1.099,
+                    "ringdown_coefficient": 0.27475,
                 },
             },
             {
@@ -110,6 +115,9 @@ def test_summarize_case_confidence_flattens_source_and_competitor():
     assert row["competing_geometry_z_mm"] == 91.0
     assert row["source_frequency_scale"] == 1.1
     assert row["source_time_shift_ps"] == -50.0
+    assert row["source_ringdown_scale"] == 0.25
+    assert row["source_ringdown_delay_ps"] == 180.0
+    assert row["source_ringdown_coefficient"] == 0.27475
     assert row["ambiguity_radius_max_mm"] == 6.8
 
 

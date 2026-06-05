@@ -4636,4 +4636,38 @@ z=90 mm, r=6.0 mm. The source-mismatch seed55 row created a new weakest margin,
 1.006e-04 against r=6.2 at true x/z. This is still correct, but tight enough
 that the next source-shape GPU step should widen/high-radius-check seed55 before
 coupled-neighbor development.
+Experiment 437 ran that seed55 wide/high-radius check on the center target:
+x=248/249/250/251/252 mm, z=88/89/90/91/92 mm, and
+r=5.8/6.0/6.2/7.4/7.8 mm. Both seed55 rows selected the true x=250 mm,
+z=90 mm, r=6.0 mm. The source-mismatch seed55 margin remained 1.006e-04, and
+the sparse high-radius 7.4/7.8 mm candidates stayed around ranks 10-12. The
+next seed55 check should use the dense Stage 4C radius grid, because the known
+secondary branch is around r=6.8-7.0 mm.
+Experiment 438 ran that dense seed55 center grid with r=5.4:7.8:0.2 mm. Both
+seed55 rows again selected the true x=250 mm, z=90 mm, r=6.0 mm. The
+source-mismatch seed55 row remains the weakest observed source-shape result at
+1.006e-04 against r=6.2, but the dense z=91 mm / r=6.8-7.0 mm branch stayed at
+ranks 3-4 and did not become a near-tie. This closes the seed55 radius-grid
+follow-up; update the synthesis and then move to coupled-neighbor geometry or a
+different physics lever.
+Experiment 439 updated the source-shape synthesis with experiments 436-438.
+Across 48 rows from experiments 425-434 and 436-438, every row selected the
+true target x/z/r geometry. The weakest row remains center
+source_mismatch_ringdown025_noise10_seed55, with radius_margin_abs=1.006e-04
+against r=6.2 at true x/z. The dense seed55 figure confirms that the z=91 mm /
+r=6.8-7.0 mm branch remains secondary. Fixed-neighbor source-shape replication
+is now sufficiently covered; the next meaningful step is coupled-neighbor
+geometry development or a different explicit physics stress.
+Experiment 440 added that first coupled-neighbor source-shape coordinate test.
+The coordinate optimizer now supports `--fit-ringdown-coefficient` and reports
+ringdown coefficient fields in confidence/objective diagnostics. The run
+started all three radii at 6.2 mm, updated center, left, and right in one
+compact sequential pass, and recovered the exact true final state
+x=[150,250,350] mm, z=[90,90,90] mm, r=[6,6,6] mm. Margins were weak but
+positive: 1.228e-04 for the center, 2.948e-04 for the left, and 2.185e-04 for
+the right, with all ambiguity intervals limited to r=6.0-6.2 mm at true x/z.
+The fitted nuisance source recovered fc=1.1, shift=-50 ps, and ringdown about
+0.25 in every step. This is a correct first coupled pass, but not yet a
+high-confidence radius claim. Next, repeat from a harder x/z/r perturbed seed
+before spending GPU time on dense coupled sweeps.
 ```

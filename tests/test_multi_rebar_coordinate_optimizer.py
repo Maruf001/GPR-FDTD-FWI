@@ -152,6 +152,11 @@ def test_objective_diagnostic_rows_for_step_flattens_variants():
                             "frequency_scale": 1.0,
                             "time_shift_ps": 0.0,
                             "amplitude_scale": 1.0,
+                            "ringdown_scale": 0.25,
+                            "ringdown_delay_ps": 180.0,
+                            "ringdown_frequency_scale": 0.8,
+                            "primary_coefficient": 1.0,
+                            "ringdown_coefficient": 0.25,
                         },
                     }
                 ],
@@ -205,6 +210,8 @@ def test_objective_diagnostic_rows_for_step_flattens_variants():
     assert rows[1]["step_target_index"] == 2
     assert rows[1]["best_radius_mm"] == 6.0
     assert rows[1]["radius_margin_abs"] == 0.3
+    assert rows[0]["best_source_ringdown_scale"] == 0.25
+    assert rows[0]["best_source_ringdown_coefficient"] == 0.25
 
 
 def test_objective_top_candidate_rows_for_step_flattens_ranked_variants(tmp_path):
@@ -227,6 +234,11 @@ def test_objective_top_candidate_rows_for_step_flattens_ranked_variants(tmp_path
                             "frequency_scale": 1.0,
                             "time_shift_ps": 0.0,
                             "amplitude_scale": 1.0,
+                            "ringdown_scale": 0.2,
+                            "ringdown_delay_ps": 180.0,
+                            "ringdown_frequency_scale": 0.8,
+                            "primary_coefficient": 1.0,
+                            "ringdown_coefficient": 0.2,
                         },
                     },
                     {
@@ -289,6 +301,8 @@ def test_objective_top_candidate_rows_for_step_flattens_ranked_variants(tmp_path
     assert rows[0]["x_values_mm"] == "[190.0, 250.0, 300.0]"
     assert rows[1]["x_mm"] == 299.0
     assert rows[2]["source_frequency_scale"] == 1.1
+    assert rows[0]["source_ringdown_scale"] == 0.2
+    assert rows[0]["source_ringdown_coefficient"] == 0.2
 
     path = tmp_path / "objective_top_candidates.csv"
     write_objective_top_candidate_csv(path, rows)
@@ -296,6 +310,7 @@ def test_objective_top_candidate_rows_for_step_flattens_ranked_variants(tmp_path
     with path.open("r", encoding="utf-8", newline="") as handle:
         written = list(csv.DictReader(handle))
     assert written[0]["objective_label"] == "base"
+    assert written[0]["source_ringdown_scale"] == "0.2"
     assert written[1]["rank"] == "2"
     assert written[1]["x_mm"] == "299.0"
 

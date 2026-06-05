@@ -181,6 +181,11 @@ def summarize_case_confidence(run_name, case_label, case_result, summary_meta=No
         "source_frequency_scale": best_profile.get("frequency_scale"),
         "source_time_shift_ps": best_profile.get("time_shift_ps"),
         "source_amplitude_scale": best_profile.get("amplitude_scale"),
+        "source_ringdown_scale": best_profile.get("ringdown_scale"),
+        "source_ringdown_delay_ps": best_profile.get("ringdown_delay_ps"),
+        "source_ringdown_frequency_scale": best_profile.get("ringdown_frequency_scale"),
+        "source_primary_coefficient": best_profile.get("primary_coefficient"),
+        "source_ringdown_coefficient": best_profile.get("ringdown_coefficient"),
     }
     row.update(ambiguity)
     return row

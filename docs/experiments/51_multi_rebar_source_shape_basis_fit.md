@@ -889,6 +889,198 @@ Figure notes:
 outputs/experiments/436_multi_rebar_center_source_shape_seed_replication_compact_xzr/figures/FIGURE_NOTES.md
 ```
 
+## 437: Center Seed55 High-Radius 5x5 X/Z Check
+
+Output:
+
+```text
+outputs/experiments/437_multi_rebar_center_source_shape_seed55_high_radius_wide_xz
+```
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_multi_rebar_local_geometry_profile.py \
+  --backend gpu-cpml \
+  --grid-step-mm 1.0 \
+  --sources 5 \
+  --frequency-ghz 1.5 \
+  --target-rebar-index 1 \
+  --target-x-values-mm 248:252:1 \
+  --target-z-values-mm 88:92:1 \
+  --target-radius-values-mm 5.8,6.0,6.2,7.4,7.8 \
+  --replication-cases 'ringdown025_noise10_seed55:1.0,0.0,1.0,0.10,55,0.25,180.0,0.8|source_mismatch_ringdown025_noise10_seed55:1.1,-50.0,1.1,0.10,55,0.25,180.0,0.8' \
+  --source-frequency-scales 0.9,1.0,1.1 \
+  --source-ringdown-delay-ps 180.0 \
+  --source-ringdown-frequency-scale 0.8 \
+  --fit-ringdown-coefficient \
+  --source-time-shift-ps-values=-50,0,50 \
+  --objective-variants 'base:1.0,7.0,0.3,none,none,0.0' \
+  --progress-every 10 \
+  --run-name multi_rebar_center_source_shape_seed55_high_radius_wide_xz
+```
+
+Runtime and count:
+
+```text
+125 target candidates
+2 observed cases
+3 modeled center-frequency scales
+primary + ringdown source bases per frequency scale
+4086.62 s
+```
+
+Result:
+
+| Case | Best x/z/r [mm] | Next r [mm] | Margin | Fitted source profile | Interpretation |
+| --- | --- | ---: | ---: | --- | --- |
+| ringdown025_noise10_seed55 | 250 / 90 / 6.0 | 6.2 | 2.741e-04 | fc=1.0, shift=0 ps, ringdown=0.251 | correct |
+| source_mismatch_ringdown025_noise10_seed55 | 250 / 90 / 6.0 | 6.2 | 1.006e-04 | fc=1.1, shift=-50 ps, ringdown=0.250 | correct but still weakest margin |
+
+The sparse high-radius candidates r=7.4 and r=7.8 mm appear only around ranks
+10-12, so they do not explain the weak seed55 margin. The dense r=6.8/7.0 mm
+branch seen in experiments 432-434 remains the next seed55 check.
+
+Plot validation:
+
+```text
+multi_rebar_local_geometry_radius_profiles.png:
+1617x920 px, dynamic range 255, grayscale std 31.9734
+
+multi_rebar_objective_variant_radius_profiles.png:
+1855x1243 px, dynamic range 255, grayscale std 36.8441
+```
+
+Figure notes:
+
+```text
+outputs/experiments/437_multi_rebar_center_source_shape_seed55_high_radius_wide_xz/figures/FIGURE_NOTES.md
+```
+
+## 438: Center Seed55 Dense Stage 4C Radius Check
+
+Output:
+
+```text
+outputs/experiments/438_multi_rebar_center_source_shape_seed55_stage4c_dense_radius
+```
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_multi_rebar_local_geometry_profile.py \
+  --backend gpu-cpml \
+  --grid-step-mm 1.0 \
+  --sources 5 \
+  --frequency-ghz 1.5 \
+  --target-rebar-index 1 \
+  --target-x-values-mm 248:252:1 \
+  --target-z-values-mm 88:92:1 \
+  --target-radius-values-mm 5.4:7.8:0.2 \
+  --replication-cases 'ringdown025_noise10_seed55:1.0,0.0,1.0,0.10,55,0.25,180.0,0.8|source_mismatch_ringdown025_noise10_seed55:1.1,-50.0,1.1,0.10,55,0.25,180.0,0.8' \
+  --source-frequency-scales 0.9,1.0,1.1 \
+  --source-ringdown-delay-ps 180.0 \
+  --source-ringdown-frequency-scale 0.8 \
+  --fit-ringdown-coefficient \
+  --source-time-shift-ps-values=-50,0,50 \
+  --objective-variants 'base:1.0,7.0,0.3,none,none,0.0' \
+  --progress-every 25 \
+  --run-name multi_rebar_center_source_shape_seed55_stage4c_dense_radius
+```
+
+Runtime and count:
+
+```text
+325 target candidates
+2 observed cases
+3 modeled center-frequency scales
+primary + ringdown source bases per frequency scale
+10588.34 s
+```
+
+Result:
+
+| Case | Best x/z/r [mm] | Next r [mm] | Margin | Fitted source profile | Interpretation |
+| --- | --- | ---: | ---: | --- | --- |
+| ringdown025_noise10_seed55 | 250 / 90 / 6.0 | 6.2 | 2.741e-04 | fc=1.0, shift=0 ps, ringdown=0.251 | correct |
+| source_mismatch_ringdown025_noise10_seed55 | 250 / 90 / 6.0 | 6.2 | 1.006e-04 | fc=1.1, shift=-50 ps, ringdown=0.250 | correct but weakest margin |
+
+The dense z=91 mm, r=6.8-7.0 mm branch appears at ranks 3-4, but it remains
+below the adjacent r=6.2 candidate at true x/z. The seed55 source-mismatch row
+is therefore margin-weak but not a wrong-geometry or shifted-depth failure.
+
+Plot validation:
+
+```text
+multi_rebar_local_geometry_radius_profiles.png:
+1617x920 px, dynamic range 255, grayscale std 31.3656
+
+multi_rebar_objective_variant_radius_profiles.png:
+1855x1243 px, dynamic range 255, grayscale std 36.1861
+```
+
+Figure notes:
+
+```text
+outputs/experiments/438_multi_rebar_center_source_shape_seed55_stage4c_dense_radius/figures/FIGURE_NOTES.md
+```
+
+## 439: Source-Shape Seed Synthesis
+
+Output:
+
+```text
+outputs/experiments/439_multi_rebar_source_shape_seed_synthesis
+```
+
+Inputs:
+
+```text
+experiments 425-434, 436-438
+48 source-shape case rows
+13 source-shape runs
+```
+
+Artifacts:
+
+```text
+data/source_shape_seed_synthesis_rows.csv
+data/source_shape_seed_synthesis_summary.json
+figures/source_shape_seed_margin_timeline.png
+figures/seed55_margin_heatmap.png
+figures/FIGURE_NOTES.md
+```
+
+Synthesis result:
+
+| Metric | Value |
+| --- | --- |
+| Truth geometry rows | 48 / 48 |
+| Weakest all-row margin | 1.006e-04 |
+| Weakest all-row case | experiment 436, center, source_mismatch_ringdown025_noise10_seed55 |
+| Dense-grid rows | 14 |
+| Seed55 rows | 6 |
+| Dense seed55 conclusion | z=91 mm / r=6.8-7.0 mm branch stays secondary |
+
+Interpretation:
+
+```text
+Runs 425-438 recover true geometry in every recorded source-shape row. The
+weakest margin is the center source_mismatch_ringdown025_noise10_seed55 row,
+with radius_margin_abs=1.0060989770306616e-04. Dense seed55 keeps the z=91 mm /
+r=6.8-7.0 mm branch below true r=6.0 and adjacent r=6.2 at true x/z.
+```
+
+Plot validation:
+
+```text
+source_shape_seed_margin_timeline.png:
+2240x1040 px, dynamic range 255, grayscale std 30.7522
+
+seed55_margin_heatmap.png:
+1760x768 px, dynamic range 255, grayscale std 50.1509
+```
+
 ## Interpretation
 
 This branch now has four passes.
@@ -942,6 +1134,19 @@ Experiment 436 replicated the hard center noise/source rows for seeds 34 and
 55. All rows selected the true geometry. Seed55 under source mismatch produced
 a new weakest margin, 1.006e-04, against r=6.2 at true x/z.
 
+Experiment 437 widened the seed55 weak row to 5x5 x/z and sparse high-radius
+candidates. The true geometry still ranked first; sparse high-radius candidates
+did not become near-ties.
+
+Experiment 438 ran the dense Stage 4C radius grid for seed55. The true geometry
+again ranked first. The known z=91 mm, r=6.8-7.0 mm branch appeared at ranks
+3-4, but stayed below r=6.2 at true x/z.
+
+Experiment 439 updated the branch synthesis. Across 48 recorded rows from
+experiments 425-434 and 436-438, every row selected the true target x/z/r. The
+weakest result remains seed55 under source mismatch, with margin 1.006e-04
+against r=6.2 at true x/z.
+
 This is now a strong local multi-rebar source-shape validation for fixed
 neighbor geometry. It is not yet a full coupled multi-rebar validation because
 only one target was moved at a time while neighboring rebar geometries stayed
@@ -952,6 +1157,14 @@ at truth.
 Scale one step, not many steps:
 
 ```text
-run a wider/high-radius center seed55 check before any coupled-neighbor
-geometry development.
+move to coupled-neighbor geometry development or another explicitly new physics
+stress. Do not spend more GPU time on fixed-neighbor source-shape replication
+unless a new failure mode appears.
+```
+
+Follow-up:
+
+```text
+Experiment 52 / run 440 starts the coupled-neighbor source-shape coordinate
+branch.
 ```
