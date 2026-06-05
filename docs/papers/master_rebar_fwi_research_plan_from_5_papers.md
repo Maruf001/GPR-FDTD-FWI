@@ -4613,4 +4613,27 @@ secondary shifted-depth branch around z=91 mm and r=6.8-7.0 mm appeared in the
 top candidates, but it remained below true r=6.0 and adjacent r=6.2 at true
 x/z. This passes the left dense source-shape gate. Next, run the dense grid on
 the right target to complete all-target dense coverage.
+Experiment 434 completed that all-target dense coverage by running the same
+Stage 4C source-shape grid on the right target:
+x=348/349/350/351/352 mm, z=88/89/90/91/92 mm, and r=5.4:7.8:0.2 mm. All four
+rows selected the true x=350 mm, z=90 mm, r=6.0 mm. The weakest right-target
+margin was 2.288e-04 in the ringdown025_noise10_seed21 row. The same z=91 mm,
+r=6.8-7.0 mm branch appeared, but stayed secondary. The all-target dense
+source-shape gate passes; next build a CPU-only synthesis artifact for runs
+425-434 before choosing seed replication or a broader coupled-geometry test.
+Experiment 435 built that CPU-only synthesis artifact. It aggregates 40
+source-shape rows from experiments 425-434, and all 40 selected the true target
+x/z/r geometry. The weakest all-row and dense-grid margin is 1.813e-04 on the
+center target, ringdown025_noise10_seed21. The synthesis figures show that the
+dense Stage 4C secondary z=91 mm / r=6.8-7.0 mm branch is visible but not a
+near-tie. This closes the local fixed-neighbor multi-rebar source-shape gate.
+The next GPU branch should choose between seed replication and a coupled
+neighbor-geometry stress where neighboring rebars are no longer held at truth.
+Experiment 436 ran the first compact seed replication for the weakest center
+source-shape branch, using 10% noise seeds 34 and 55 for ringdown-only and
+source-mismatch+ringdown rows. All four rows selected the true x=250 mm,
+z=90 mm, r=6.0 mm. The source-mismatch seed55 row created a new weakest margin,
+1.006e-04 against r=6.2 at true x/z. This is still correct, but tight enough
+that the next source-shape GPU step should widen/high-radius-check seed55 before
+coupled-neighbor development.
 ```

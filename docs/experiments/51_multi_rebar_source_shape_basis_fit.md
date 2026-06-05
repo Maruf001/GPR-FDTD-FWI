@@ -691,6 +691,204 @@ Figure notes:
 outputs/experiments/433_multi_rebar_left_source_shape_basis_fit_stage4c_dense_radius/figures/FIGURE_NOTES.md
 ```
 
+## 434: Dense Stage 4C Right-Rebar Source-Shape Radius Grid
+
+Output:
+
+```text
+outputs/experiments/434_multi_rebar_right_source_shape_basis_fit_stage4c_dense_radius
+```
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_multi_rebar_local_geometry_profile.py \
+  --backend gpu-cpml \
+  --grid-step-mm 1.0 \
+  --sources 5 \
+  --frequency-ghz 1.5 \
+  --target-rebar-index 2 \
+  --target-x-values-mm 348:352:1 \
+  --target-z-values-mm 88:92:1 \
+  --target-radius-values-mm 5.4:7.8:0.2 \
+  --replication-cases 'nominal:1.0,0.0,1.0,0.0,13|ringdown020:1.0,0.0,1.0,0.0,13,0.20,180.0,0.8|ringdown025_noise10_seed21:1.0,0.0,1.0,0.10,21,0.25,180.0,0.8|source_mismatch_ringdown025_noise10_seed13:1.1,-50.0,1.1,0.10,13,0.25,180.0,0.8' \
+  --source-frequency-scales 0.9,1.0,1.1 \
+  --source-ringdown-delay-ps 180.0 \
+  --source-ringdown-frequency-scale 0.8 \
+  --fit-ringdown-coefficient \
+  --source-time-shift-ps-values=-50,0,50 \
+  --objective-variants 'base:1.0,7.0,0.3,none,none,0.0' \
+  --progress-every 25 \
+  --run-name multi_rebar_right_source_shape_basis_fit_stage4c_dense_radius
+```
+
+Runtime and count:
+
+```text
+325 target candidates
+4 observed cases
+3 modeled center-frequency scales
+primary + ringdown source bases per frequency scale
+10208.39 s
+```
+
+Result:
+
+| Case | Best x/z/r [mm] | Next r [mm] | Margin | Fitted source profile | Interpretation |
+| --- | --- | ---: | ---: | --- | --- |
+| nominal | 350 / 90 / 6.0 | 6.2 | 3.657e-04 | fc=1.0, shift=0 ps, ringdown=0.000 | correct |
+| ringdown020 | 350 / 90 / 6.0 | 6.2 | 2.843e-04 | fc=1.0, shift=0 ps, ringdown=0.200 | correct former discrete-grid failure row |
+| ringdown025_noise10_seed21 | 350 / 90 / 6.0 | 6.2 | 2.288e-04 | fc=1.0, shift=0 ps, ringdown=0.252 | correct 10% noisy ringdown |
+| source_mismatch_ringdown025_noise10_seed13 | 350 / 90 / 6.0 | 6.2 | 3.663e-04 | fc=1.1, shift=-50 ps, ringdown=0.250 | correct source mismatch plus 10% noise |
+
+As in the center and left dense runs, a shifted-depth branch around z=91 mm and
+r=6.8-7.0 mm appears in the top candidates, but it stays behind the true
+geometry and the adjacent r=6.2 mm candidate at true x/z.
+
+Plot validation:
+
+```text
+multi_rebar_local_geometry_radius_profiles.png:
+1617x920 px, dynamic range 255, grayscale std 33.7672
+
+multi_rebar_objective_variant_radius_profiles.png:
+1855x2467 px, dynamic range 255, grayscale std 33.9993
+```
+
+Figure notes:
+
+```text
+outputs/experiments/434_multi_rebar_right_source_shape_basis_fit_stage4c_dense_radius/figures/FIGURE_NOTES.md
+```
+
+## 435: Source-Shape Dense Synthesis
+
+Output:
+
+```text
+outputs/experiments/435_multi_rebar_source_shape_dense_synthesis
+```
+
+Inputs:
+
+```text
+experiments 425-434
+40 source-shape case rows
+10 source-shape runs
+```
+
+Artifacts:
+
+```text
+data/source_shape_dense_synthesis_rows.csv
+data/source_shape_dense_synthesis_summary.json
+figures/source_shape_margin_timeline.png
+figures/dense_stage4c_margin_heatmap.png
+figures/FIGURE_NOTES.md
+```
+
+Synthesis result:
+
+| Metric | Value |
+| --- | --- |
+| Truth geometry rows | 40 / 40 |
+| Weakest all-row margin | 1.813e-04 |
+| Weakest all-row case | experiment 429, center, ringdown025_noise10_seed21 |
+| Weakest dense-grid margin | 1.813e-04 |
+| Weakest dense-grid case | experiment 432, center, ringdown025_noise10_seed21 |
+| Dense targets covered | left, center, right |
+
+Interpretation:
+
+```text
+Runs 425-434 recover true geometry in every recorded source-shape row. The
+weakest margin is the center target, ringdown025_noise10_seed21, with
+radius_margin_abs=1.8134590293075736e-04. Dense Stage 4C runs show a secondary
+z=91 mm / r=6.8-7.0 mm branch, but it remains below true r=6.0 and adjacent
+r=6.2 at true x/z.
+```
+
+Plot validation:
+
+```text
+source_shape_margin_timeline.png:
+2080x960 px, dynamic range 255, grayscale std 31.7068
+
+dense_stage4c_margin_heatmap.png:
+1920x768 px, dynamic range 255, grayscale std 48.8804
+```
+
+## 436: Compact Center-Rebar Hard-Noise Seed Replication
+
+Output:
+
+```text
+outputs/experiments/436_multi_rebar_center_source_shape_seed_replication_compact_xzr
+```
+
+Command:
+
+```bash
+/home/lam001/miniforge3/envs/FNO/bin/python -u run_multi_rebar_local_geometry_profile.py \
+  --backend gpu-cpml \
+  --grid-step-mm 1.0 \
+  --sources 5 \
+  --frequency-ghz 1.5 \
+  --target-rebar-index 1 \
+  --target-x-values-mm 249:251:1 \
+  --target-z-values-mm 89:91:1 \
+  --target-radius-values-mm 5.8,6.0,6.2 \
+  --replication-cases 'ringdown025_noise10_seed34:1.0,0.0,1.0,0.10,34,0.25,180.0,0.8|ringdown025_noise10_seed55:1.0,0.0,1.0,0.10,55,0.25,180.0,0.8|source_mismatch_ringdown025_noise10_seed34:1.1,-50.0,1.1,0.10,34,0.25,180.0,0.8|source_mismatch_ringdown025_noise10_seed55:1.1,-50.0,1.1,0.10,55,0.25,180.0,0.8' \
+  --source-frequency-scales 0.9,1.0,1.1 \
+  --source-ringdown-delay-ps 180.0 \
+  --source-ringdown-frequency-scale 0.8 \
+  --fit-ringdown-coefficient \
+  --source-time-shift-ps-values=-50,0,50 \
+  --objective-variants 'base:1.0,7.0,0.3,none,none,0.0' \
+  --progress-every 3 \
+  --run-name multi_rebar_center_source_shape_seed_replication_compact_xzr
+```
+
+Runtime and count:
+
+```text
+27 target candidates
+4 observed cases
+3 modeled center-frequency scales
+primary + ringdown source bases per frequency scale
+849.33 s
+```
+
+Result:
+
+| Case | Best x/z/r [mm] | Next r [mm] | Margin | Fitted source profile | Interpretation |
+| --- | --- | ---: | ---: | --- | --- |
+| ringdown025_noise10_seed34 | 250 / 90 / 6.0 | 6.2 | 2.719e-04 | fc=1.0, shift=0 ps, ringdown=0.252 | correct |
+| ringdown025_noise10_seed55 | 250 / 90 / 6.0 | 6.2 | 2.741e-04 | fc=1.0, shift=0 ps, ringdown=0.251 | correct |
+| source_mismatch_ringdown025_noise10_seed34 | 250 / 90 / 6.0 | 6.2 | 2.847e-04 | fc=1.1, shift=-50 ps, ringdown=0.251 | correct |
+| source_mismatch_ringdown025_noise10_seed55 | 250 / 90 / 6.0 | 6.2 | 1.006e-04 | fc=1.1, shift=-50 ps, ringdown=0.250 | correct but new weakest margin |
+
+The source-mismatch seed55 row is the new weakest source-shape result. Its top
+two candidates are still r=6.0 and r=6.2 at true x/z, so this compact window
+does not show location drift, but the margin is tight enough to justify a
+wider/high-radius seed55 check.
+
+Plot validation:
+
+```text
+multi_rebar_local_geometry_radius_profiles.png:
+1617x920 px, dynamic range 255, grayscale std 35.6081
+
+multi_rebar_objective_variant_radius_profiles.png:
+1855x2467 px, dynamic range 255, grayscale std 36.5885
+```
+
+Figure notes:
+
+```text
+outputs/experiments/436_multi_rebar_center_source_shape_seed_replication_compact_xzr/figures/FIGURE_NOTES.md
+```
+
 ## Interpretation
 
 This branch now has four passes.
@@ -732,17 +930,28 @@ Experiment 433 repeated the dense Stage 4C source-shape grid on the left
 target. The true geometry again ranked first in all rows. The same shifted-depth
 branch appeared, but it remained secondary.
 
-This is not yet a full multi-rebar source-shape validation. All three targets
-have been tested only in compact windows and neighboring rebar geometries were
-fixed at truth. The center target has passed the high-radius compact check, but
-the dense 5.4:7.8:0.2 mm Stage 4C radius grid has only been run for the center
-and left targets with the source-basis ringdown fit.
+Experiment 434 repeated the dense Stage 4C source-shape grid on the right
+target. The true geometry again ranked first in all rows. The shifted-depth
+z=91 mm, r=6.8-7.0 mm branch appeared again, but remained secondary.
+
+Experiment 435 packaged the branch synthesis. Across 40 recorded rows from
+experiments 425-434, every row selected the true target x/z/r. The weakest
+margin is 1.813e-04 in the center target's ringdown025_noise10_seed21 row.
+
+Experiment 436 replicated the hard center noise/source rows for seeds 34 and
+55. All rows selected the true geometry. Seed55 under source mismatch produced
+a new weakest margin, 1.006e-04, against r=6.2 at true x/z.
+
+This is now a strong local multi-rebar source-shape validation for fixed
+neighbor geometry. It is not yet a full coupled multi-rebar validation because
+only one target was moved at a time while neighboring rebar geometries stayed
+at truth.
 
 ## Next Decision
 
 Scale one step, not many steps:
 
 ```text
-run the same dense Stage 4C source-shape radius grid on the right target to
-complete all-target dense coverage.
+run a wider/high-radius center seed55 check before any coupled-neighbor
+geometry development.
 ```
