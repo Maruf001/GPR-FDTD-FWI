@@ -1,0 +1,40 @@
+{
+  "source": "summary",
+  "summary_path": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/data/multi_rebar_coordinate_optimizer_summary.json",
+  "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+  "case": {
+    "label": "source_mismatch_ringdown050_noise10_seed3524578",
+    "frequency_scale": 1.1,
+    "time_shift_ps": -50.0,
+    "amplitude_scale": 1.1,
+    "noise_fraction": 0.1,
+    "noise_seed": 3524578,
+    "ringdown_scale": 0.5,
+    "ringdown_delay_ps": 180.0,
+    "ringdown_frequency_scale": 0.8
+  },
+  "source_wavelet": {
+    "type": "Ricker / Mexican hat",
+    "base_frequency_ghz": 1.5
+  },
+  "noise": {
+    "type": "zero-mean Gaussian additive observed-data noise",
+    "seed": 3524578,
+    "rms_fraction": 0.1,
+    "source_proxy_rms": 0.13869327101935325,
+    "noise_proxy_std": 0.013869327101935326,
+    "noise_proxy_rms": 0.014395944470417121,
+    "observed_bscan_clean_rms": 0.000517926970358516,
+    "observed_bscan_noise_std": 5.1792697035851606e-05,
+    "observed_bscan_actual_noise_rms": 5.2204525526974656e-05
+  },
+  "validation": {
+    "width_px": 2314,
+    "height_px": 1379,
+    "unique_colors": 6232,
+    "nonwhite_fraction": 0.11945292487698236
+  },
+  "paths": {
+    "figure": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/figures/source_pulse_noise_context.png"
+  }
+}

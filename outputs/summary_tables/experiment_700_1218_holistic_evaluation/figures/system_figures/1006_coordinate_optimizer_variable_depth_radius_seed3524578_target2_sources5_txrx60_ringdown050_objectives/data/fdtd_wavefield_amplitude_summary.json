@@ -1,0 +1,74 @@
+{
+  "animation_type": "true FDTD Ez wavefield amplitude",
+  "source": "coordinate optimizer summary",
+  "summary_path": "outputs/experiments/1006_coordinate_optimizer_variable_depth_radius_seed3524578_target2_sources5_txrx60_ringdown050_objectives/data/multi_rebar_coordinate_optimizer_summary.json",
+  "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target2_sources5_txrx60_ringdown050_objectives",
+  "model_state": "truth",
+  "backend": "cpu",
+  "grid": {
+    "grid_step_mm": 1.0,
+    "nx": 560,
+    "nz": 360,
+    "nt": 3769,
+    "dt_s": 2.122788903074716e-12,
+    "npml": 30,
+    "work_estimate_cell_steps": 759830400
+  },
+  "geometry": {
+    "x_values_mm": [
+      150.0,
+      250.0,
+      350.0
+    ],
+    "z_values_mm": [
+      80.0,
+      100.0,
+      120.0
+    ],
+    "radius_values_mm": [
+      5.0,
+      6.0,
+      8.0
+    ],
+    "geometry_mode": "hard",
+    "subcell_samples": 5
+  },
+  "representative_pair": {
+    "tx_x_mm": 346.0,
+    "rx_x_mm": 406.0,
+    "tx_z_mm": 38.0,
+    "rx_z_mm": 38.0,
+    "target_rebar_index": 2
+  },
+  "receiver_sampling": "nearest",
+  "case": {
+    "label": "source_mismatch_ringdown050_noise10_seed3524578",
+    "frequency_scale": 1.1,
+    "time_shift_ps": -50.0,
+    "amplitude_scale": 1.1,
+    "noise_fraction": 0.1,
+    "noise_seed": 3524578,
+    "ringdown_scale": 0.5,
+    "ringdown_delay_ps": 180.0,
+    "ringdown_frequency_scale": 0.8
+  },
+  "noise_policy": "Observed-data noise is not injected into the wavefield animation; the GIF shows the clean forward FDTD field for the configured source.",
+  "save_every": 89,
+  "requested_frames": 42,
+  "snapshot_count": 43,
+  "fps": 12,
+  "elapsed_time_s": 15.019975900650024,
+  "validation": {
+    "frame_count": 43,
+    "width_px": 1000,
+    "height_px": 600,
+    "max_dynamic_range": 255,
+    "mean_frame_std": 36.194868352984834,
+    "peak_abs_ez": 0.013287600952502754,
+    "max_rms_ez": 0.001092911897678513,
+    "nonzero_frames": 43
+  },
+  "paths": {
+    "animation": "outputs/experiments/1006_coordinate_optimizer_variable_depth_radius_seed3524578_target2_sources5_txrx60_ringdown050_objectives/figures/fdtd_wavefield_amplitude.gif"
+  }
+}

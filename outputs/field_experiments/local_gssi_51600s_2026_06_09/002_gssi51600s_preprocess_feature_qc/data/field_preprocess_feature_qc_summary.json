@@ -1,0 +1,26 @@
+{
+  "run_name": "gssi51600s_preprocess_feature_qc",
+  "input_dir": "data/2026-06-09_GSSI_model_51600S",
+  "field_root": "outputs/field_experiments",
+  "dataset_id": "local_gssi_51600s_2026_06_09",
+  "dataset_root": "outputs/field_experiments/local_gssi_51600s_2026_06_09",
+  "outdir": "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc",
+  "readgssi_version": "0.0.22",
+  "profile_channel_count": 4,
+  "reflector_cue_count": 19,
+  "qc_scope": "CPU-only preprocessing and reflector-cue screening. No confirmed rebar labeling, no radius estimate, and no FWI.",
+  "profile_summary_csv": "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/data/field_profile_feature_summary.csv",
+  "candidate_csv": "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/data/field_reflector_cue_candidates.csv",
+  "figure_validation_csv": "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/data/figure_validation.csv",
+  "figures": {
+    "preprocess_mosaic": "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/figures/field_preprocessing_mosaic.png",
+    "candidate_summary": "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/figures/field_candidate_summary.png",
+    "energy_summary": "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/figures/field_energy_summary.png",
+    "profile_screens": [
+      "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/figures/PROJECT001C__013_ch0_feature_screen.png",
+      "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/figures/PROJECT001C__014_ch0_feature_screen.png",
+      "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/figures/PROJECT001C__015_ch0_feature_screen.png",
+      "outputs/field_experiments/local_gssi_51600s_2026_06_09/002_gssi51600s_preprocess_feature_qc/figures/PROJECT001C__016_ch0_feature_screen.png"
+    ]
+  }
+}

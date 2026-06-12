@@ -7,7 +7,7 @@ Create a machine-readable baseline table for all saved single-rebar runs before 
 ## Outputs
 
 ```text
-outputs/experiments/single_rebar_baseline_matrix.csv
+outputs/summary_tables/single_rebar_baseline_matrix.csv
 ```
 
 ## Summary Table

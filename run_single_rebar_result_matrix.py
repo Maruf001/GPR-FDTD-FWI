@@ -67,7 +67,7 @@ def main():
     parser.add_argument("--root", default="outputs/experiments")
     parser.add_argument(
         "--csv",
-        default="outputs/experiments/single_rebar_baseline_matrix.csv",
+        default="outputs/summary_tables/single_rebar_baseline_matrix.csv",
         help="CSV output path",
     )
     parser.add_argument(

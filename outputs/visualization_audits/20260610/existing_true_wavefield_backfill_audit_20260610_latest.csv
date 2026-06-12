@@ -1,0 +1,3 @@
+run_number,run_dir,status,reason,inventory_path,figure_notes_path,animation_count,total_frames,animations
+1127,outputs/experiments/1127_coordinate_optimizer_variable_depth_radius_seed591286729879_target2_sources5_txrx60_ringdown050_objectives,skipped,no existing true wavefield GIF,,,0,0,
+1126,outputs/experiments/1126_coordinate_optimizer_variable_depth_radius_seed591286729879_target0_sources8_txrx60_ringdown050_objectives,skipped,no existing true wavefield GIF,,,0,0,
