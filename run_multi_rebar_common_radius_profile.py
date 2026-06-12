@@ -115,29 +115,81 @@ def build_variable_radius_model(
     )
 
 
-def build_scan_positions(scan_step, n_sources, tx_rx_offset_m=None):
+def _linear_receiver_indices(x_pos, tx_rx_offset_m):
+    """Return linear receiver interpolation indices for one scan position."""
+    rec_x = float(x_pos) + float(tx_rx_offset_m)
+    rec_cell = rec_x / cfg.DX
+    left_cell = int(np.floor(rec_cell))
+    weight_right = float(rec_cell - left_cell)
+    rec_ix_left = left_cell + cfg.NPML
+    rec_ix_right = rec_ix_left + 1
+    max_rec_ix = cfg.NX - cfg.NPML - 1
+
+    if rec_ix_left >= max_rec_ix:
+        return max_rec_ix, max_rec_ix, 0.0
+    if rec_ix_right > max_rec_ix:
+        return rec_ix_left, max_rec_ix, min(max(weight_right, 0.0), 1.0)
+    return rec_ix_left, rec_ix_right, min(max(weight_right, 0.0), 1.0)
+
+
+def build_scan_positions(
+    scan_step,
+    n_sources,
+    tx_rx_offset_m=None,
+    receiver_sampling="nearest",
+    scan_x_values_m=None,
+):
     """Build scan positions compatible with the single-rebar GPU CPML engine."""
     if tx_rx_offset_m is None:
         tx_rx_offset_m = cfg.TX_RX_OFFSET
     tx_rx_offset_m = float(tx_rx_offset_m)
     if tx_rx_offset_m < 0.0:
         raise ValueError("tx_rx_offset_m must be non-negative")
-    scan_x_all = np.arange(cfg.SCAN_START_X, cfg.SCAN_END_X + 1e-10, scan_step)
-    if n_sources is not None and n_sources < len(scan_x_all):
-        idx = np.linspace(0, len(scan_x_all) - 1, n_sources, dtype=int)
-        idx = np.unique(idx)
-        scan_x = scan_x_all[idx]
+    if receiver_sampling not in ("nearest", "linear"):
+        raise ValueError("receiver_sampling must be 'nearest' or 'linear'")
+    if scan_x_values_m is not None:
+        scan_x = np.asarray(scan_x_values_m, dtype=float)
+        if scan_x.size == 0:
+            raise ValueError("scan_x_values_m must contain at least one position")
+        if not np.all(np.isfinite(scan_x)):
+            raise ValueError("scan_x_values_m must be finite")
+        if np.any(np.diff(scan_x) <= 0.0):
+            raise ValueError("scan_x_values_m must be strictly increasing")
+        min_x = cfg.SCAN_START_X - 1e-12
+        max_x = cfg.SCAN_END_X + 1e-12
+        if scan_x[0] < min_x or scan_x[-1] > max_x:
+            raise ValueError("scan_x_values_m must stay within the scan domain")
     else:
-        scan_x = scan_x_all
+        scan_x_all = np.arange(cfg.SCAN_START_X, cfg.SCAN_END_X + 1e-10, scan_step)
+        if n_sources is not None and n_sources < len(scan_x_all):
+            idx = np.linspace(0, len(scan_x_all) - 1, n_sources, dtype=int)
+            idx = np.unique(idx)
+            scan_x = scan_x_all[idx]
+        else:
+            scan_x = scan_x_all
 
     src_iz = pos_to_index(cfg.TX_Z, cfg.DZ, cfg.NPML)
     rec_iz = pos_to_index(cfg.RX_Z, cfg.DZ, cfg.NPML)
     positions = []
     for x_pos in scan_x:
         src_ix = pos_to_index(x_pos, cfg.DX, cfg.NPML)
-        rec_ix = pos_to_index(x_pos + tx_rx_offset_m, cfg.DX, cfg.NPML)
-        rec_ix = min(rec_ix, cfg.NX - cfg.NPML - 1)
-        positions.append((src_iz, src_ix, rec_iz, rec_ix))
+        if receiver_sampling == "nearest":
+            rec_ix = pos_to_index(x_pos + tx_rx_offset_m, cfg.DX, cfg.NPML)
+            rec_ix = min(rec_ix, cfg.NX - cfg.NPML - 1)
+            positions.append((src_iz, src_ix, rec_iz, rec_ix))
+        else:
+            rec_ix_left, rec_ix_right, weight_right = _linear_receiver_indices(
+                x_pos,
+                tx_rx_offset_m,
+            )
+            positions.append((
+                src_iz,
+                src_ix,
+                rec_iz,
+                rec_ix_left,
+                rec_ix_right,
+                weight_right,
+            ))
     return positions, scan_x
 
 
@@ -158,7 +210,14 @@ def simulate_bscan(model, wavelet, scan_positions, backend):
         return sim.run_batch(wavelet, scan_positions)["bscan"]
 
     bscan = np.zeros((cfg.NT, len(scan_positions)), dtype=np.float64)
-    for i, (src_iz, src_ix, rec_iz, rec_ix) in enumerate(scan_positions):
+    for i, position in enumerate(scan_positions):
+        if len(position) == 4:
+            src_iz, src_ix, rec_iz, rec_ix = position
+        elif len(position) == 6:
+            src_iz, src_ix, rec_iz, rec_ix_left, rec_ix_right, weight_right = position
+            rec_ix = (rec_ix_left, rec_ix_right, weight_right)
+        else:
+            raise ValueError("scan positions must have 4 or 6 entries")
         result = sim.run(wavelet, src_iz, src_ix, rec_iz, rec_ix)
         bscan[:, i] = result["trace"]
     return bscan

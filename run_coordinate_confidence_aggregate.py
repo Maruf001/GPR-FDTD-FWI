@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 import sys
 from collections import Counter, defaultdict
@@ -35,17 +36,69 @@ LABEL_COLORS = {
     "missing": "#bdbdbd",
 }
 
+OPTIONAL_NUMERIC_ROW_FIELDS = (
+    "best_x_mm",
+    "best_z_mm",
+    "best_radius_mm",
+    "next_radius_mm",
+    "radius_margin_abs",
+    "radius_margin_rel",
+    "best_misfit",
+    "next_radius_misfit",
+    "competing_geometry_x_mm",
+    "competing_geometry_z_mm",
+    "competing_geometry_radius_mm",
+    "competing_geometry_misfit",
+    "source_frequency_scale",
+    "source_time_shift_ps",
+    "source_amplitude_scale",
+    "source_ringdown_scale",
+    "source_ringdown_delay_ps",
+    "source_ringdown_frequency_scale",
+    "source_primary_coefficient",
+    "source_ringdown_coefficient",
+    "ambiguity_misfit_threshold",
+    "ambiguity_x_min_mm",
+    "ambiguity_x_max_mm",
+    "ambiguity_z_min_mm",
+    "ambiguity_z_max_mm",
+    "ambiguity_radius_min_mm",
+    "ambiguity_radius_max_mm",
+)
+
 
 def _float_or_none(value):
     if value in ("", None):
         return None
-    return float(value)
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return None
+    return numeric if math.isfinite(numeric) else None
+
+
+def _format_optional_float(value, fmt=".3g"):
+    numeric = _float_or_none(value)
+    if numeric is None:
+        return "not_recorded"
+    return f"{numeric:{fmt}}"
+
+
+def _validated_default_tx_rx_offset(value):
+    if value is None:
+        return None
+    numeric = _float_or_none(value)
+    if numeric is None or numeric < 0.0:
+        raise ValueError("--default-missing-tx-rx-offset-mm must be a finite non-negative number")
+    return numeric
 
 
 def _exact_match(value, truth, tol=1.0e-9):
-    if value is None or truth is None:
+    numeric = _float_or_none(value)
+    truth_numeric = _float_or_none(truth)
+    if numeric is None or truth_numeric is None:
         return False
-    return abs(float(value) - float(truth)) <= tol
+    return abs(numeric - truth_numeric) <= tol
 
 
 def _interval_width(row, min_key, max_key):
@@ -57,36 +110,44 @@ def _interval_width(row, min_key, max_key):
 
 
 def _row_plot_label(row):
-    sources = row.get("sources")
+    sources = _float_or_none(row.get("sources"))
     source_prefix = "" if sources is None else f"s{int(sources)} "
-    tx_rx_offset = row.get("tx_rx_offset_mm")
-    offset_prefix = "" if tx_rx_offset is None else f"tx{float(tx_rx_offset):.3g} "
+    tx_rx_offset = _float_or_none(row.get("tx_rx_offset_mm"))
+    offset_prefix = "" if tx_rx_offset is None else f"tx{tx_rx_offset:.3g} "
     return f"{row['run_name']}\n{source_prefix}{offset_prefix}t{row['step_target_index']} {row['case_label']}"
 
 
 def _acquisition_key(row):
-    sources = row.get("sources")
-    tx_rx_offset = row.get("tx_rx_offset_mm")
+    sources = _float_or_none(row.get("sources"))
+    tx_rx_offset = _float_or_none(row.get("tx_rx_offset_mm"))
     if sources is None and tx_rx_offset is None:
         return None
     source_text = "sources=unknown" if sources is None else f"sources={int(sources)}"
     offset_text = (
         "tx_rx_offset_mm=not_recorded"
         if tx_rx_offset is None
-        else f"tx_rx_offset_mm={float(tx_rx_offset):.3g}"
+        else f"tx_rx_offset_mm={tx_rx_offset:.3g}"
     )
-    return f"{source_text}|{offset_text}"
+    tx_rx_source = row.get("tx_rx_offset_source")
+    source_suffix = (
+        ""
+        if tx_rx_source in (None, "summary", "missing")
+        else f"|tx_rx_offset_source={tx_rx_source}"
+    )
+    return f"{source_text}|{offset_text}{source_suffix}"
 
 
 def _acquisition_label(row):
-    sources = row.get("sources")
-    tx_rx_offset = row.get("tx_rx_offset_mm")
+    sources = _float_or_none(row.get("sources"))
+    tx_rx_offset = _float_or_none(row.get("tx_rx_offset_mm"))
     source_text = "sources not recorded" if sources is None else f"{int(sources)} sources"
     offset_text = (
         "Tx/Rx offset not recorded"
         if tx_rx_offset is None
-        else f"Tx/Rx offset {float(tx_rx_offset):.3g} mm"
+        else f"Tx/Rx offset {tx_rx_offset:.3g} mm"
     )
+    if row.get("tx_rx_offset_inferred"):
+        offset_text += " (filled default)"
     return f"{source_text}, {offset_text}"
 
 
@@ -96,17 +157,31 @@ def load_summary(path):
         return json.load(handle)
 
 
-def enrich_coordinate_rows(summary, summary_path=None):
+def enrich_coordinate_rows(summary, summary_path=None, default_missing_tx_rx_offset_mm=None):
     """Add truth/error fields to coordinate confidence rows."""
+    default_missing_tx_rx_offset_mm = _validated_default_tx_rx_offset(
+        default_missing_tx_rx_offset_mm
+    )
     truth_x = list(summary["true_x_values_mm"])
     truth_z = list(summary["true_z_values_mm"])
     truth_radii = summary.get("truth_radius_values_mm")
-    sources = summary.get("sources")
-    frequency_ghz = summary.get("frequency_ghz")
-    tx_rx_offset_mm = summary.get("tx_rx_offset_mm")
+    sources = _float_or_none(summary.get("sources"))
+    frequency_ghz = _float_or_none(summary.get("frequency_ghz"))
+    tx_rx_offset_mm = _float_or_none(summary.get("tx_rx_offset_mm"))
+    tx_rx_offset_inferred = False
+    tx_rx_offset_source = "summary"
+    if tx_rx_offset_mm is None:
+        tx_rx_offset_source = "missing"
+        if default_missing_tx_rx_offset_mm is not None:
+            tx_rx_offset_mm = default_missing_tx_rx_offset_mm
+            tx_rx_offset_inferred = True
+            tx_rx_offset_source = "default_missing"
     rows = []
     for row in summary.get("confidence_rows", []):
         enriched = dict(row)
+        for key in OPTIONAL_NUMERIC_ROW_FIELDS:
+            if key in enriched:
+                enriched[key] = _float_or_none(enriched.get(key))
         target_index = int(enriched["step_target_index"])
         best_x = _float_or_none(enriched.get("best_x_mm"))
         best_z = _float_or_none(enriched.get("best_z_mm"))
@@ -123,6 +198,8 @@ def enrich_coordinate_rows(summary, summary_path=None):
             "sources": sources,
             "frequency_ghz": frequency_ghz,
             "tx_rx_offset_mm": tx_rx_offset_mm,
+            "tx_rx_offset_inferred": tx_rx_offset_inferred,
+            "tx_rx_offset_source": tx_rx_offset_source,
             "truth_x_mm": target_truth_x,
             "truth_z_mm": target_truth_z,
             "truth_radius_mm": target_truth_r,
@@ -149,32 +226,39 @@ def enrich_coordinate_rows(summary, summary_path=None):
     return rows
 
 
+def _finite_values(rows, key):
+    values = []
+    for row in rows:
+        value = _float_or_none(row.get(key))
+        if value is not None:
+            values.append(value)
+    return values
+
+
+def _positive_value_count(rows, key):
+    count = 0
+    for row in rows:
+        value = _float_or_none(row.get(key))
+        if value is not None and value > 0.0:
+            count += 1
+    return count
+
+
+def _plot_value(value):
+    numeric = _float_or_none(value)
+    return 0.0 if numeric is None else numeric
+
+
 def aggregate_rows(rows):
     """Compute aggregate confidence and accuracy counts."""
     rows = list(rows)
     label_counts = Counter(row.get("confidence_label") for row in rows)
     warning_count = sum(1 for row in rows if row.get("fallback_warning"))
     exact_count = sum(1 for row in rows if row.get("is_truth_geometry"))
-    margins = [
-        float(row["radius_margin_abs"])
-        for row in rows
-        if row.get("radius_margin_abs") is not None
-    ]
-    ambiguity_x_widths = [
-        float(row["ambiguity_x_width_mm"])
-        for row in rows
-        if row.get("ambiguity_x_width_mm") is not None
-    ]
-    ambiguity_z_widths = [
-        float(row["ambiguity_z_width_mm"])
-        for row in rows
-        if row.get("ambiguity_z_width_mm") is not None
-    ]
-    ambiguity_radius_widths = [
-        float(row["ambiguity_radius_width_mm"])
-        for row in rows
-        if row.get("ambiguity_radius_width_mm") is not None
-    ]
+    margins = _finite_values(rows, "radius_margin_abs")
+    ambiguity_x_widths = _finite_values(rows, "ambiguity_x_width_mm")
+    ambiguity_z_widths = _finite_values(rows, "ambiguity_z_width_mm")
+    ambiguity_radius_widths = _finite_values(rows, "ambiguity_radius_width_mm")
     by_target = defaultdict(list)
     by_sources = defaultdict(list)
     by_acquisition = defaultdict(list)
@@ -188,11 +272,7 @@ def aggregate_rows(rows):
 
     target_summary = {}
     for target_index, target_rows in sorted(by_target.items()):
-        target_margins = [
-            float(row["radius_margin_abs"])
-            for row in target_rows
-            if row.get("radius_margin_abs") is not None
-        ]
+        target_margins = _finite_values(target_rows, "radius_margin_abs")
         target_summary[str(target_index)] = {
             "row_count": len(target_rows),
             "truth_geometry_count": sum(1 for row in target_rows if row.get("is_truth_geometry")),
@@ -201,28 +281,16 @@ def aggregate_rows(rows):
             "radius_margin_abs_min": None if not target_margins else min(target_margins),
             "radius_margin_abs_mean": None if not target_margins else sum(target_margins) / len(target_margins),
             "radius_margin_abs_max": None if not target_margins else max(target_margins),
-            "x_ambiguity_row_count": sum(
-                1 for row in target_rows
-                if row.get("ambiguity_x_width_mm") is not None
-                and float(row["ambiguity_x_width_mm"]) > 0.0
-            ),
+            "x_ambiguity_row_count": _positive_value_count(target_rows, "ambiguity_x_width_mm"),
         }
 
     source_summary = {}
     for sources, source_rows in sorted(by_sources.items()):
-        source_margins = [
-            float(row["radius_margin_abs"])
-            for row in source_rows
-            if row.get("radius_margin_abs") is not None
-        ]
+        source_margins = _finite_values(source_rows, "radius_margin_abs")
         source_summary[str(sources)] = {
             "row_count": len(source_rows),
             "truth_geometry_count": sum(1 for row in source_rows if row.get("is_truth_geometry")),
-            "x_ambiguity_row_count": sum(
-                1 for row in source_rows
-                if row.get("ambiguity_x_width_mm") is not None
-                and float(row["ambiguity_x_width_mm"]) > 0.0
-            ),
+            "x_ambiguity_row_count": _positive_value_count(source_rows, "ambiguity_x_width_mm"),
             "radius_margin_abs_min": None if not source_margins else min(source_margins),
             "radius_margin_abs_mean": (
                 None if not source_margins else sum(source_margins) / len(source_margins)
@@ -232,11 +300,7 @@ def aggregate_rows(rows):
 
     acquisition_summary = {}
     for acquisition_key, acquisition_rows in sorted(by_acquisition.items()):
-        acquisition_margins = [
-            float(row["radius_margin_abs"])
-            for row in acquisition_rows
-            if row.get("radius_margin_abs") is not None
-        ]
+        acquisition_margins = _finite_values(acquisition_rows, "radius_margin_abs")
         first = acquisition_rows[0]
         acquisition_summary[acquisition_key] = {
             "label": _acquisition_label(first),
@@ -244,11 +308,7 @@ def aggregate_rows(rows):
             "tx_rx_offset_mm": first.get("tx_rx_offset_mm"),
             "row_count": len(acquisition_rows),
             "truth_geometry_count": sum(1 for row in acquisition_rows if row.get("is_truth_geometry")),
-            "x_ambiguity_row_count": sum(
-                1 for row in acquisition_rows
-                if row.get("ambiguity_x_width_mm") is not None
-                and float(row["ambiguity_x_width_mm"]) > 0.0
-            ),
+            "x_ambiguity_row_count": _positive_value_count(acquisition_rows, "ambiguity_x_width_mm"),
             "radius_margin_abs_min": None if not acquisition_margins else min(acquisition_margins),
             "radius_margin_abs_mean": (
                 None if not acquisition_margins else sum(acquisition_margins) / len(acquisition_margins)
@@ -269,11 +329,7 @@ def aggregate_rows(rows):
         "ambiguity_radius_width_max_mm": (
             None if not ambiguity_radius_widths else max(ambiguity_radius_widths)
         ),
-        "x_ambiguity_row_count": sum(
-            1 for row in rows
-            if row.get("ambiguity_x_width_mm") is not None
-            and float(row["ambiguity_x_width_mm"]) > 0.0
-        ),
+        "x_ambiguity_row_count": _positive_value_count(rows, "ambiguity_x_width_mm"),
         "target_summary": target_summary,
         "source_summary": source_summary,
         "acquisition_summary": acquisition_summary,
@@ -298,10 +354,7 @@ def plot_coordinate_aggregate(rows, save_path):
     if not rows:
         raise ValueError("no rows to plot")
     labels = [_row_plot_label(row) for row in rows]
-    values = [
-        0.0 if row.get("radius_margin_abs") is None else float(row["radius_margin_abs"])
-        for row in rows
-    ]
+    values = [_plot_value(row.get("radius_margin_abs")) for row in rows]
     colors = [LABEL_COLORS.get(row.get("confidence_label"), "#7f7f7f") for row in rows]
     thresholds = ConfidenceThresholds()
     width = max(10.0, 0.72 * len(rows))
@@ -339,18 +392,9 @@ def plot_ambiguity_widths(rows, save_path):
     if not rows:
         raise ValueError("no rows to plot")
     labels = [_row_plot_label(row) for row in rows]
-    x_widths = [
-        0.0 if row.get("ambiguity_x_width_mm") is None else float(row["ambiguity_x_width_mm"])
-        for row in rows
-    ]
-    z_widths = [
-        0.0 if row.get("ambiguity_z_width_mm") is None else float(row["ambiguity_z_width_mm"])
-        for row in rows
-    ]
-    radius_widths = [
-        0.0 if row.get("ambiguity_radius_width_mm") is None else float(row["ambiguity_radius_width_mm"])
-        for row in rows
-    ]
+    x_widths = [_plot_value(row.get("ambiguity_x_width_mm")) for row in rows]
+    z_widths = [_plot_value(row.get("ambiguity_z_width_mm")) for row in rows]
+    radius_widths = [_plot_value(row.get("ambiguity_radius_width_mm")) for row in rows]
     width = max(10.0, 0.72 * len(rows))
     x_positions = list(range(len(rows)))
     bar_width = 0.25
@@ -447,9 +491,9 @@ def write_figure_notes(path, aggregate):
         "",
         f"Rows with nonzero x ambiguity: {aggregate.get('x_ambiguity_row_count', 0)}. "
         f"Maximum x/z/r ambiguity widths: "
-        f"{aggregate.get('ambiguity_x_width_max_mm')} / "
-        f"{aggregate.get('ambiguity_z_width_max_mm')} / "
-        f"{aggregate.get('ambiguity_radius_width_max_mm')} mm.",
+        f"{_format_optional_float(aggregate.get('ambiguity_x_width_max_mm'))} / "
+        f"{_format_optional_float(aggregate.get('ambiguity_z_width_max_mm'))} / "
+        f"{_format_optional_float(aggregate.get('ambiguity_radius_width_max_mm'))} mm.",
     ]
     Path(path).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -459,12 +503,30 @@ def main():
     parser.add_argument("summary_json", nargs="+", help="coordinate optimizer summary JSON paths")
     parser.add_argument("--run-name", default="coordinate_confidence_aggregate")
     parser.add_argument("--outdir", default=None)
+    parser.add_argument(
+        "--default-missing-tx-rx-offset-mm",
+        type=float,
+        default=None,
+        help=(
+            "Fill summaries that predate tx_rx_offset_mm with this explicit "
+            "Tx/Rx offset value. Rows are marked as inferred."
+        ),
+    )
     args = parser.parse_args()
+    default_missing_tx_rx_offset_mm = _validated_default_tx_rx_offset(
+        args.default_missing_tx_rx_offset_mm
+    )
 
     rows = []
     for summary_path in args.summary_json:
         summary = load_summary(summary_path)
-        rows.extend(enrich_coordinate_rows(summary, summary_path))
+        rows.extend(
+            enrich_coordinate_rows(
+                summary,
+                summary_path,
+                default_missing_tx_rx_offset_mm=default_missing_tx_rx_offset_mm,
+            )
+        )
     aggregate = aggregate_rows(rows)
 
     outdir = allocate_output_dir(args.outdir, args.run_name)
@@ -486,6 +548,7 @@ def main():
     report = {
         "run_name": args.run_name,
         "input_summary_json": args.summary_json,
+        "default_missing_tx_rx_offset_mm": default_missing_tx_rx_offset_mm,
         "aggregate": aggregate,
         "rows": rows,
         "paths": {
@@ -508,6 +571,7 @@ def main():
             "plot": plot_path,
             "ambiguity_plot": ambiguity_plot_path,
             "figure_notes": notes_path,
+            "default_missing_tx_rx_offset_mm": default_missing_tx_rx_offset_mm,
         },
     )
     print(json.dumps(aggregate, indent=2))

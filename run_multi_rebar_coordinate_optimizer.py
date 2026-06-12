@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 import sys
 import time
@@ -27,6 +28,7 @@ from core.run_outputs import allocate_output_dir, write_run_manifest  # noqa: E4
 from core.source import generate_time_array  # noqa: E402
 from inversion.adjoint import _build_mute_window  # noqa: E402
 from inversion.candidate_confidence import (  # noqa: E402
+    ConfidenceThresholds,
     summarize_case_confidence,
     write_confidence_csv,
 )
@@ -45,6 +47,10 @@ from run_multi_rebar_common_radius_profile import (  # noqa: E402
     build_scan_positions,
     default_rebar_x_values_mm,
     default_rebar_z_values_mm,
+)
+from run_experiment_scene_visualization import (  # noqa: E402
+    scene_from_summary,
+    write_scene_artifacts,
 )
 from run_multi_rebar_local_geometry_profile import (  # noqa: E402
     best_curve_by_radius,
@@ -106,6 +112,16 @@ def truth_radius_values_for_run(common_radius_mm, radius_values_mm, target_count
     if len(values) != int(target_count):
         raise ValueError("truth radius values must match truth x/z value count")
     return values
+
+
+def summary_truth_radius_mm(common_radius_mm, truth_radii_mm, target_indices):
+    """Return the scalar truth radius that best represents this optimizer run."""
+    targets = [int(value) for value in target_indices]
+    if len(targets) == 1:
+        target = targets[0]
+        if 0 <= target < len(truth_radii_mm):
+            return float(truth_radii_mm[target])
+    return float(common_radius_mm)
 
 
 def results_from_candidates(candidates, case_labels, top_k):
@@ -407,43 +423,460 @@ def write_state_csv(path, state_history):
             })
 
 
-def plot_coordinate_margins(rows, save_path):
+def _float_or_none(value):
+    if value in ("", None):
+        return None
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return None
+    return numeric if math.isfinite(numeric) else None
+
+
+def _int_or_none(value):
+    numeric = _float_or_none(value)
+    if numeric is None:
+        return None
+    return int(numeric)
+
+
+def _short_case_label(label):
+    text = str(label or "case")
+    replacements = [
+        ("source_mismatch_ringdown050_noise10_", "noise10 "),
+        ("source_mismatch_ringdown025_noise10_", "noise10 "),
+        ("source_mismatch_", ""),
+        ("ringdown050_", ""),
+    ]
+    for old, new in replacements:
+        text = text.replace(old, new)
+    return text if len(text) <= 38 else text[:35] + "..."
+
+
+def _step_label(row, include_case=True):
+    pass_index = _int_or_none(row.get("pass_index"))
+    target_index = _int_or_none(row.get("step_target_index"))
+    prefix = f"p{pass_index if pass_index is not None else '?'} "
+    prefix += f"t{target_index if target_index is not None else '?'}"
+    if not include_case:
+        return prefix
+    return f"{prefix}\n{_short_case_label(row.get('case_label'))}"
+
+
+def _confidence_color(label):
+    return {
+        "strong": "#1b7837",
+        "moderate": "#4575b4",
+        "weak": "#d73027",
+        "ambiguous": "#7f7f7f",
+        "missing": "#8c8c8c",
+    }.get(str(label), "#8c8c8c")
+
+
+def _objective_sort_key(label):
+    order = {
+        "base": 0,
+        "highband": 1,
+        "late": 2,
+        "late_high": 3,
+        "veryhigh": 4,
+        "early_high": 5,
+    }
+    return (order.get(str(label), 100), str(label))
+
+
+def _format_mm(value):
+    numeric = _float_or_none(value)
+    return "n/a" if numeric is None else f"{numeric:.2f} mm"
+
+
+def _format_scientific(value):
+    numeric = _float_or_none(value)
+    return "n/a" if numeric is None else f"{numeric:.3e}"
+
+
+def _updated_case_rows(rows):
+    selected = [
+        row for row in rows
+        if row.get("case_label") == row.get("update_case_label")
+    ]
+    return selected or list(rows)
+
+
+def _candidate_radius_limits(rows):
+    values = []
+    for row in rows:
+        for key in ("best_radius_mm", "next_radius_mm", "competing_geometry_radius_mm", "radius_mm"):
+            value = _float_or_none(row.get(key))
+            if value is not None:
+                values.append(value)
+    if not values:
+        return 0.0, 1.0
+    lo = min(values)
+    hi = max(values)
+    if lo == hi:
+        return lo - 0.5, hi + 0.5
+    pad = max(0.2, 0.12 * (hi - lo))
+    return lo - pad, hi + pad
+
+
+def plot_coordinate_margins(rows, save_path, thresholds=None):
     """Plot confidence margins for coordinate-search update rows."""
     if not rows:
         raise ValueError("no confidence rows to plot")
-    labels = [
-        f"p{row['pass_index']} t{row['step_target_index']}\n{row['case_label']}"
-        for row in rows
-    ]
+    thresholds = thresholds or ConfidenceThresholds()
+    labels = [_step_label(row) for row in rows]
     values = [
-        0.0 if row["radius_margin_abs"] is None else float(row["radius_margin_abs"])
+        0.0 if _float_or_none(row.get("radius_margin_abs")) is None
+        else _float_or_none(row.get("radius_margin_abs"))
         for row in rows
     ]
-    colors = [
-        "#4575b4" if row["confidence_label"] == "moderate"
-        else "#1b7837" if row["confidence_label"] == "strong"
-        else "#d73027" if row["confidence_label"] == "weak"
-        else "#7f7f7f"
-        for row in rows
-    ]
-    width = max(9.0, 0.65 * len(rows))
-    fig, ax = plt.subplots(figsize=(width, 5.2), constrained_layout=True)
-    ax.bar(range(len(rows)), values, color=colors, edgecolor="#333333", linewidth=0.5)
-    ax.set_title("Coordinate Optimizer Radius Confidence")
-    ax.set_ylabel("Best-vs-next-radius objective gap")
-    ax.set_xticks(range(len(rows)))
-    ax.set_xticklabels(labels, rotation=35, ha="right", fontsize=8)
-    ax.grid(True, axis="y", alpha=0.25)
-    ymax = max(max(values) * 1.25, 1.0e-3)
-    ax.set_ylim(0.0, ymax)
+    colors = [_confidence_color(row.get("confidence_label")) for row in rows]
+    height = max(3.8, 0.42 * len(rows) + 2.4)
+    with plt.style.context("seaborn-v0_8-whitegrid"):
+        fig, ax = plt.subplots(figsize=(10.5, height), constrained_layout=True)
+        y_positions = np.arange(len(rows))
+        ax.barh(y_positions, values, color=colors, edgecolor="#333333", linewidth=0.5)
+        ax.axvline(
+            thresholds.moderate_abs,
+            color="#111111",
+            linestyle="--",
+            linewidth=1.1,
+            label=f"moderate cutoff {thresholds.moderate_abs:.1e}",
+        )
+        for y_pos, row, value in zip(y_positions, rows, values):
+            best = _format_mm(row.get("best_radius_mm"))
+            next_radius = _format_mm(row.get("next_radius_mm"))
+            ax.text(
+                value + max(thresholds.moderate_abs * 0.035, 1.0e-6),
+                y_pos,
+                f"{row.get('confidence_label', 'unknown')} | best {best}, next {next_radius}",
+                va="center",
+                fontsize=8,
+                color="#222222",
+            )
+        ax.set_title("Coordinate Optimizer Radius Confidence")
+        ax.set_xlabel("Best-vs-next-radius objective gap")
+        ax.set_yticks(y_positions)
+        ax.set_yticklabels(labels, fontsize=8)
+        ax.invert_yaxis()
+        ax.grid(True, axis="x", alpha=0.25)
+        xmax = max(max(values) * 1.35, thresholds.moderate_abs * 1.6, 1.0e-3)
+        ax.set_xlim(0.0, xmax)
+        ax.legend(loc="lower right", fontsize=8, frameon=True)
     save_validated_figure(fig, save_path)
     plt.close(fig)
 
 
-def write_coordinate_figure_notes(path, rows):
+def plot_coordinate_radius_decision_panel(
+        rows,
+        objective_rows,
+        save_path,
+        thresholds=None):
+    """Plot a standalone radius-decision summary for coordinate-search rows."""
+    update_rows = _updated_case_rows(rows)
+    if not update_rows:
+        raise ValueError("no update confidence rows to plot")
+    thresholds = thresholds or ConfidenceThresholds()
+    objective_rows = list(objective_rows or [])
+
+    with plt.style.context("seaborn-v0_8-whitegrid"):
+        fig = plt.figure(figsize=(12.4, 9.2), constrained_layout=True)
+        grid = fig.add_gridspec(3, 1, height_ratios=[1.1, 1.0, 1.35])
+        ax_radius = fig.add_subplot(grid[0, 0])
+        ax_margin = fig.add_subplot(grid[1, 0])
+        ax_objectives = fig.add_subplot(grid[2, 0])
+
+        y_positions = np.arange(len(update_rows))
+        for y_pos, row in zip(y_positions, update_rows):
+            best_radius = _float_or_none(row.get("best_radius_mm"))
+            next_radius = _float_or_none(row.get("next_radius_mm"))
+            color = _confidence_color(row.get("confidence_label"))
+            if best_radius is not None and next_radius is not None:
+                ax_radius.plot(
+                    [best_radius, next_radius],
+                    [y_pos, y_pos],
+                    color="#9ca3af",
+                    linewidth=2.0,
+                    zorder=1,
+                )
+            if best_radius is not None:
+                ax_radius.scatter(
+                    [best_radius],
+                    [y_pos],
+                    s=180,
+                    color=color,
+                    edgecolor="white",
+                    linewidth=1.2,
+                    zorder=3,
+                    label="selected radius" if y_pos == 0 else None,
+                )
+                ax_radius.text(
+                    best_radius,
+                    y_pos + 0.19,
+                    f"selected\nr={best_radius:.2f}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=8,
+                    color="#111111",
+                )
+            if next_radius is not None:
+                ax_radius.scatter(
+                    [next_radius],
+                    [y_pos],
+                    s=130,
+                    facecolor="white",
+                    edgecolor="#4b5563",
+                    linewidth=1.5,
+                    zorder=2,
+                    label="next radius" if y_pos == 0 else None,
+                )
+                ax_radius.text(
+                    next_radius,
+                    y_pos - 0.19,
+                    f"next\nr={next_radius:.2f}",
+                    ha="center",
+                    va="top",
+                    fontsize=8,
+                    color="#374151",
+                )
+            comp_radius = _float_or_none(row.get("competing_geometry_radius_mm"))
+            comp_z = _float_or_none(row.get("competing_geometry_z_mm"))
+            if comp_radius is not None:
+                ax_radius.scatter(
+                    [comp_radius],
+                    [y_pos],
+                    marker="D",
+                    s=72,
+                    facecolor="#facc15",
+                    edgecolor="#92400e",
+                    linewidth=1.0,
+                    zorder=4,
+                    label="next x/z geometry" if y_pos == 0 else None,
+                )
+                suffix = "" if comp_z is None else f", z={comp_z:.0f}"
+                ax_radius.text(
+                    comp_radius,
+                    y_pos + 0.36,
+                    f"geom r={comp_radius:.2f}{suffix}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=7.5,
+                    color="#78350f",
+                )
+
+        ax_radius.set_title(
+            "Coordinate Radius Decision: Selected vs Closest Competitors",
+            pad=14,
+        )
+        ax_radius.set_xlabel("Radius candidate (mm)")
+        ax_radius.set_yticks(y_positions)
+        ax_radius.set_yticklabels([_step_label(row) for row in update_rows], fontsize=8)
+        ax_radius.set_xlim(*_candidate_radius_limits(update_rows))
+        ax_radius.set_ylim(len(update_rows) - 0.45, -0.55)
+        ax_radius.legend(loc="best", fontsize=8, frameon=True)
+
+        deltas = [
+            (_float_or_none(row.get("radius_margin_abs")) or 0.0) - thresholds.moderate_abs
+            for row in update_rows
+        ]
+        margin_colors = [
+            "#1b7837" if delta >= 0.0 else "#d73027"
+            for delta in deltas
+        ]
+        ax_margin.axvline(0.0, color="#111111", linestyle="--", linewidth=1.1)
+        ax_margin.barh(y_positions, deltas, color=margin_colors, edgecolor="#333333", linewidth=0.5)
+        for y_pos, row, delta in zip(y_positions, update_rows, deltas):
+            margin = _float_or_none(row.get("radius_margin_abs"))
+            label = "above" if delta >= 0.0 else "below"
+            place_inside_negative = (
+                delta < 0.0
+                and abs(delta) >= thresholds.moderate_abs * 0.18
+            )
+            if place_inside_negative:
+                text_x = delta * 0.5
+                ha = "center"
+                text_color = "white"
+            elif delta < 0.0:
+                text_x = max(thresholds.moderate_abs * 0.012, 4.0e-6)
+                ha = "left"
+                text_color = "#222222"
+            else:
+                text_x = delta + max(abs(delta) * 0.08, 4.0e-6)
+                ha = "left"
+                text_color = "#222222"
+            ax_margin.text(
+                text_x,
+                y_pos,
+                f"margin={_format_scientific(margin)} ({abs(delta):.2e} {label} cutoff)",
+                va="center",
+                ha=ha,
+                fontsize=8,
+                color=text_color,
+            )
+        span = max(max(abs(delta) for delta in deltas), thresholds.moderate_abs * 0.16)
+        ax_margin.set_xlim(-span * 1.45, span * 1.45)
+        ax_margin.set_title("Confidence Margin Relative to Cutoff")
+        ax_margin.set_xlabel("radius_margin_abs - 5e-4")
+        ax_margin.set_yticks(y_positions)
+        ax_margin.set_yticklabels([_step_label(row, include_case=False) for row in update_rows], fontsize=8)
+        ax_margin.set_ylim(len(update_rows) - 0.45, -0.55)
+
+        if objective_rows:
+            filtered = [
+                row for row in objective_rows
+                if row.get("case_label") == update_rows[0].get("update_case_label")
+            ] or objective_rows
+            filtered = sorted(filtered, key=lambda row: _objective_sort_key(row.get("objective_label")))
+            objective_labels = [str(row.get("objective_label", "objective")) for row in filtered]
+            objective_values = [_float_or_none(row.get("radius_margin_abs")) or 0.0 for row in filtered]
+            objective_colors = [
+                "#2ca25f" if value >= thresholds.moderate_abs else "#de2d26"
+                for value in objective_values
+            ]
+            objective_y = np.arange(len(filtered))
+            ax_objectives.barh(
+                objective_y,
+                objective_values,
+                color=objective_colors,
+                edgecolor="#333333",
+                linewidth=0.5,
+            )
+            ax_objectives.axvline(
+                thresholds.moderate_abs,
+                color="#111111",
+                linestyle="--",
+                linewidth=1.1,
+                label="moderate cutoff",
+            )
+            for y_pos, row, value in zip(objective_y, filtered, objective_values):
+                best = _float_or_none(row.get("best_radius_mm"))
+                next_radius = _float_or_none(row.get("next_radius_mm"))
+                ax_objectives.text(
+                    value + max(thresholds.moderate_abs * 0.035, 1.0e-6),
+                    y_pos,
+                    f"best r={best:.2f}, next r={next_radius:.2f}"
+                    if best is not None and next_radius is not None
+                    else "radius pair n/a",
+                    va="center",
+                    fontsize=8,
+                    color="#222222",
+                )
+            ax_objectives.set_yticks(objective_y)
+            ax_objectives.set_yticklabels(objective_labels, fontsize=8)
+            ax_objectives.set_xlim(
+                0.0,
+                max(max(objective_values) * 1.35, thresholds.moderate_abs * 1.7),
+            )
+            ax_objectives.invert_yaxis()
+            ax_objectives.legend(loc="lower right", fontsize=8, frameon=True)
+        else:
+            ax_objectives.text(
+                0.5,
+                0.5,
+                "No objective-variant diagnostic rows were written for this run.",
+                transform=ax_objectives.transAxes,
+                ha="center",
+                va="center",
+                fontsize=10,
+            )
+            ax_objectives.set_xticks([])
+            ax_objectives.set_yticks([])
+        ax_objectives.set_title("Objective-Variant Radius Margins")
+        ax_objectives.set_xlabel("Best-vs-next-radius objective gap")
+
+    save_validated_figure(fig, save_path)
+    plt.close(fig)
+
+
+def plot_coordinate_objective_radius_candidates(rows, save_path, max_rank=6):
+    """Plot top ranked radius candidates for each objective variant."""
+    candidate_rows = [
+        row for row in rows
+        if (_int_or_none(row.get("rank")) or 0) <= int(max_rank)
+    ]
+    if not candidate_rows:
+        raise ValueError("no objective top-candidate rows to plot")
+
+    objective_labels = sorted(
+        {str(row.get("objective_label", "objective")) for row in candidate_rows},
+        key=_objective_sort_key,
+    )
+    y_by_objective = {label: idx for idx, label in enumerate(objective_labels)}
+    radii = [
+        _float_or_none(row.get("radius_mm"))
+        for row in candidate_rows
+        if _float_or_none(row.get("radius_mm")) is not None
+    ]
+    vmin, vmax = _candidate_radius_limits([{"radius_mm": value} for value in radii])
+
+    with plt.style.context("seaborn-v0_8-whitegrid"):
+        fig, ax = plt.subplots(
+            figsize=(11.8, max(4.8, 0.62 * len(objective_labels) + 2.2)),
+            constrained_layout=True,
+        )
+        xs = []
+        ys = []
+        cs = []
+        sizes = []
+        labels = []
+        for row in candidate_rows:
+            rank = _int_or_none(row.get("rank"))
+            objective = str(row.get("objective_label", "objective"))
+            radius = _float_or_none(row.get("radius_mm"))
+            z_mm = _float_or_none(row.get("z_mm"))
+            if rank is None or radius is None:
+                continue
+            xs.append(rank)
+            ys.append(y_by_objective[objective])
+            cs.append(radius)
+            sizes.append(max(45.0, 180.0 - 18.0 * rank))
+            if rank <= 3:
+                labels.append((rank, y_by_objective[objective], radius, z_mm))
+
+        scatter = ax.scatter(
+            xs,
+            ys,
+            c=cs,
+            cmap="viridis",
+            vmin=vmin,
+            vmax=vmax,
+            s=sizes,
+            edgecolor="#222222",
+            linewidth=0.45,
+            alpha=0.92,
+        )
+        for rank, y_pos, radius, z_mm in labels:
+            z_text = "" if z_mm is None else f"\nz={z_mm:.0f}"
+            ax.text(
+                rank + 0.08,
+                y_pos,
+                f"r={radius:.2f}{z_text}",
+                va="center",
+                ha="left",
+                fontsize=7.2,
+                color="#111111",
+            )
+        ax.set_title("Objective-Variant Top Radius Candidates")
+        ax.set_xlabel("Candidate rank within each objective (1 = best)")
+        ax.set_ylabel("Objective variant")
+        ax.set_xticks(range(1, int(max_rank) + 1))
+        ax.set_yticks(range(len(objective_labels)))
+        ax.set_yticklabels(objective_labels, fontsize=8)
+        ax.set_xlim(0.65, int(max_rank) + 0.85)
+        ax.set_ylim(len(objective_labels) - 0.55, -0.55)
+        colorbar = fig.colorbar(scatter, ax=ax, pad=0.01)
+        colorbar.set_label("candidate radius (mm)")
+    save_validated_figure(fig, save_path)
+    plt.close(fig)
+
+
+def write_coordinate_figure_notes(path, rows, objective_rows=None, top_candidate_rows=None):
     """Write plain-language notes for coordinate optimizer figures."""
     if not rows:
         raise ValueError("no confidence rows to describe")
+    objective_rows = list(objective_rows or [])
+    top_candidate_rows = list(top_candidate_rows or [])
     labels = sorted({row.get("confidence_label", "unknown") for row in rows})
     counts = {
         label: sum(row.get("confidence_label") == label for row in rows)
@@ -482,7 +915,20 @@ def write_coordinate_figure_notes(path, rows):
     lines = [
         "# Figure Notes",
         "",
-        "## 1. `coordinate_confidence_margins.png` - coordinate-update radius confidence",
+        "## 1. `coordinate_radius_decision_panel.png` - radius decision context",
+        "",
+        "This is the primary figure for a coordinate-optimizer run. It shows the",
+        "selected radius next to the closest competing radius, the margin relative",
+        "to the moderate-confidence cutoff, and the objective-variant margins.",
+        "It is intended to answer three questions directly: which radius won, what",
+        "radius nearly won, and whether the decision clears the cutoff.",
+        "",
+        "Markers in the first panel use filled circles for the selected radius,",
+        "open circles for the next distinct-radius candidate, and diamonds for",
+        "the next candidate that changes x/z geometry when such a competitor",
+        "exists.",
+        "",
+        "## 2. `coordinate_confidence_margins.png` - legacy confidence margins",
         "",
         "This figure shows the best-versus-next-radius objective gap for each",
         "coordinate-search step and observed case. Larger bars mean the chosen",
@@ -501,6 +947,32 @@ def write_coordinate_figure_notes(path, rows):
         "",
         f"Broad radius-ambiguity rows to inspect first: {broad_text}.",
     ]
+    if top_candidate_rows:
+        lines.extend([
+            "",
+            "## 3. `coordinate_objective_radius_candidates.png` - ranked radius candidates",
+            "",
+            "This figure shows the top ranked candidate radii for each diagnostic",
+            "objective variant. The x-axis is candidate rank, marker color is the",
+            "candidate radius in millimeters, and the first three ranks are labeled",
+            "with radius and depth. Use it to see whether the objectives agree on",
+            "the same point radius or are split across nearby alternatives.",
+            "",
+            f"Top-candidate rows included: {len(top_candidate_rows)}.",
+        ])
+    if objective_rows:
+        below = [
+            row for row in objective_rows
+            if (_float_or_none(row.get("radius_margin_abs")) or 0.0) < ConfidenceThresholds().moderate_abs
+        ]
+        if below:
+            below_text = ", ".join(str(row.get("objective_label")) for row in below)
+        else:
+            below_text = "none"
+        lines.extend([
+            "",
+            f"Objective variants below moderate cutoff: {below_text}.",
+        ])
     with open(path, "w", encoding="utf-8") as handle:
         handle.write("\n".join(lines) + "\n")
 
@@ -510,7 +982,9 @@ def main():
     parser.add_argument("--backend", choices=["cpu", "gpu-cpml"], default="gpu-cpml")
     parser.add_argument("--grid-step-mm", type=float, default=1.0)
     parser.add_argument("--sources", type=int, default=5)
+    parser.add_argument("--scan-x-values-mm", type=parse_vector_mm, default=None)
     parser.add_argument("--tx-rx-offset-mm", type=float, default=cfg.TX_RX_OFFSET * 1000.0)
+    parser.add_argument("--receiver-sampling", choices=["nearest", "linear"], default="nearest")
     parser.add_argument("--frequency-ghz", type=float, default=1.5)
     parser.add_argument("--true-x-values-mm", type=parse_vector_mm, default=default_rebar_x_values_mm())
     parser.add_argument("--true-z-values-mm", type=parse_vector_mm, default=default_rebar_z_values_mm())
@@ -584,11 +1058,17 @@ def main():
     frequency_hz = args.frequency_ghz * 1e9
     time_values = generate_time_array(cfg.NT, cfg.DT)
     mute = _build_mute_window(cfg.NT, cfg.DT)
+    scan_x_values_m = None
+    if args.scan_x_values_mm is not None:
+        scan_x_values_m = [value / 1000.0 for value in args.scan_x_values_mm]
     scan_positions, scan_x = build_scan_positions(
         cfg.INVERSION_SCAN_STEP,
         args.sources,
         tx_rx_offset_m=args.tx_rx_offset_mm / 1000.0,
+        receiver_sampling=args.receiver_sampling,
+        scan_x_values_m=scan_x_values_m,
     )
+    source_count = len(scan_x)
     observed_by_case, case_metadata = build_observed_cases(
         true_model,
         time_values,
@@ -902,6 +1382,11 @@ def main():
     )
     state_csv = os.path.join(data_dir, "coordinate_state_history.csv")
     plot_path = os.path.join(figures_dir, "coordinate_confidence_margins.png")
+    decision_plot_path = os.path.join(figures_dir, "coordinate_radius_decision_panel.png")
+    objective_candidate_plot_path = os.path.join(
+        figures_dir,
+        "coordinate_objective_radius_candidates.png",
+    )
     notes_path = os.path.join(figures_dir, "FIGURE_NOTES.md")
     write_confidence_csv(confidence_rows, confidence_csv)
     if objective_diagnostic_rows:
@@ -910,19 +1395,39 @@ def main():
         write_objective_top_candidate_csv(objective_top_candidate_csv, objective_top_candidate_rows)
     write_state_csv(state_csv, state_history)
     plot_coordinate_margins(confidence_rows, plot_path)
-    write_coordinate_figure_notes(notes_path, confidence_rows)
+    plot_coordinate_radius_decision_panel(
+        confidence_rows,
+        objective_diagnostic_rows,
+        decision_plot_path,
+    )
+    if objective_top_candidate_rows:
+        plot_coordinate_objective_radius_candidates(
+            objective_top_candidate_rows,
+            objective_candidate_plot_path,
+        )
+    write_coordinate_figure_notes(
+        notes_path,
+        confidence_rows,
+        objective_diagnostic_rows,
+        objective_top_candidate_rows,
+    )
 
     summary = {
         "run_name": args.run_name,
         "backend": args.backend,
         "grid_step_mm": args.grid_step_mm,
-        "sources": args.sources,
+        "sources": source_count,
         "tx_rx_offset_mm": args.tx_rx_offset_mm,
+        "receiver_sampling": args.receiver_sampling,
         "scan_x_values_mm": [float(value * 1000.0) for value in scan_x],
         "frequency_ghz": args.frequency_ghz,
         "true_x_values_mm": args.true_x_values_mm,
         "true_z_values_mm": args.true_z_values_mm,
-        "truth_radius_mm": args.truth_radius_mm,
+        "truth_radius_mm": summary_truth_radius_mm(
+            args.truth_radius_mm,
+            true_radii,
+            args.target_indices,
+        ),
         "truth_radius_values_mm": true_radii,
         "initial_state": initial_state.as_dict(),
         "final_state": state.as_dict(),
@@ -961,9 +1466,24 @@ def main():
             ),
             "state_csv": state_csv,
             "confidence_plot": plot_path,
+            "radius_decision_plot": decision_plot_path,
+            "objective_radius_candidate_plot": (
+                objective_candidate_plot_path if objective_top_candidate_rows else None
+            ),
             "figure_notes": notes_path,
         },
     }
+    scene_artifacts = write_scene_artifacts(
+        scene_from_summary(summary),
+        outdir,
+        title=f"{args.run_name} scene",
+    )
+    summary["paths"].update({
+        "scene_geometry_plot": scene_artifacts["figure"],
+        "scene_geometry_summary": scene_artifacts["summary"],
+    })
+    summary["scene_geometry_validation"] = scene_artifacts["validation"]
+
     summary_path = os.path.join(data_dir, "multi_rebar_coordinate_optimizer_summary.json")
     with open(summary_path, "w", encoding="utf-8") as handle:
         json.dump(summary, handle, indent=2)
@@ -982,6 +1502,12 @@ def main():
             ),
             "state_csv": state_csv,
             "confidence_plot": plot_path,
+            "radius_decision_plot": decision_plot_path,
+            "objective_radius_candidate_plot": (
+                objective_candidate_plot_path if objective_top_candidate_rows else None
+            ),
+            "scene_geometry_plot": scene_artifacts["figure"],
+            "scene_geometry_summary": scene_artifacts["summary"],
             "figure_notes": notes_path,
         },
     )
@@ -991,6 +1517,10 @@ def main():
     if objective_top_candidate_rows:
         print(f"Wrote objective top-candidate CSV: {objective_top_candidate_csv}")
     print(f"Wrote plot: {plot_path}")
+    print(f"Wrote decision plot: {decision_plot_path}")
+    if objective_top_candidate_rows:
+        print(f"Wrote objective candidate plot: {objective_candidate_plot_path}")
+    print(f"Wrote scene geometry plot: {scene_artifacts['figure']}")
 
 
 if __name__ == "__main__":

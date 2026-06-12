@@ -1,0 +1,5335 @@
+{
+  "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+  "backend": "gpu-cpml",
+  "grid_step_mm": 1.0,
+  "sources": 5,
+  "tx_rx_offset_mm": 60.0,
+  "receiver_sampling": "nearest",
+  "scan_x_values_mm": [
+    50.0,
+    146.00000000000003,
+    250.0,
+    346.0,
+    450.0
+  ],
+  "frequency_ghz": 1.5,
+  "true_x_values_mm": [
+    150.0,
+    250.0,
+    350.0
+  ],
+  "true_z_values_mm": [
+    80.0,
+    100.0,
+    120.0
+  ],
+  "truth_radius_mm": 6.0,
+  "truth_radius_values_mm": [
+    5.0,
+    6.0,
+    8.0
+  ],
+  "initial_state": {
+    "x_values_mm": [
+      150.0,
+      250.0,
+      350.0
+    ],
+    "z_values_mm": [
+      80.0,
+      100.0,
+      120.0
+    ],
+    "radii_mm": [
+      5.0,
+      6.0,
+      8.0
+    ]
+  },
+  "final_state": {
+    "x_values_mm": [
+      150.0,
+      250.0,
+      350.0
+    ],
+    "z_values_mm": [
+      80.0,
+      100.0,
+      120.0
+    ],
+    "radii_mm": [
+      5.0,
+      6.0,
+      8.0
+    ]
+  },
+  "target_indices": [
+    1
+  ],
+  "passes": 1,
+  "x_offsets_mm": [
+    0.0
+  ],
+  "z_offsets_mm": [
+    0.0,
+    1.0
+  ],
+  "radius_offsets_mm": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25
+  ],
+  "replication_cases": [
+    {
+      "label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "frequency_scale": 1.1,
+      "time_shift_ps": -50.0,
+      "amplitude_scale": 1.1,
+      "noise_fraction": 0.1,
+      "noise_seed": 3524578,
+      "ringdown_scale": 0.5,
+      "ringdown_delay_ps": 180.0,
+      "ringdown_frequency_scale": 0.8
+    }
+  ],
+  "case_metadata": {
+    "source_mismatch_ringdown050_noise10_seed3524578": {
+      "label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "frequency_scale": 1.1,
+      "time_shift_ps": -50.0,
+      "amplitude_scale": 1.1,
+      "noise_fraction": 0.1,
+      "noise_seed": 3524578,
+      "ringdown_scale": 0.5,
+      "ringdown_delay_ps": 180.0,
+      "ringdown_frequency_scale": 0.8,
+      "noise": {
+        "rms_fraction": 0.1,
+        "seed": 3524578,
+        "clean_rms": 0.000517926970358516,
+        "noise_std": 5.1792697035851606e-05,
+        "actual_noise_rms": 5.2204525526974656e-05
+      }
+    }
+  },
+  "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+  "source_profile_grid": {
+    "frequency_scales": [
+      0.9,
+      1.0,
+      1.1
+    ],
+    "time_shift_ps_values": [
+      -50.0,
+      0.0,
+      50.0
+    ],
+    "fit_amplitude": true,
+    "fit_ringdown_coefficient": true,
+    "ringdown_delay_ps": 180.0,
+    "ringdown_frequency_scale": 0.8
+  },
+  "diagnostic_objective_variants": [
+    {
+      "label": "base",
+      "t_start_ns": 1.0,
+      "t_end_ns": 7.000000000000001,
+      "taper_ns": 0.3,
+      "low_ghz": null,
+      "high_ghz": null,
+      "band_taper_ghz": 0.0
+    },
+    {
+      "label": "highband",
+      "t_start_ns": 1.0,
+      "t_end_ns": 7.000000000000001,
+      "taper_ns": 0.3,
+      "low_ghz": 1.1,
+      "high_ghz": 3.4,
+      "band_taper_ghz": 0.15
+    },
+    {
+      "label": "late",
+      "t_start_ns": 1.5000000000000002,
+      "t_end_ns": 5.500000000000001,
+      "taper_ns": 0.20000000000000004,
+      "low_ghz": null,
+      "high_ghz": null,
+      "band_taper_ghz": 0.0
+    },
+    {
+      "label": "late_high",
+      "t_start_ns": 1.5000000000000002,
+      "t_end_ns": 5.500000000000001,
+      "taper_ns": 0.20000000000000004,
+      "low_ghz": 1.1,
+      "high_ghz": 3.4,
+      "band_taper_ghz": 0.15
+    },
+    {
+      "label": "veryhigh",
+      "t_start_ns": 1.0,
+      "t_end_ns": 7.000000000000001,
+      "taper_ns": 0.3,
+      "low_ghz": 1.8,
+      "high_ghz": 4.2,
+      "band_taper_ghz": 0.15
+    },
+    {
+      "label": "early_high",
+      "t_start_ns": 0.8000000000000002,
+      "t_end_ns": 3.5000000000000004,
+      "taper_ns": 0.20000000000000004,
+      "low_ghz": 1.1,
+      "high_ghz": 3.4,
+      "band_taper_ghz": 0.15
+    }
+  ],
+  "elapsed_time_s": 364.3859119415283,
+  "steps": [
+    {
+      "pass_index": 0,
+      "target_index": 1,
+      "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "state_before": {
+        "x_values_mm": [
+          150.0,
+          250.0,
+          350.0
+        ],
+        "z_values_mm": [
+          80.0,
+          100.0,
+          120.0
+        ],
+        "radii_mm": [
+          5.0,
+          6.0,
+          8.0
+        ]
+      },
+      "state_after": {
+        "x_values_mm": [
+          150.0,
+          250.0,
+          350.0
+        ],
+        "z_values_mm": [
+          80.0,
+          100.0,
+          120.0
+        ],
+        "radii_mm": [
+          5.0,
+          6.0,
+          8.0
+        ]
+      },
+      "best_candidate": {
+        "misfit": 0.017012716975895435,
+        "params": {
+          "x_mm": 250.0,
+          "z_mm": 100.0,
+          "radius_mm": 6.0,
+          "target_index": 1,
+          "x_values_mm": [
+            150.0,
+            250.0,
+            350.0
+          ],
+          "z_values_mm": [
+            80.0,
+            100.0,
+            120.0
+          ],
+          "radii_mm": [
+            5.0,
+            6.0,
+            8.0
+          ]
+        },
+        "source_profile": {
+          "misfit": 0.017012716975895435,
+          "frequency_scale": 1.1,
+          "time_shift_s": -5e-11,
+          "time_shift_ps": -50.0,
+          "amplitude_scale": 1.0979912242373477,
+          "ringdown_scale": 0.5016415171496322,
+          "ringdown_delay_s": 1.8e-10,
+          "ringdown_delay_ps": 180.0,
+          "ringdown_frequency_scale": 0.8,
+          "primary_coefficient": 1.0979912242373477,
+          "ringdown_coefficient": 0.5507979835434051
+        }
+      },
+      "margin": {
+        "best_radius_mm": 6.0,
+        "best_radius_misfit": 0.017012716975895435,
+        "next_radius_mm": 6.25,
+        "next_radius_misfit": 0.017565115424529414,
+        "radius_margin_abs": 0.0005523984486339797,
+        "radius_margin_rel": 0.03246973716289107
+      },
+      "candidate_csv": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/data/coordinate_step_01_target_1_candidates.csv",
+      "window": {
+        "target_index": 1,
+        "x_values_mm": [
+          250.0
+        ],
+        "z_values_mm": [
+          100.0,
+          101.0
+        ],
+        "radius_values_mm": [
+          6.0,
+          6.25,
+          6.5,
+          6.75,
+          7.0,
+          7.25
+        ]
+      },
+      "results": {
+        "source_mismatch_ringdown050_noise10_seed3524578": {
+          "margin": {
+            "best_radius_mm": 6.0,
+            "best_radius_misfit": 0.017012716975895435,
+            "next_radius_mm": 6.25,
+            "next_radius_misfit": 0.017565115424529414,
+            "radius_margin_abs": 0.0005523984486339797,
+            "radius_margin_rel": 0.03246973716289107
+          },
+          "top_candidates": [
+            {
+              "misfit": 0.017012716975895435,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 100.0,
+                "radius_mm": 6.0,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  100.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.0,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.017012716975895435,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0979912242373477,
+                "ringdown_scale": 0.5016415171496322,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0979912242373477,
+                "ringdown_coefficient": 0.5507979835434051
+              }
+            },
+            {
+              "misfit": 0.017565115424529414,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 100.0,
+                "radius_mm": 6.25,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  100.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.25,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.017565115424529414,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0944879507553917,
+                "ringdown_scale": 0.5002694096754144,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0944879507553917,
+                "ringdown_coefficient": 0.5475388410212539
+              }
+            },
+            {
+              "misfit": 0.01777979546428274,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 6.75,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.75,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.01777979546428274,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0862895784311781,
+                "ringdown_scale": 0.5041369274748077,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0862895784311781,
+                "ringdown_coefficient": 0.5476386904181982
+              }
+            },
+            {
+              "misfit": 0.01818665909879108,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 6.5,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.5,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.01818665909879108,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.089283453325881,
+                "ringdown_scale": 0.5057091617591696,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.089283453325881,
+                "ringdown_coefficient": 0.5508606220995649
+              }
+            },
+            {
+              "misfit": 0.018634103653529525,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 7.0,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  7.0,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.018634103653529525,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.082451387279496,
+                "ringdown_scale": 0.5027424417493482,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.082451387279496,
+                "ringdown_coefficient": 0.5441942535158633
+              }
+            },
+            {
+              "misfit": 0.022324227129394334,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 100.0,
+                "radius_mm": 6.5,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  100.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.5,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.022324227129394334,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0842987669998816,
+                "ringdown_scale": 0.4971150637510264,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0842987669998816,
+                "ringdown_coefficient": 0.5390212506823054
+              }
+            },
+            {
+              "misfit": 0.022570000294526566,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 6.25,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.25,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.022570000294526566,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.092729403057132,
+                "ringdown_scale": 0.5088816707130253,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.092729403057132,
+                "ringdown_coefficient": 0.55606996426496
+              }
+            },
+            {
+              "misfit": 0.024756504477704517,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 7.25,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  7.25,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.024756504477704517,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.07067800427897,
+                "ringdown_scale": 0.49911953059799563,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.07067800427897,
+                "ringdown_coefficient": 0.5343963029173183
+              }
+            },
+            {
+              "misfit": 0.026193786403743063,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 6.0,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.0,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.026193786403743063,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.093162765237997,
+                "ringdown_scale": 0.5102872851379229,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.093162765237997,
+                "ringdown_coefficient": 0.557827059687162
+              }
+            },
+            {
+              "misfit": 0.026474127157923147,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 100.0,
+                "radius_mm": 6.75,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  100.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.75,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.026474127157923147,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0780103424134164,
+                "ringdown_scale": 0.4955403733244185,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0780103424134164,
+                "ringdown_coefficient": 0.5341976475271286
+              }
+            },
+            {
+              "misfit": 0.03171700288880379,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 100.0,
+                "radius_mm": 7.0,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  100.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  7.0,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.03171700288880379,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0711338734940574,
+                "ringdown_scale": 0.49415656374115663,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0711338734940574,
+                "ringdown_coefficient": 0.5293078342325782
+              }
+            },
+            {
+              "misfit": 0.047981868548186105,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 100.0,
+                "radius_mm": 7.25,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  100.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  7.25,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.047981868548186105,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0522125891045149,
+                "ringdown_scale": 0.49048907858475427,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0522125891045149,
+                "ringdown_coefficient": 0.5160987833051521
+              }
+            }
+          ],
+          "best_curve_by_radius": [
+            {
+              "radius_mm": 6.0,
+              "misfit": 0.017012716975895435,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 100.0,
+                "radius_mm": 6.0,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  100.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.0,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.017012716975895435,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0979912242373477,
+                "ringdown_scale": 0.5016415171496322,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0979912242373477,
+                "ringdown_coefficient": 0.5507979835434051
+              }
+            },
+            {
+              "radius_mm": 6.25,
+              "misfit": 0.017565115424529414,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 100.0,
+                "radius_mm": 6.25,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  100.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.25,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.017565115424529414,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0944879507553917,
+                "ringdown_scale": 0.5002694096754144,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0944879507553917,
+                "ringdown_coefficient": 0.5475388410212539
+              }
+            },
+            {
+              "radius_mm": 6.5,
+              "misfit": 0.01818665909879108,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 6.5,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.5,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.01818665909879108,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.089283453325881,
+                "ringdown_scale": 0.5057091617591696,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.089283453325881,
+                "ringdown_coefficient": 0.5508606220995649
+              }
+            },
+            {
+              "radius_mm": 6.75,
+              "misfit": 0.01777979546428274,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 6.75,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  6.75,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.01777979546428274,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.0862895784311781,
+                "ringdown_scale": 0.5041369274748077,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.0862895784311781,
+                "ringdown_coefficient": 0.5476386904181982
+              }
+            },
+            {
+              "radius_mm": 7.0,
+              "misfit": 0.018634103653529525,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 7.0,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  7.0,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.018634103653529525,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.082451387279496,
+                "ringdown_scale": 0.5027424417493482,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.082451387279496,
+                "ringdown_coefficient": 0.5441942535158633
+              }
+            },
+            {
+              "radius_mm": 7.25,
+              "misfit": 0.024756504477704517,
+              "params": {
+                "x_mm": 250.0,
+                "z_mm": 101.0,
+                "radius_mm": 7.25,
+                "target_index": 1,
+                "x_values_mm": [
+                  150.0,
+                  250.0,
+                  350.0
+                ],
+                "z_values_mm": [
+                  80.0,
+                  101.0,
+                  120.0
+                ],
+                "radii_mm": [
+                  5.0,
+                  7.25,
+                  8.0
+                ]
+              },
+              "source_profile": {
+                "misfit": 0.024756504477704517,
+                "frequency_scale": 1.1,
+                "time_shift_s": -5e-11,
+                "time_shift_ps": -50.0,
+                "amplitude_scale": 1.07067800427897,
+                "ringdown_scale": 0.49911953059799563,
+                "ringdown_delay_s": 1.8e-10,
+                "ringdown_delay_ps": 180.0,
+                "ringdown_frequency_scale": 0.8,
+                "primary_coefficient": 1.07067800427897,
+                "ringdown_coefficient": 0.5343963029173183
+              }
+            }
+          ]
+        }
+      },
+      "objective_results": {
+        "source_mismatch_ringdown050_noise10_seed3524578": {
+          "base": {
+            "margin": {
+              "best_radius_mm": 6.0,
+              "best_radius_misfit": 0.017012716975895435,
+              "next_radius_mm": 6.25,
+              "next_radius_misfit": 0.017565115424529414,
+              "radius_margin_abs": 0.0005523984486339797,
+              "radius_margin_rel": 0.03246973716289107
+            },
+            "top_candidates": [
+              {
+                "misfit": 0.017012716975895435,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.017012716975895435,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0979912242373477,
+                  "ringdown_scale": 0.5016415171496322,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0979912242373477,
+                  "ringdown_coefficient": 0.5507979835434051
+                }
+              },
+              {
+                "misfit": 0.017565115424529414,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.017565115424529414,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0944879507553917,
+                  "ringdown_scale": 0.5002694096754144,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0944879507553917,
+                  "ringdown_coefficient": 0.5475388410212539
+                }
+              },
+              {
+                "misfit": 0.01777979546428274,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.01777979546428274,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0862895784311781,
+                  "ringdown_scale": 0.5041369274748077,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0862895784311781,
+                  "ringdown_coefficient": 0.5476386904181982
+                }
+              },
+              {
+                "misfit": 0.01818665909879108,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.01818665909879108,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.089283453325881,
+                  "ringdown_scale": 0.5057091617591696,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.089283453325881,
+                  "ringdown_coefficient": 0.5508606220995649
+                }
+              },
+              {
+                "misfit": 0.018634103653529525,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.018634103653529525,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.082451387279496,
+                  "ringdown_scale": 0.5027424417493482,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.082451387279496,
+                  "ringdown_coefficient": 0.5441942535158633
+                }
+              },
+              {
+                "misfit": 0.022324227129394334,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.022324227129394334,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0842987669998816,
+                  "ringdown_scale": 0.4971150637510264,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0842987669998816,
+                  "ringdown_coefficient": 0.5390212506823054
+                }
+              },
+              {
+                "misfit": 0.022570000294526566,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.022570000294526566,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.092729403057132,
+                  "ringdown_scale": 0.5088816707130253,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.092729403057132,
+                  "ringdown_coefficient": 0.55606996426496
+                }
+              },
+              {
+                "misfit": 0.024756504477704517,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.024756504477704517,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.07067800427897,
+                  "ringdown_scale": 0.49911953059799563,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.07067800427897,
+                  "ringdown_coefficient": 0.5343963029173183
+                }
+              },
+              {
+                "misfit": 0.026193786403743063,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.026193786403743063,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.093162765237997,
+                  "ringdown_scale": 0.5102872851379229,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.093162765237997,
+                  "ringdown_coefficient": 0.557827059687162
+                }
+              },
+              {
+                "misfit": 0.026474127157923147,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.026474127157923147,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0780103424134164,
+                  "ringdown_scale": 0.4955403733244185,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0780103424134164,
+                  "ringdown_coefficient": 0.5341976475271286
+                }
+              },
+              {
+                "misfit": 0.03171700288880379,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.03171700288880379,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0711338734940574,
+                  "ringdown_scale": 0.49415656374115663,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0711338734940574,
+                  "ringdown_coefficient": 0.5293078342325782
+                }
+              },
+              {
+                "misfit": 0.047981868548186105,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.047981868548186105,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0522125891045149,
+                  "ringdown_scale": 0.49048907858475427,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0522125891045149,
+                  "ringdown_coefficient": 0.5160987833051521
+                }
+              }
+            ],
+            "best_curve_by_radius": [
+              {
+                "radius_mm": 6.0,
+                "misfit": 0.017012716975895435,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.017012716975895435,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0979912242373477,
+                  "ringdown_scale": 0.5016415171496322,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0979912242373477,
+                  "ringdown_coefficient": 0.5507979835434051
+                }
+              },
+              {
+                "radius_mm": 6.25,
+                "misfit": 0.017565115424529414,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.017565115424529414,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0944879507553917,
+                  "ringdown_scale": 0.5002694096754144,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0944879507553917,
+                  "ringdown_coefficient": 0.5475388410212539
+                }
+              },
+              {
+                "radius_mm": 6.5,
+                "misfit": 0.01818665909879108,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.01818665909879108,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.089283453325881,
+                  "ringdown_scale": 0.5057091617591696,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.089283453325881,
+                  "ringdown_coefficient": 0.5508606220995649
+                }
+              },
+              {
+                "radius_mm": 6.75,
+                "misfit": 0.01777979546428274,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.01777979546428274,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0862895784311781,
+                  "ringdown_scale": 0.5041369274748077,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0862895784311781,
+                  "ringdown_coefficient": 0.5476386904181982
+                }
+              },
+              {
+                "radius_mm": 7.0,
+                "misfit": 0.018634103653529525,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.018634103653529525,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.082451387279496,
+                  "ringdown_scale": 0.5027424417493482,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.082451387279496,
+                  "ringdown_coefficient": 0.5441942535158633
+                }
+              },
+              {
+                "radius_mm": 7.25,
+                "misfit": 0.024756504477704517,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.024756504477704517,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.07067800427897,
+                  "ringdown_scale": 0.49911953059799563,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.07067800427897,
+                  "ringdown_coefficient": 0.5343963029173183
+                }
+              }
+            ]
+          },
+          "highband": {
+            "margin": {
+              "best_radius_mm": 6.0,
+              "best_radius_misfit": 0.0002550636062592429,
+              "next_radius_mm": 6.25,
+              "next_radius_misfit": 0.0009649043772084561,
+              "radius_margin_abs": 0.0007098407709492133,
+              "radius_margin_rel": 2.782995117805014
+            },
+            "top_candidates": [
+              {
+                "misfit": 0.0002550636062592429,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0002550636062592429,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.097336869563671,
+                  "ringdown_scale": 0.5015973815668715,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.097336869563671,
+                  "ringdown_coefficient": 0.550421300469925
+                }
+              },
+              {
+                "misfit": 0.0009649043772084561,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0009649043772084561,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0927282886633505,
+                  "ringdown_scale": 0.4997809086656974,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0927282886633505,
+                  "ringdown_coefficient": 0.5461247370328818
+                }
+              },
+              {
+                "misfit": 0.0011673895068532642,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0011673895068532642,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0851166607750433,
+                  "ringdown_scale": 0.5034743066146156,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0851166607750433,
+                  "ringdown_coefficient": 0.546328358379682
+                }
+              },
+              {
+                "misfit": 0.001771607434878051,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.001771607434878051,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0890995848097775,
+                  "ringdown_scale": 0.5054257528709903,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0890995848097775,
+                  "ringdown_coefficient": 0.5504589776039648
+                }
+              },
+              {
+                "misfit": 0.002213177265314795,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.002213177265314795,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0801108010981106,
+                  "ringdown_scale": 0.5015914531281598,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0801108010981106,
+                  "ringdown_coefficient": 0.5417743462622221
+                }
+              },
+              {
+                "misfit": 0.007081905544480603,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.007081905544480603,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0793613700519606,
+                  "ringdown_scale": 0.49525462089932415,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0793613700519606,
+                  "ringdown_coefficient": 0.5345587061384589
+                }
+              },
+              {
+                "misfit": 0.007631319923970625,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.007631319923970625,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0938350421226914,
+                  "ringdown_scale": 0.5090095727991364,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0938350421226914,
+                  "ringdown_coefficient": 0.5567725075035965
+                }
+              },
+              {
+                "misfit": 0.009947981432234448,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.009947981432234448,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.064766790938937,
+                  "ringdown_scale": 0.49636544397298443,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.064766790938937,
+                  "ringdown_coefficient": 0.5285134409120953
+                }
+              },
+              {
+                "misfit": 0.012401463600938223,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.012401463600938223,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0711863184663577,
+                  "ringdown_scale": 0.4928030460440839,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0711863184663577,
+                  "ringdown_coefficient": 0.5278838806209692
+                }
+              },
+              {
+                "misfit": 0.01242600541319798,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.01242600541319798,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.09453151468759,
+                  "ringdown_scale": 0.5104499720178541,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.09453151468759,
+                  "ringdown_coefficient": 0.5587035810449398
+                }
+              },
+              {
+                "misfit": 0.019123779027408333,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.019123779027408333,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0623731521554334,
+                  "ringdown_scale": 0.4904598519198549,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0623731521554334,
+                  "ringdown_coefficient": 0.5210513788897834
+                }
+              },
+              {
+                "misfit": 0.03979123476882969,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.03979123476882969,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.038058427400033,
+                  "ringdown_scale": 0.48395939430363566,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.038058427400033,
+                  "ringdown_coefficient": 0.5023781277763045
+                }
+              }
+            ],
+            "best_curve_by_radius": [
+              {
+                "radius_mm": 6.0,
+                "misfit": 0.0002550636062592429,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0002550636062592429,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.097336869563671,
+                  "ringdown_scale": 0.5015973815668715,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.097336869563671,
+                  "ringdown_coefficient": 0.550421300469925
+                }
+              },
+              {
+                "radius_mm": 6.25,
+                "misfit": 0.0009649043772084561,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0009649043772084561,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0927282886633505,
+                  "ringdown_scale": 0.4997809086656974,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0927282886633505,
+                  "ringdown_coefficient": 0.5461247370328818
+                }
+              },
+              {
+                "radius_mm": 6.5,
+                "misfit": 0.001771607434878051,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.001771607434878051,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0890995848097775,
+                  "ringdown_scale": 0.5054257528709903,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0890995848097775,
+                  "ringdown_coefficient": 0.5504589776039648
+                }
+              },
+              {
+                "radius_mm": 6.75,
+                "misfit": 0.0011673895068532642,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0011673895068532642,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0851166607750433,
+                  "ringdown_scale": 0.5034743066146156,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0851166607750433,
+                  "ringdown_coefficient": 0.546328358379682
+                }
+              },
+              {
+                "radius_mm": 7.0,
+                "misfit": 0.002213177265314795,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.002213177265314795,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0801108010981106,
+                  "ringdown_scale": 0.5015914531281598,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0801108010981106,
+                  "ringdown_coefficient": 0.5417743462622221
+                }
+              },
+              {
+                "radius_mm": 7.25,
+                "misfit": 0.009947981432234448,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.009947981432234448,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.064766790938937,
+                  "ringdown_scale": 0.49636544397298443,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.064766790938937,
+                  "ringdown_coefficient": 0.5285134409120953
+                }
+              }
+            ]
+          },
+          "late": {
+            "margin": {
+              "best_radius_mm": 6.0,
+              "best_radius_misfit": 0.020799089235688854,
+              "next_radius_mm": 6.25,
+              "next_radius_misfit": 0.02164185329248395,
+              "radius_margin_abs": 0.0008427640567950957,
+              "radius_margin_rel": 0.040519276937809816
+            },
+            "top_candidates": [
+              {
+                "misfit": 0.020799089235688854,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.020799089235688854,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.097249022426924,
+                  "ringdown_scale": 0.5009799228626967,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.097249022426924,
+                  "ringdown_coefficient": 0.5496997306166097
+                }
+              },
+              {
+                "misfit": 0.02164185329248395,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.02164185329248395,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0962838173716136,
+                  "ringdown_scale": 0.49851044644282816,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0962838173716136,
+                  "ringdown_coefficient": 0.546508935225971
+                }
+              },
+              {
+                "misfit": 0.02187671832733329,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.02187671832733329,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0794576883757003,
+                  "ringdown_scale": 0.502251517453233,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0794576883757003,
+                  "ringdown_coefficient": 0.5421592620132546
+                }
+              },
+              {
+                "misfit": 0.02220496302185448,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.02220496302185448,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0790673003278133,
+                  "ringdown_scale": 0.5050804302808862,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0790673003278133,
+                  "ringdown_coefficient": 0.5450157763516063
+                }
+              },
+              {
+                "misfit": 0.023469652532878006,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.023469652532878006,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0775584583615785,
+                  "ringdown_scale": 0.4996660120551482,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0775584583615785,
+                  "ringdown_coefficient": 0.5384193376458234
+                }
+              },
+              {
+                "misfit": 0.028037038780551804,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.028037038780551804,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0743859314204285,
+                  "ringdown_scale": 0.5105162467967739,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0743859314204285,
+                  "ringdown_coefficient": 0.5484914733200132
+                }
+              },
+              {
+                "misfit": 0.028734704102212412,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.028734704102212412,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0911083050427008,
+                  "ringdown_scale": 0.4924302266066534,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0911083050427008,
+                  "ringdown_coefficient": 0.5372947099045787
+                }
+              },
+              {
+                "misfit": 0.033126125657990835,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.033126125657990835,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.071010064452539,
+                  "ringdown_scale": 0.5127571817153053,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.071010064452539,
+                  "ringdown_coefficient": 0.5491681022374114
+                }
+              },
+              {
+                "misfit": 0.033250551698397794,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.033250551698397794,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0706559342137114,
+                  "ringdown_scale": 0.4924807852521617,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0706559342137114,
+                  "ringdown_coefficient": 0.5272774752164554
+                }
+              },
+              {
+                "misfit": 0.03492617893880003,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.03492617893880003,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.08641091307595,
+                  "ringdown_scale": 0.4892052026114423,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.08641091307595,
+                  "ringdown_coefficient": 0.5314778708506022
+                }
+              },
+              {
+                "misfit": 0.04298669695639194,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.04298669695639194,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0795380429967936,
+                  "ringdown_scale": 0.486189918454137,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0795380429967936,
+                  "ringdown_coefficient": 0.5248605130927497
+                }
+              },
+              {
+                "misfit": 0.06727190591328698,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.06727190591328698,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0607628386100494,
+                  "ringdown_scale": 0.4778011083596536,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0607628386100494,
+                  "ringdown_coefficient": 0.5068336599946139
+                }
+              }
+            ],
+            "best_curve_by_radius": [
+              {
+                "radius_mm": 6.0,
+                "misfit": 0.020799089235688854,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.020799089235688854,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.097249022426924,
+                  "ringdown_scale": 0.5009799228626967,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.097249022426924,
+                  "ringdown_coefficient": 0.5496997306166097
+                }
+              },
+              {
+                "radius_mm": 6.25,
+                "misfit": 0.02164185329248395,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.02164185329248395,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0962838173716136,
+                  "ringdown_scale": 0.49851044644282816,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0962838173716136,
+                  "ringdown_coefficient": 0.546508935225971
+                }
+              },
+              {
+                "radius_mm": 6.5,
+                "misfit": 0.02220496302185448,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.02220496302185448,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0790673003278133,
+                  "ringdown_scale": 0.5050804302808862,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0790673003278133,
+                  "ringdown_coefficient": 0.5450157763516063
+                }
+              },
+              {
+                "radius_mm": 6.75,
+                "misfit": 0.02187671832733329,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.02187671832733329,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0794576883757003,
+                  "ringdown_scale": 0.502251517453233,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0794576883757003,
+                  "ringdown_coefficient": 0.5421592620132546
+                }
+              },
+              {
+                "radius_mm": 7.0,
+                "misfit": 0.023469652532878006,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.023469652532878006,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0775584583615785,
+                  "ringdown_scale": 0.4996660120551482,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0775584583615785,
+                  "ringdown_coefficient": 0.5384193376458234
+                }
+              },
+              {
+                "radius_mm": 7.25,
+                "misfit": 0.033250551698397794,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.033250551698397794,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0706559342137114,
+                  "ringdown_scale": 0.4924807852521617,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0706559342137114,
+                  "ringdown_coefficient": 0.5272774752164554
+                }
+              }
+            ]
+          },
+          "late_high": {
+            "margin": {
+              "best_radius_mm": 6.0,
+              "best_radius_misfit": 0.00026492362025131247,
+              "next_radius_mm": 6.25,
+              "next_radius_misfit": 0.0011655934013873903,
+              "radius_margin_abs": 0.0009006697811360778,
+              "radius_margin_rel": 3.399733780935359
+            },
+            "top_candidates": [
+              {
+                "misfit": 0.00026492362025131247,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.00026492362025131247,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.096744797754381,
+                  "ringdown_scale": 0.5013687231606166,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.096744797754381,
+                  "ringdown_coefficient": 0.5498735388831627
+                }
+              },
+              {
+                "misfit": 0.0011655934013873903,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0011655934013873903,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0961069341397447,
+                  "ringdown_scale": 0.49893572922333523,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0961069341397447,
+                  "ringdown_coefficient": 0.5468869124917678
+                }
+              },
+              {
+                "misfit": 0.001397465554732499,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.001397465554732499,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0803658547228152,
+                  "ringdown_scale": 0.5030988727608184,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0803658547228152,
+                  "ringdown_coefficient": 0.5435308436803264
+                }
+              },
+              {
+                "misfit": 0.001820797021369447,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.001820797021369447,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.079540684823944,
+                  "ringdown_scale": 0.505909638381909,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.079540684823944,
+                  "ringdown_coefficient": 0.54615003747784
+                }
+              },
+              {
+                "misfit": 0.0031034544535437666,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0031034544535437666,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.078712964062738,
+                  "ringdown_scale": 0.5005773261595682,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.078712964062738,
+                  "ringdown_coefficient": 0.5399792512441878
+                }
+              },
+              {
+                "misfit": 0.008339368066401212,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.008339368066401212,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.073639286498932,
+                  "ringdown_scale": 0.5114010222398112,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.073639286498932,
+                  "ringdown_coefficient": 0.5490602286323754
+                }
+              },
+              {
+                "misfit": 0.008905398970625845,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.008905398970625845,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0912491257220651,
+                  "ringdown_scale": 0.4929747436351408,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0912491257220651,
+                  "ringdown_coefficient": 0.5379582579949066
+                }
+              },
+              {
+                "misfit": 0.013765237777724796,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.013765237777724796,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0720437561824234,
+                  "ringdown_scale": 0.49357263483522384,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0720437561824234,
+                  "ringdown_coefficient": 0.529131461397609
+                }
+              },
+              {
+                "misfit": 0.013986546275619982,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.013986546275619982,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.069552081003376,
+                  "ringdown_scale": 0.5136998558708026,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.069552081003376,
+                  "ringdown_coefficient": 0.5494287498577513
+                }
+              },
+              {
+                "misfit": 0.015693333659104896,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.015693333659104896,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0865270186530576,
+                  "ringdown_scale": 0.4898458410516757,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0865270186530576,
+                  "ringdown_coefficient": 0.5322307412774767
+                }
+              },
+              {
+                "misfit": 0.02458670871846484,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.02458670871846484,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0794781672125238,
+                  "ringdown_scale": 0.48697056199082256,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0794781672125238,
+                  "ringdown_coefficient": 0.5256740897443059
+                }
+              },
+              {
+                "misfit": 0.05130723031798191,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.05130723031798191,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0598944643133656,
+                  "ringdown_scale": 0.4788888288522435,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0598944643133656,
+                  "ringdown_coefficient": 0.5075716187220036
+                }
+              }
+            ],
+            "best_curve_by_radius": [
+              {
+                "radius_mm": 6.0,
+                "misfit": 0.00026492362025131247,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.00026492362025131247,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.096744797754381,
+                  "ringdown_scale": 0.5013687231606166,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.096744797754381,
+                  "ringdown_coefficient": 0.5498735388831627
+                }
+              },
+              {
+                "radius_mm": 6.25,
+                "misfit": 0.0011655934013873903,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0011655934013873903,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0961069341397447,
+                  "ringdown_scale": 0.49893572922333523,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0961069341397447,
+                  "ringdown_coefficient": 0.5468869124917678
+                }
+              },
+              {
+                "radius_mm": 6.5,
+                "misfit": 0.001820797021369447,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.001820797021369447,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.079540684823944,
+                  "ringdown_scale": 0.505909638381909,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.079540684823944,
+                  "ringdown_coefficient": 0.54615003747784
+                }
+              },
+              {
+                "radius_mm": 6.75,
+                "misfit": 0.001397465554732499,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.001397465554732499,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0803658547228152,
+                  "ringdown_scale": 0.5030988727608184,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0803658547228152,
+                  "ringdown_coefficient": 0.5435308436803264
+                }
+              },
+              {
+                "radius_mm": 7.0,
+                "misfit": 0.0031034544535437666,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0031034544535437666,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.078712964062738,
+                  "ringdown_scale": 0.5005773261595682,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.078712964062738,
+                  "ringdown_coefficient": 0.5399792512441878
+                }
+              },
+              {
+                "radius_mm": 7.25,
+                "misfit": 0.013765237777724796,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.013765237777724796,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0720437561824234,
+                  "ringdown_scale": 0.49357263483522384,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0720437561824234,
+                  "ringdown_coefficient": 0.529131461397609
+                }
+              }
+            ]
+          },
+          "veryhigh": {
+            "margin": {
+              "best_radius_mm": 6.0,
+              "best_radius_misfit": 0.0002686126482358831,
+              "next_radius_mm": 6.25,
+              "next_radius_misfit": 0.0009488242527299806,
+              "radius_margin_abs": 0.0006802116044940976,
+              "radius_margin_rel": 2.5323141295147336
+            },
+            "top_candidates": [
+              {
+                "misfit": 0.0002686126482358831,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0002686126482358831,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0975050498320602,
+                  "ringdown_scale": 0.5017598077507295,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0975050498320602,
+                  "ringdown_coefficient": 0.5506839228091893
+                }
+              },
+              {
+                "misfit": 0.0009488242527299806,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0009488242527299806,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.09393575081983,
+                  "ringdown_scale": 0.4934464147816092,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.09393575081983,
+                  "ringdown_coefficient": 0.5397986742434729
+                }
+              },
+              {
+                "misfit": 0.001204772192783239,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.001204772192783239,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0850148793502497,
+                  "ringdown_scale": 0.5028788878094745,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0850148793502497,
+                  "ringdown_coefficient": 0.5456310757843847
+                }
+              },
+              {
+                "misfit": 0.0017409113858030325,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0017409113858030325,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0878499630698788,
+                  "ringdown_scale": 0.5117390212616804,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0878499630698788,
+                  "ringdown_coefficient": 0.5566952753809349
+                }
+              },
+              {
+                "misfit": 0.0022281506553548935,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0022281506553548935,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0810294106219718,
+                  "ringdown_scale": 0.49422999441000726,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0810294106219718,
+                  "ringdown_coefficient": 0.5342771595687505
+                }
+              },
+              {
+                "misfit": 0.0066332867306829815,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0066332867306829815,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0828105749041534,
+                  "ringdown_scale": 0.47410196875139105,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0828105749041534,
+                  "ringdown_coefficient": 0.5133626253468847
+                }
+              },
+              {
+                "misfit": 0.007154557910140929,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.007154557910140929,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0902012491418192,
+                  "ringdown_scale": 0.5287710312506726,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0902012491418192,
+                  "ringdown_coefficient": 0.5764668387794911
+                }
+              },
+              {
+                "misfit": 0.009403721379480501,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.009403721379480501,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.068157312774321,
+                  "ringdown_scale": 0.4721667026283118,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.068157312774321,
+                  "ringdown_coefficient": 0.5043483162609694
+                }
+              },
+              {
+                "misfit": 0.01152764127796768,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.01152764127796768,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0757063762858188,
+                  "ringdown_scale": 0.4639818143866424,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0757063762858188,
+                  "ringdown_coefficient": 0.4991081962163744
+                }
+              },
+              {
+                "misfit": 0.011627949523250825,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.011627949523250825,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.08979185737306,
+                  "ringdown_scale": 0.5361995358191808,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.08979185737306,
+                  "ringdown_coefficient": 0.5843458880629576
+                }
+              },
+              {
+                "misfit": 0.017737002857598216,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.017737002857598216,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0678220384262564,
+                  "ringdown_scale": 0.4541676269499773,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0678220384262564,
+                  "ringdown_coefficient": 0.4849702011969404
+                }
+              },
+              {
+                "misfit": 0.03649718997226541,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.03649718997226541,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0458129862405527,
+                  "ringdown_scale": 0.42876296361332356,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0458129862405527,
+                  "ringdown_coefficient": 0.44840587536579934
+                }
+              }
+            ],
+            "best_curve_by_radius": [
+              {
+                "radius_mm": 6.0,
+                "misfit": 0.0002686126482358831,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0002686126482358831,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0975050498320602,
+                  "ringdown_scale": 0.5017598077507295,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0975050498320602,
+                  "ringdown_coefficient": 0.5506839228091893
+                }
+              },
+              {
+                "radius_mm": 6.25,
+                "misfit": 0.0009488242527299806,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0009488242527299806,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.09393575081983,
+                  "ringdown_scale": 0.4934464147816092,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.09393575081983,
+                  "ringdown_coefficient": 0.5397986742434729
+                }
+              },
+              {
+                "radius_mm": 6.5,
+                "misfit": 0.0017409113858030325,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0017409113858030325,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0878499630698788,
+                  "ringdown_scale": 0.5117390212616804,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0878499630698788,
+                  "ringdown_coefficient": 0.5566952753809349
+                }
+              },
+              {
+                "radius_mm": 6.75,
+                "misfit": 0.001204772192783239,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.001204772192783239,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0850148793502497,
+                  "ringdown_scale": 0.5028788878094745,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0850148793502497,
+                  "ringdown_coefficient": 0.5456310757843847
+                }
+              },
+              {
+                "radius_mm": 7.0,
+                "misfit": 0.0022281506553548935,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0022281506553548935,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0810294106219718,
+                  "ringdown_scale": 0.49422999441000726,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0810294106219718,
+                  "ringdown_coefficient": 0.5342771595687505
+                }
+              },
+              {
+                "radius_mm": 7.25,
+                "misfit": 0.009403721379480501,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.009403721379480501,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.068157312774321,
+                  "ringdown_scale": 0.4721667026283118,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.068157312774321,
+                  "ringdown_coefficient": 0.5043483162609694
+                }
+              }
+            ]
+          },
+          "early_high": {
+            "margin": {
+              "best_radius_mm": 6.0,
+              "best_radius_misfit": 6.976126791264769e-05,
+              "next_radius_mm": 6.25,
+              "next_radius_misfit": 0.0005951644740432783,
+              "radius_margin_abs": 0.0005254032061306306,
+              "radius_margin_rel": 7.531445770001197
+            },
+            "top_candidates": [
+              {
+                "misfit": 6.976126791264769e-05,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 6.976126791264769e-05,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0981880235072614,
+                  "ringdown_scale": 0.5012406557812643,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0981880235072614,
+                  "ringdown_coefficient": 0.5504564850739102
+                }
+              },
+              {
+                "misfit": 0.0005951644740432783,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0005951644740432783,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0941700478281222,
+                  "ringdown_scale": 0.49965068085790093,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0941700478281222,
+                  "ringdown_coefficient": 0.5467028093716433
+                }
+              },
+              {
+                "misfit": 0.0006849483428272754,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0006849483428272754,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0889356864611999,
+                  "ringdown_scale": 0.5023526258393091,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0889356864611999,
+                  "ringdown_coefficient": 0.5470297014639143
+                }
+              },
+              {
+                "misfit": 0.0011772545241077231,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0011772545241077231,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0924929293683026,
+                  "ringdown_scale": 0.5040074226620953,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0924929293683026,
+                  "ringdown_coefficient": 0.5506245456074808
+                }
+              },
+              {
+                "misfit": 0.0014240586537284305,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0014240586537284305,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.084612660429488,
+                  "ringdown_scale": 0.5006973189156882,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.084612660429488,
+                  "ringdown_coefficient": 0.5430626511390564
+                }
+              },
+              {
+                "misfit": 0.005135364420901319,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.005135364420901319,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0827002644192143,
+                  "ringdown_scale": 0.495546979274786,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0827002644192143,
+                  "ringdown_coefficient": 0.5365288454929538
+                }
+              },
+              {
+                "misfit": 0.005602175980838075,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.005602175980838075,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0970632173555215,
+                  "ringdown_scale": 0.5068885499041977,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0970632173555215,
+                  "ringdown_coefficient": 0.556088783398574
+                }
+              },
+              {
+                "misfit": 0.007075148475602074,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.007075148475602074,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.071477809733529,
+                  "ringdown_scale": 0.4959630442065332,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.071477809733529,
+                  "ringdown_coefficient": 0.5314133963151896
+                }
+              },
+              {
+                "misfit": 0.009092127951809517,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.009092127951809517,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0757656776186117,
+                  "ringdown_scale": 0.49326168243311314,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0757656776186117,
+                  "ringdown_coefficient": 0.5306339880459544
+                }
+              },
+              {
+                "misfit": 0.009185629397418084,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.009185629397418084,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0979896528371254,
+                  "ringdown_scale": 0.5079648119045,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0979896528371254,
+                  "ringdown_coefficient": 0.5577401074764977
+                }
+              },
+              {
+                "misfit": 0.014102521481218596,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.014102521481218596,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0683736637162577,
+                  "ringdown_scale": 0.49102522540758653,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0683736637162577,
+                  "ringdown_coefficient": 0.5245984190458045
+                }
+              },
+              {
+                "misfit": 0.02956548741259416,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.02956548741259416,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0479058991692154,
+                  "ringdown_scale": 0.48475561345390344,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0479058991692154,
+                  "ringdown_coefficient": 0.5079782669937373
+                }
+              }
+            ],
+            "best_curve_by_radius": [
+              {
+                "radius_mm": 6.0,
+                "misfit": 6.976126791264769e-05,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 6.976126791264769e-05,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0981880235072614,
+                  "ringdown_scale": 0.5012406557812643,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0981880235072614,
+                  "ringdown_coefficient": 0.5504564850739102
+                }
+              },
+              {
+                "radius_mm": 6.25,
+                "misfit": 0.0005951644740432783,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 100.0,
+                  "radius_mm": 6.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    100.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0005951644740432783,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0941700478281222,
+                  "ringdown_scale": 0.49965068085790093,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0941700478281222,
+                  "ringdown_coefficient": 0.5467028093716433
+                }
+              },
+              {
+                "radius_mm": 6.5,
+                "misfit": 0.0011772545241077231,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.5,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.5,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0011772545241077231,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0924929293683026,
+                  "ringdown_scale": 0.5040074226620953,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0924929293683026,
+                  "ringdown_coefficient": 0.5506245456074808
+                }
+              },
+              {
+                "radius_mm": 6.75,
+                "misfit": 0.0006849483428272754,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 6.75,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    6.75,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0006849483428272754,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.0889356864611999,
+                  "ringdown_scale": 0.5023526258393091,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.0889356864611999,
+                  "ringdown_coefficient": 0.5470297014639143
+                }
+              },
+              {
+                "radius_mm": 7.0,
+                "misfit": 0.0014240586537284305,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.0,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.0,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.0014240586537284305,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.084612660429488,
+                  "ringdown_scale": 0.5006973189156882,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.084612660429488,
+                  "ringdown_coefficient": 0.5430626511390564
+                }
+              },
+              {
+                "radius_mm": 7.25,
+                "misfit": 0.007075148475602074,
+                "params": {
+                  "x_mm": 250.0,
+                  "z_mm": 101.0,
+                  "radius_mm": 7.25,
+                  "target_index": 1,
+                  "x_values_mm": [
+                    150.0,
+                    250.0,
+                    350.0
+                  ],
+                  "z_values_mm": [
+                    80.0,
+                    101.0,
+                    120.0
+                  ],
+                  "radii_mm": [
+                    5.0,
+                    7.25,
+                    8.0
+                  ]
+                },
+                "source_profile": {
+                  "misfit": 0.007075148475602074,
+                  "frequency_scale": 1.1,
+                  "time_shift_s": -5e-11,
+                  "time_shift_ps": -50.0,
+                  "amplitude_scale": 1.071477809733529,
+                  "ringdown_scale": 0.4959630442065332,
+                  "ringdown_delay_s": 1.8e-10,
+                  "ringdown_delay_ps": 180.0,
+                  "ringdown_frequency_scale": 0.8,
+                  "primary_coefficient": 1.071477809733529,
+                  "ringdown_coefficient": 0.5314133963151896
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "confidence_rows": [
+    {
+      "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+      "case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "backend": "gpu-cpml",
+      "grid_step_mm": 1.0,
+      "target_rebar_index": 1,
+      "candidate_count": 12,
+      "case_count": 1,
+      "best_x_mm": 250.0,
+      "best_z_mm": 100.0,
+      "best_radius_mm": 6.0,
+      "next_radius_mm": 6.25,
+      "radius_margin_abs": 0.0005523984486339797,
+      "radius_margin_rel": 0.03246973716289107,
+      "confidence_label": "moderate",
+      "fallback_warning": "",
+      "best_misfit": 0.017012716975895435,
+      "next_radius_misfit": 0.017565115424529414,
+      "competing_geometry_x_mm": 250.0,
+      "competing_geometry_z_mm": 101.0,
+      "competing_geometry_radius_mm": 6.75,
+      "competing_geometry_misfit": 0.01777979546428274,
+      "source_frequency_scale": 1.1,
+      "source_time_shift_ps": -50.0,
+      "source_amplitude_scale": 1.0979912242373477,
+      "source_ringdown_scale": 0.5016415171496322,
+      "source_ringdown_delay_ps": 180.0,
+      "source_ringdown_frequency_scale": 0.8,
+      "source_primary_coefficient": 1.0979912242373477,
+      "source_ringdown_coefficient": 0.5507979835434051,
+      "ambiguity_candidate_count": 1,
+      "ambiguity_misfit_threshold": 0.017267907730533865,
+      "ambiguity_x_min_mm": 250.0,
+      "ambiguity_x_max_mm": 250.0,
+      "ambiguity_z_min_mm": 100.0,
+      "ambiguity_z_max_mm": 100.0,
+      "ambiguity_radius_min_mm": 6.0,
+      "ambiguity_radius_max_mm": 6.0,
+      "pass_index": 0,
+      "step_target_index": 1,
+      "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "step_kind": "main"
+    }
+  ],
+  "objective_diagnostic_rows": [
+    {
+      "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+      "case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "objective_label": "base",
+      "backend": "gpu-cpml",
+      "grid_step_mm": 1.0,
+      "target_rebar_index": 1,
+      "candidate_count": 12,
+      "case_count": 1,
+      "pass_index": 0,
+      "step_target_index": 1,
+      "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "step_kind": "main",
+      "best_x_mm": 250.0,
+      "best_z_mm": 100.0,
+      "best_radius_mm": 6.0,
+      "next_radius_mm": 6.25,
+      "radius_margin_abs": 0.0005523984486339797,
+      "radius_margin_rel": 0.03246973716289107,
+      "best_misfit": 0.017012716975895435,
+      "best_source_frequency_scale": 1.1,
+      "best_source_time_shift_ps": -50.0,
+      "best_source_amplitude_scale": 1.0979912242373477,
+      "best_source_ringdown_scale": 0.5016415171496322,
+      "best_source_ringdown_delay_ps": 180.0,
+      "best_source_ringdown_frequency_scale": 0.8,
+      "best_source_primary_coefficient": 1.0979912242373477,
+      "best_source_ringdown_coefficient": 0.5507979835434051
+    },
+    {
+      "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+      "case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "objective_label": "highband",
+      "backend": "gpu-cpml",
+      "grid_step_mm": 1.0,
+      "target_rebar_index": 1,
+      "candidate_count": 12,
+      "case_count": 1,
+      "pass_index": 0,
+      "step_target_index": 1,
+      "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "step_kind": "main",
+      "best_x_mm": 250.0,
+      "best_z_mm": 100.0,
+      "best_radius_mm": 6.0,
+      "next_radius_mm": 6.25,
+      "radius_margin_abs": 0.0007098407709492133,
+      "radius_margin_rel": 2.782995117805014,
+      "best_misfit": 0.0002550636062592429,
+      "best_source_frequency_scale": 1.1,
+      "best_source_time_shift_ps": -50.0,
+      "best_source_amplitude_scale": 1.097336869563671,
+      "best_source_ringdown_scale": 0.5015973815668715,
+      "best_source_ringdown_delay_ps": 180.0,
+      "best_source_ringdown_frequency_scale": 0.8,
+      "best_source_primary_coefficient": 1.097336869563671,
+      "best_source_ringdown_coefficient": 0.550421300469925
+    },
+    {
+      "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+      "case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "objective_label": "late",
+      "backend": "gpu-cpml",
+      "grid_step_mm": 1.0,
+      "target_rebar_index": 1,
+      "candidate_count": 12,
+      "case_count": 1,
+      "pass_index": 0,
+      "step_target_index": 1,
+      "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "step_kind": "main",
+      "best_x_mm": 250.0,
+      "best_z_mm": 100.0,
+      "best_radius_mm": 6.0,
+      "next_radius_mm": 6.25,
+      "radius_margin_abs": 0.0008427640567950957,
+      "radius_margin_rel": 0.040519276937809816,
+      "best_misfit": 0.020799089235688854,
+      "best_source_frequency_scale": 1.1,
+      "best_source_time_shift_ps": -50.0,
+      "best_source_amplitude_scale": 1.097249022426924,
+      "best_source_ringdown_scale": 0.5009799228626967,
+      "best_source_ringdown_delay_ps": 180.0,
+      "best_source_ringdown_frequency_scale": 0.8,
+      "best_source_primary_coefficient": 1.097249022426924,
+      "best_source_ringdown_coefficient": 0.5496997306166097
+    },
+    {
+      "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+      "case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "objective_label": "late_high",
+      "backend": "gpu-cpml",
+      "grid_step_mm": 1.0,
+      "target_rebar_index": 1,
+      "candidate_count": 12,
+      "case_count": 1,
+      "pass_index": 0,
+      "step_target_index": 1,
+      "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "step_kind": "main",
+      "best_x_mm": 250.0,
+      "best_z_mm": 100.0,
+      "best_radius_mm": 6.0,
+      "next_radius_mm": 6.25,
+      "radius_margin_abs": 0.0009006697811360778,
+      "radius_margin_rel": 3.399733780935359,
+      "best_misfit": 0.00026492362025131247,
+      "best_source_frequency_scale": 1.1,
+      "best_source_time_shift_ps": -50.0,
+      "best_source_amplitude_scale": 1.096744797754381,
+      "best_source_ringdown_scale": 0.5013687231606166,
+      "best_source_ringdown_delay_ps": 180.0,
+      "best_source_ringdown_frequency_scale": 0.8,
+      "best_source_primary_coefficient": 1.096744797754381,
+      "best_source_ringdown_coefficient": 0.5498735388831627
+    },
+    {
+      "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+      "case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "objective_label": "veryhigh",
+      "backend": "gpu-cpml",
+      "grid_step_mm": 1.0,
+      "target_rebar_index": 1,
+      "candidate_count": 12,
+      "case_count": 1,
+      "pass_index": 0,
+      "step_target_index": 1,
+      "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "step_kind": "main",
+      "best_x_mm": 250.0,
+      "best_z_mm": 100.0,
+      "best_radius_mm": 6.0,
+      "next_radius_mm": 6.25,
+      "radius_margin_abs": 0.0006802116044940976,
+      "radius_margin_rel": 2.5323141295147336,
+      "best_misfit": 0.0002686126482358831,
+      "best_source_frequency_scale": 1.1,
+      "best_source_time_shift_ps": -50.0,
+      "best_source_amplitude_scale": 1.0975050498320602,
+      "best_source_ringdown_scale": 0.5017598077507295,
+      "best_source_ringdown_delay_ps": 180.0,
+      "best_source_ringdown_frequency_scale": 0.8,
+      "best_source_primary_coefficient": 1.0975050498320602,
+      "best_source_ringdown_coefficient": 0.5506839228091893
+    },
+    {
+      "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives",
+      "case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "objective_label": "early_high",
+      "backend": "gpu-cpml",
+      "grid_step_mm": 1.0,
+      "target_rebar_index": 1,
+      "candidate_count": 12,
+      "case_count": 1,
+      "pass_index": 0,
+      "step_target_index": 1,
+      "update_case_label": "source_mismatch_ringdown050_noise10_seed3524578",
+      "step_kind": "main",
+      "best_x_mm": 250.0,
+      "best_z_mm": 100.0,
+      "best_radius_mm": 6.0,
+      "next_radius_mm": 6.25,
+      "radius_margin_abs": 0.0005254032061306306,
+      "radius_margin_rel": 7.531445770001197,
+      "best_misfit": 6.976126791264769e-05,
+      "best_source_frequency_scale": 1.1,
+      "best_source_time_shift_ps": -50.0,
+      "best_source_amplitude_scale": 1.0981880235072614,
+      "best_source_ringdown_scale": 0.5012406557812643,
+      "best_source_ringdown_delay_ps": 180.0,
+      "best_source_ringdown_frequency_scale": 0.8,
+      "best_source_primary_coefficient": 1.0981880235072614,
+      "best_source_ringdown_coefficient": 0.5504564850739102
+    }
+  ],
+  "objective_top_candidate_row_count": 72,
+  "paths": {
+    "confidence_csv": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/data/coordinate_confidence_report.csv",
+    "objective_diagnostic_csv": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/data/coordinate_objective_diagnostics.csv",
+    "objective_top_candidate_csv": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/data/coordinate_objective_top_candidates.csv",
+    "state_csv": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/data/coordinate_state_history.csv",
+    "confidence_plot": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/figures/coordinate_confidence_margins.png",
+    "figure_notes": "outputs/experiments/1007_coordinate_optimizer_variable_depth_radius_seed3524578_target1_sources5_txrx60_ringdown050_objectives/figures/FIGURE_NOTES.md"
+  }
+}

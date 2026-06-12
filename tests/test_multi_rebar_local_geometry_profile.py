@@ -118,6 +118,57 @@ def test_build_scan_positions_accepts_tx_rx_offset_override():
         build_scan_positions(cfg.INVERSION_SCAN_STEP, 1, tx_rx_offset_m=-cfg.DX)
 
 
+def test_build_scan_positions_supports_linear_receiver_sampling():
+    positions, _ = build_scan_positions(
+        cfg.INVERSION_SCAN_STEP,
+        1,
+        tx_rx_offset_m=cfg.TX_RX_OFFSET + 0.25 * cfg.DX,
+        receiver_sampling="linear",
+    )
+
+    src_iz, src_ix, rec_iz, rec_ix_left, rec_ix_right, weight_right = positions[0]
+    assert src_iz == rec_iz
+    assert rec_ix_left - src_ix == round(cfg.TX_RX_OFFSET / cfg.DX)
+    assert rec_ix_right == rec_ix_left + 1
+    assert weight_right == pytest.approx(0.25)
+
+    with pytest.raises(ValueError, match="receiver_sampling"):
+        build_scan_positions(
+            cfg.INVERSION_SCAN_STEP,
+            1,
+            receiver_sampling="cubic",
+        )
+
+
+def test_build_scan_positions_accepts_custom_scan_x_values():
+    positions, scan_x = build_scan_positions(
+        cfg.INVERSION_SCAN_STEP,
+        9,
+        tx_rx_offset_m=60.0e-3,
+        scan_x_values_m=[50.0e-3, 134.0e-3, 218.0e-3, 302.0e-3, 386.0e-3],
+    )
+
+    assert list(scan_x * 1000.0) == pytest.approx([50.0, 134.0, 218.0, 302.0, 386.0])
+    assert len(positions) == 5
+    assert positions[0][1] < positions[-1][1]
+
+
+def test_build_scan_positions_rejects_invalid_custom_scan_x_values():
+    with pytest.raises(ValueError, match="strictly increasing"):
+        build_scan_positions(
+            cfg.INVERSION_SCAN_STEP,
+            5,
+            scan_x_values_m=[50.0e-3, 50.0e-3],
+        )
+
+    with pytest.raises(ValueError, match="scan domain"):
+        build_scan_positions(
+            cfg.INVERSION_SCAN_STEP,
+            5,
+            scan_x_values_m=[40.0e-3, 50.0e-3],
+        )
+
+
 def test_rank_case_sorts_local_geometry_candidates():
     candidates = [
         {

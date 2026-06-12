@@ -176,8 +176,16 @@ class FDTDSimulator:
         for n in range(nt):
             self.step(source_waveform[n], src_iz, src_ix)
 
-            # Record at receiver
-            trace[n] = self.Ez[rec_iz, rec_ix]
+            # Record at receiver. Tuple rec_ix values are linear x-interpolation
+            # samples: (left_ix, right_ix, weight_right).
+            if isinstance(rec_ix, (tuple, list)):
+                rec_ix_left, rec_ix_right, weight_right = rec_ix
+                trace[n] = (
+                    (1.0 - float(weight_right)) * self.Ez[rec_iz, int(rec_ix_left)]
+                    + float(weight_right) * self.Ez[rec_iz, int(rec_ix_right)]
+                )
+            else:
+                trace[n] = self.Ez[rec_iz, rec_ix]
 
             # Save snapshots for animation
             if save_fields_every > 0 and n % save_fields_every == 0:

@@ -3,3 +3,4 @@ scipy>=1.10
 matplotlib>=3.7
 numba>=0.57
 pillow>=9.0
+readgssi>=0.0.22

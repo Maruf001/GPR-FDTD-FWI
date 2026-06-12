@@ -17,7 +17,7 @@ chronologically.
 Before testing anything subtle, the plot infrastructure was rebuilt so the
 later evidence couldn't be ambiguous: image-based B-scan rendering, dedicated
 colorbar axes, validated dynamic-range checks on every saved figure, and a
-machine-readable baseline matrix `outputs/experiments/single_rebar_baseline_matrix.csv`
+machine-readable baseline matrix `outputs/summary_tables/single_rebar_baseline_matrix.csv`
 indexing every saved run by recovered geometry, NRMS, and best/next radius
 margin. This is mentioned briefly because every later slide depends on it,
 but does not need its own slide.

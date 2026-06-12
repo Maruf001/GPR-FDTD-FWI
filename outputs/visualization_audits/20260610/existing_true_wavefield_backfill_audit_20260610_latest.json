@@ -1,0 +1,29 @@
+{
+  "rows": [
+    {
+      "run_dir": "outputs/experiments/1127_coordinate_optimizer_variable_depth_radius_seed591286729879_target2_sources5_txrx60_ringdown050_objectives",
+      "run_number": 1127,
+      "status": "skipped",
+      "reason": "no existing true wavefield GIF",
+      "inventory_path": "",
+      "figure_notes_path": "",
+      "animation_count": 0,
+      "total_frames": 0,
+      "animations": ""
+    },
+    {
+      "run_dir": "outputs/experiments/1126_coordinate_optimizer_variable_depth_radius_seed591286729879_target0_sources8_txrx60_ringdown050_objectives",
+      "run_number": 1126,
+      "status": "skipped",
+      "reason": "no existing true wavefield GIF",
+      "inventory_path": "",
+      "figure_notes_path": "",
+      "animation_count": 0,
+      "total_frames": 0,
+      "animations": ""
+    }
+  ],
+  "counts": {
+    "skipped": 2
+  }
+}

@@ -1,0 +1,3 @@
+# Optional dependencies for GSSI DZT field-data import/QC.
+-r requirements.txt
+readgssi==0.0.22

@@ -25,6 +25,9 @@ def test_confidence_label_uses_abs_and_relative_thresholds():
     )
 
     assert confidence_label(None, 0.1, thresholds) == "missing"
+    assert confidence_label(float("nan"), 0.1, thresholds) == "missing"
+    assert confidence_label(0.1, float("inf"), thresholds) == "missing"
+    assert confidence_label("bad", 0.1, thresholds) == "missing"
     assert confidence_label(0.0, 0.1, thresholds) == "ambiguous"
     assert confidence_label(2.0e-4, 2.0e-3, thresholds) == "weak"
     assert confidence_label(5.0e-4, 5.0e-3, thresholds) == "moderate"
@@ -55,6 +58,25 @@ def test_ambiguity_interval_includes_near_deeper_radius_branch():
     interval = ambiguity_interval(top_candidates)
 
     assert interval["ambiguity_candidate_count"] == 3
+    assert interval["ambiguity_x_min_mm"] == 250.0
+    assert interval["ambiguity_x_max_mm"] == 250.0
+    assert interval["ambiguity_z_min_mm"] == 90.0
+    assert interval["ambiguity_z_max_mm"] == 91.0
+    assert interval["ambiguity_radius_min_mm"] == 6.0
+    assert interval["ambiguity_radius_max_mm"] == 6.8
+
+
+def test_ambiguity_interval_ignores_nonfinite_misfits():
+    top_candidates = [
+        {"misfit": "nan", "params": {"x_mm": 249.0, "z_mm": 89.0, "radius_mm": 5.8}},
+        {"misfit": 0.0800, "params": {"x_mm": 250.0, "z_mm": 90.0, "radius_mm": 6.0}},
+        {"misfit": "inf", "params": {"x_mm": 250.0, "z_mm": 90.0, "radius_mm": 6.2}},
+        {"misfit": 0.0803, "params": {"x_mm": 250.0, "z_mm": 91.0, "radius_mm": 6.8}},
+    ]
+
+    interval = ambiguity_interval(top_candidates)
+
+    assert interval["ambiguity_candidate_count"] == 2
     assert interval["ambiguity_x_min_mm"] == 250.0
     assert interval["ambiguity_x_max_mm"] == 250.0
     assert interval["ambiguity_z_min_mm"] == 90.0
@@ -119,6 +141,113 @@ def test_summarize_case_confidence_flattens_source_and_competitor():
     assert row["source_ringdown_delay_ps"] == 180.0
     assert row["source_ringdown_coefficient"] == 0.27475
     assert row["ambiguity_radius_max_mm"] == 6.8
+
+
+def test_summarize_case_confidence_marks_nonfinite_margins_missing():
+    result = {
+        "margin": {
+            "best_radius_mm": 6.0,
+            "radius_margin_abs": "nan",
+            "radius_margin_rel": "inf",
+        },
+        "top_candidates": [
+            {
+                "misfit": "nan",
+                "params": {"x_mm": 250.0, "z_mm": 90.0, "radius_mm": 6.0},
+            }
+        ],
+    }
+
+    row = summarize_case_confidence("run", "case", result)
+
+    assert row["confidence_label"] == "missing"
+    assert row["fallback_warning"] == ""
+    assert row["ambiguity_candidate_count"] == 0
+    assert row["ambiguity_misfit_threshold"] is None
+
+
+def test_summarize_case_confidence_nulls_nonfinite_numeric_fields():
+    result = {
+        "margin": {
+            "best_radius_mm": float("nan"),
+            "best_radius_misfit": float("inf"),
+            "next_radius_mm": "bad",
+            "next_radius_misfit": float("nan"),
+            "radius_margin_abs": float("nan"),
+            "radius_margin_rel": float("inf"),
+        },
+        "top_candidates": [
+            {
+                "misfit": float("nan"),
+                "params": {
+                    "x_mm": float("nan"),
+                    "z_mm": "bad",
+                    "radius_mm": float("inf"),
+                },
+                "source_profile": {
+                    "frequency_scale": float("nan"),
+                    "time_shift_ps": "bad",
+                    "amplitude_scale": float("inf"),
+                },
+            },
+            {
+                "misfit": 0.08,
+                "params": {"x_mm": 251.0, "z_mm": 91.0, "radius_mm": 6.8},
+            },
+        ],
+    }
+
+    row = summarize_case_confidence("run", "case", result)
+
+    assert row["best_x_mm"] is None
+    assert row["best_z_mm"] is None
+    assert row["best_radius_mm"] is None
+    assert row["next_radius_mm"] is None
+    assert row["radius_margin_abs"] is None
+    assert row["radius_margin_rel"] is None
+    assert row["best_misfit"] is None
+    assert row["next_radius_misfit"] is None
+    assert row["source_frequency_scale"] is None
+    assert row["source_time_shift_ps"] is None
+    assert row["source_amplitude_scale"] is None
+    assert row["competing_geometry_x_mm"] is None
+    assert row["competing_geometry_z_mm"] is None
+    assert row["competing_geometry_radius_mm"] is None
+
+
+def test_summarize_case_confidence_nulls_nonfinite_metadata():
+    result = {
+        "margin": {
+            "best_radius_mm": 6.0,
+            "radius_margin_abs": 0.001,
+            "radius_margin_rel": 0.01,
+        },
+        "top_candidates": [
+            {
+                "misfit": 0.08,
+                "params": {"x_mm": 250.0, "z_mm": 90.0, "radius_mm": 6.0},
+            },
+        ],
+    }
+    row = summarize_case_confidence(
+        "run",
+        "case",
+        result,
+        {
+            "backend": "cpu",
+            "grid_step_mm": float("nan"),
+            "target_rebar_index": float("inf"),
+            "candidate_count": "bad",
+            "case_count": 4.0,
+        },
+    )
+
+    assert row["backend"] == "cpu"
+    assert row["grid_step_mm"] is None
+    assert row["target_rebar_index"] is None
+    assert row["candidate_count"] is None
+    assert row["case_count"] == 4
+    json.dumps(row, allow_nan=False)
 
 
 def test_load_profile_confidence_rows_reads_profile_summary(tmp_path):

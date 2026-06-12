@@ -1,0 +1,35 @@
+{
+  "rows": [
+    {
+      "run_dir": "outputs/experiments/1121_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx52p5_ringdown050_objectives",
+      "run_number": 1121,
+      "summary_path": "outputs/experiments/1121_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx52p5_ringdown050_objectives/data/multi_rebar_coordinate_optimizer_summary.json",
+      "status": "skipped",
+      "reason": "existing valid scene artifacts",
+      "figure_path": "outputs/experiments/1121_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx52p5_ringdown050_objectives/figures/system_scene_geometry.png",
+      "scene_summary_path": "outputs/experiments/1121_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx52p5_ringdown050_objectives/data/system_scene_geometry_summary.json",
+      "figure_notes_path": "outputs/experiments/1121_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx52p5_ringdown050_objectives/figures/FIGURE_NOTES.md",
+      "width_px": 1769,
+      "height_px": 1065,
+      "unique_colors": 2148,
+      "nonwhite_fraction": 0.633608017048968
+    },
+    {
+      "run_dir": "outputs/experiments/1120_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx60_ringdown050_objectives",
+      "run_number": 1120,
+      "summary_path": "outputs/experiments/1120_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx60_ringdown050_objectives/data/multi_rebar_coordinate_optimizer_summary.json",
+      "status": "skipped",
+      "reason": "existing valid scene artifacts",
+      "figure_path": "outputs/experiments/1120_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx60_ringdown050_objectives/figures/system_scene_geometry.png",
+      "scene_summary_path": "outputs/experiments/1120_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx60_ringdown050_objectives/data/system_scene_geometry_summary.json",
+      "figure_notes_path": "outputs/experiments/1120_coordinate_optimizer_variable_depth_radius_seed365435296162_target0_sources8_txrx60_ringdown050_objectives/figures/FIGURE_NOTES.md",
+      "width_px": 2145,
+      "height_px": 1030,
+      "unique_colors": 1843,
+      "nonwhite_fraction": 0.5401529861724036
+    }
+  ],
+  "counts": {
+    "skipped": 2
+  }
+}

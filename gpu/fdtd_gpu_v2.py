@@ -133,11 +133,25 @@ class FDTDSimulatorGPU_v2:
         nt = len(source_waveform)
         batch_size = len(scan_positions)
 
-        positions = np.asarray(scan_positions, dtype=np.int64)
-        src_iz = cp.asarray(positions[:, 0])
-        src_ix = cp.asarray(positions[:, 1])
-        rec_iz = cp.asarray(positions[:, 2])
-        rec_ix = cp.asarray(positions[:, 3])
+        position_width = len(scan_positions[0])
+        if position_width == 4:
+            positions = np.asarray(scan_positions, dtype=np.int64)
+            src_iz = cp.asarray(positions[:, 0])
+            src_ix = cp.asarray(positions[:, 1])
+            rec_iz = cp.asarray(positions[:, 2])
+            rec_ix_left = cp.asarray(positions[:, 3])
+            rec_ix_right = rec_ix_left
+            rec_weight_right = cp.zeros(batch_size, dtype=cp.float64)
+        elif position_width == 6:
+            positions = np.asarray(scan_positions, dtype=np.float64)
+            src_iz = cp.asarray(positions[:, 0].astype(np.int64))
+            src_ix = cp.asarray(positions[:, 1].astype(np.int64))
+            rec_iz = cp.asarray(positions[:, 2].astype(np.int64))
+            rec_ix_left = cp.asarray(positions[:, 3].astype(np.int64))
+            rec_ix_right = cp.asarray(positions[:, 4].astype(np.int64))
+            rec_weight_right = cp.asarray(positions[:, 5])
+        else:
+            raise ValueError("scan positions must have 4 or 6 entries")
         batch = cp.arange(batch_size)
 
         Ez = cp.zeros((batch_size, self.Nz, self.Nx), dtype=cp.float64)
@@ -270,7 +284,12 @@ class FDTDSimulatorGPU_v2:
                 )
 
             Ez[batch, src_iz, src_ix] += source_waveform[it]
-            trace[it, :] = Ez[batch, rec_iz, rec_ix]
+            left_values = Ez[batch, rec_iz, rec_ix_left]
+            right_values = Ez[batch, rec_iz, rec_ix_right]
+            trace[it, :] = (
+                (1.0 - rec_weight_right) * left_values
+                + rec_weight_right * right_values
+            )
 
         return {'bscan': cp.asnumpy(trace)}
 
@@ -303,7 +322,14 @@ class FDTDSimulatorGPU_v2:
 
         for n in range(nt):
             self.step(source_waveform[n], src_iz, src_ix)
-            trace_gpu[n] = self.Ez[rec_iz, rec_ix]
+            if isinstance(rec_ix, (tuple, list)):
+                rec_ix_left, rec_ix_right, weight_right = rec_ix
+                trace_gpu[n] = (
+                    (1.0 - float(weight_right)) * self.Ez[rec_iz, int(rec_ix_left)]
+                    + float(weight_right) * self.Ez[rec_iz, int(rec_ix_right)]
+                )
+            else:
+                trace_gpu[n] = self.Ez[rec_iz, rec_ix]
             if save_fields_every and save_fields_every > 0 and n % int(save_fields_every) == 0:
                 snapshots.append((n, cp.asnumpy(self.Ez.copy())))
             if save_all_fields:

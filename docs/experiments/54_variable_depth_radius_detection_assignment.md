@@ -816,6 +816,551 @@ Figure notes:
 outputs/experiments/461_variable_depth_radius_staged_coordinate_confidence_summary/figures/FIGURE_NOTES.md
 ```
 
+## 462-470: Seed-34 Staged Replication
+
+Goal:
+
+```text
+Replicate the staged policy on a new 10% noise seed before promoting the
+variable-depth/variable-radius branch-level claim.
+```
+
+Common physical scene:
+
+```text
+truth x=[150,250,350] mm
+truth z=[80,100,120] mm
+truth r=[5,6,8] mm
+source mismatch: frequency scale 1.1, time shift -50 ps, amplitude scale 1.1
+noise: 10% RMS, seed 34
+```
+
+### 462-463: Detector and Assignment
+
+Outputs:
+
+```text
+outputs/experiments/462_detection_multi_rebar_variable_depth_radius_source_mismatch_noise10_seed34
+outputs/experiments/463_detection_assignment_variable_depth_radius_462
+```
+
+Command pattern:
+
+```text
+462: run_rebar_detection_pipeline.py with the same detector grid as 451,
+     changing only --noise-seed 34 and the run name.
+463: run_detection_assignment_report.py on 462/data/detection_candidates.csv
+     with --count 3 and --min-x-separation-mm 45.
+```
+
+Detector candidates:
+
+| Rank | x [mm] | z [mm] | Normalized score | Note |
+| ---: | ---: | ---: | ---: | --- |
+| 1 | 248 | 105 | 0.925 | center truth within 2 mm x, 5 mm z |
+| 2 | 148 | 70 | 0.854 | left truth within tolerance, but 10 mm shallow |
+| 3 | 352 | 125 | 0.842 | right truth within 2 mm x, 5 mm z |
+| 4 | 352 | 90 | 0.770 | false shallow right duplicate |
+| 5 | 252 | 65 | 0.769 | false shallow center duplicate |
+
+Assignment:
+
+```text
+selected rank 2 -> rank 1 -> rank 3 as left/center/right seeds:
+x=[148,248,352] mm, z=[70,105,125] mm.
+```
+
+Plot validation:
+
+```text
+462 detection_overlay.png:
+1885x1209 px, dynamic range 255, grayscale std 45.4114
+
+463 detector_assignment.png:
+1444x1005 px, dynamic range 255, grayscale std 37.6509
+```
+
+Interpretation:
+
+```text
+The detector/assignment gate passes for seed34, but the left seed is shallow
+enough that the coordinate policy must use target-specific z windows rather
+than the seed13 common z window.
+```
+
+### 464-466: Target-Specific Location Stage
+
+Outputs:
+
+```text
+outputs/experiments/464_coordinate_optimizer_variable_depth_radius_seed34_target0_location
+outputs/experiments/465_coordinate_optimizer_variable_depth_radius_seed34_target1_location
+outputs/experiments/466_coordinate_optimizer_variable_depth_radius_seed34_target2_location
+```
+
+Command pattern:
+
+```text
+464 target 0: x offsets -2:2:1, z offsets +5:+12:1, radius fixed at 6 mm.
+465 target 1: x offsets -2:2:1, z offsets -6:0:1, radius fixed at 6 mm.
+466 target 2: x offsets -2:0:1, z offsets -6:0:1, radius fixed at 6 mm.
+All three use gpu-cpml, 1 mm grid, 5 sources, seed34 source-mismatch rows,
+and base/highband diagnostics.
+```
+
+Final location-stage state:
+
+```text
+x=[150,250,350] mm
+z=[81,100,119] mm
+r=[6,6,6] mm
+```
+
+Update-case rows:
+
+| Run | Target | Best x/z/r [mm] | Competing geometry | Note |
+| ---: | ---: | --- | --- | --- |
+| 464 | 0 | 150 / 81 / 6 | 150 / 82 / 6 | target 0 pulled into basin, 1 mm deep |
+| 465 | 1 | 250 / 100 / 6 | 250 / 99 / 6 | center exact |
+| 466 | 2 | 350 / 119 / 6 | 351 / 119 / 6 | right x exact, 1 mm shallow |
+
+Plot validation:
+
+```text
+464 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 27.0679
+
+465 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 27.0497
+
+466 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 27.0565
+```
+
+### 467-469: Radius and Local z/r Coupling
+
+Outputs:
+
+```text
+outputs/experiments/467_coordinate_optimizer_variable_depth_radius_seed34_radius_only_pass
+outputs/experiments/468_coordinate_optimizer_variable_depth_radius_seed34_target2_z_radius_coupled
+outputs/experiments/469_coordinate_optimizer_variable_depth_radius_seed34_target0_z_radius_coupled
+```
+
+Command pattern:
+
+```text
+467: radius-only pass from x=[150,250,350], z=[81,100,119],
+     r=[6,6,6], with target radii swept by -1:2:0.5 mm.
+468: target 2 z/r coupling from z=119, r=7.25, using z offsets 0:1
+     and radius offsets -0.25:0.75:0.25.
+469: target 0 z/r coupling from z=81, r=6, using z offsets -1:0
+     and radius offsets -1:0.25:0.25.
+```
+
+Final staged state:
+
+```text
+x=[150,250,350] mm
+z=[80,100,120] mm
+r=[5,6,8] mm
+```
+
+Key rows:
+
+| Run | Step | Target | Best x/z/r [mm] | Next radius [mm] | Margin | Label |
+| ---: | --- | ---: | --- | ---: | ---: | --- |
+| 467 | main | 0 | 150 / 81 / 6.0 | 5.5 | 1.087e-03 | strong |
+| 467 | main | 1 | 250 / 100 / 6.0 | 6.5 | 3.857e-03 | strong |
+| 467 | revisit | 2 | 350 / 119 / 7.25 | 7.0 | 4.013e-04 | weak |
+| 468 | main | 2 | 350 / 120 / 8.0 | 7.75 | 9.235e-04 | moderate |
+| 468 | revisit | 2 | 350 / 120 / 8.0 | 7.875 | 1.424e-04 | weak |
+| 469 | main | 0 | 150 / 80 / 5.0 | 5.25 | 3.571e-04 | weak |
+| 469 | revisit | 0 | 150 / 80 / 5.0 | 5.125 | 3.571e-04 | weak |
+
+Interpretation:
+
+```text
+Seed34 replicates the same mechanism as seed13, but with weaker fine-radius
+margins. Radius-only profiling is not enough when a target carries a 1 mm z
+residual. Local z/r coupling recovers target 2, then target 0, and the final
+staged tuple is exact truth.
+```
+
+Plot validation:
+
+```text
+467 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 59.3192
+
+468 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 60.3920
+
+469 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 65.0768
+```
+
+### 470: Seed-34 Coordinate Confidence Summary
+
+Output:
+
+```text
+outputs/experiments/470_variable_depth_radius_seed34_staged_coordinate_confidence_summary
+```
+
+Command:
+
+```text
+run_coordinate_confidence_aggregate.py over coordinate summaries 464-469.
+```
+
+Aggregate metrics:
+
+```text
+rows: 22
+truth-geometry rows: 11
+confidence labels: missing=6, weak=10, moderate=3, strong=3
+minimum radius margin: 5.575e-05
+maximum x/z/r ambiguity widths: 2.0 / 1.0 / 1.0 mm
+target-0 rows: 8, truth-geometry rows: 4, weakest radius margin: 3.571e-04
+target-1 rows: 4, truth-geometry rows: 3, weakest radius margin: 2.609e-03
+target-2 rows: 10, truth-geometry rows: 4, weakest radius margin: 5.575e-05
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png:
+2711x971 px, dynamic range 255, grayscale std 50.5450
+
+coordinate_ambiguity_widths.png:
+2711x971 px, dynamic range 255, grayscale std 45.2990
+```
+
+Figure notes:
+
+```text
+outputs/experiments/470_variable_depth_radius_seed34_staged_coordinate_confidence_summary/figures/FIGURE_NOTES.md
+```
+
+## 471: Combined Seed13/Seed34 Coordinate Confidence Summary
+
+Output:
+
+```text
+outputs/experiments/471_variable_depth_radius_seed13_seed34_coordinate_confidence_summary
+```
+
+Command:
+
+```text
+run_coordinate_confidence_aggregate.py over coordinate summaries 455-460 and
+464-469.
+```
+
+Aggregate metrics:
+
+```text
+rows: 52
+truth-geometry rows: 22
+confidence labels: missing=14, weak=18, moderate=6, strong=14
+minimum radius margin: 5.575e-05
+maximum x/z/r ambiguity widths: 2.0 / 1.0 / 1.0 mm
+
+target 0: rows=24, truth-geometry rows=8, weakest radius margin=8.431e-05
+target 1: rows=10, truth-geometry rows=8, weakest radius margin=1.835e-03
+target 2: rows=18, truth-geometry rows=6, weakest radius margin=5.575e-05
+```
+
+Interpretation:
+
+```text
+The two-seed aggregate confirms the staged policy reaches exact final geometry
+on seeds 13 and 34, while preserving the important caveat: target 0 and target
+2 carry weak fine-radius intervals in intermediate or coupling rows. Target 1
+is consistently the most stable branch.
+```
+
+Plot validation:
+
+```text
+coordinate_confidence_aggregate.png:
+6381x971 px, dynamic range 255, grayscale std 52.5092
+
+coordinate_ambiguity_widths.png:
+6381x971 px, dynamic range 255, grayscale std 43.5996
+```
+
+Figure notes:
+
+```text
+outputs/experiments/471_variable_depth_radius_seed13_seed34_coordinate_confidence_summary/figures/FIGURE_NOTES.md
+```
+
+## 472-481: Seed-55 Staged Replication
+
+Goal:
+
+```text
+Run the harder seed55 detector gate and, if it passes, replicate the staged
+coordinate policy without launching the broad all-parameter command.
+```
+
+Common physical scene:
+
+```text
+truth x=[150,250,350] mm
+truth z=[80,100,120] mm
+truth r=[5,6,8] mm
+source mismatch: frequency scale 1.1, time shift -50 ps, amplitude scale 1.1
+noise: 10% RMS, seed 55
+```
+
+### 472-473: Detector and Assignment
+
+Outputs:
+
+```text
+outputs/experiments/472_detection_multi_rebar_variable_depth_radius_source_mismatch_noise10_seed55
+outputs/experiments/473_detection_assignment_variable_depth_radius_472
+```
+
+Command pattern:
+
+```text
+472: run_rebar_detection_pipeline.py with the same detector grid as 451,
+     changing only --noise-seed 55 and the run name.
+473: run_detection_assignment_report.py on 472/data/detection_candidates.csv
+     with --count 3 and --min-x-separation-mm 45.
+```
+
+Detector candidates:
+
+| Rank | x [mm] | z [mm] | Normalized score | Note |
+| ---: | ---: | ---: | ---: | --- |
+| 1 | 248 | 90 | 0.927 | center truth within 2 mm x, 10 mm shallow |
+| 2 | 148 | 85 | 0.869 | left truth within 2 mm x, 5 mm deep |
+| 3 | 348 | 125 | 0.834 | right truth within 2 mm x, 5 mm deep |
+| 4 | 352 | 90 | - | false shallow right duplicate |
+| 5 | 236 | 125 | - | false deeper center/right alias |
+
+Assignment:
+
+```text
+selected rank 2 -> rank 1 -> rank 3 as left/center/right seeds:
+x=[148,248,348] mm, z=[85,90,125] mm.
+```
+
+Plot validation:
+
+```text
+472 detection_overlay.png:
+1885x1209 px, dynamic range 255, grayscale std 47.1761
+
+473 detector_assignment.png:
+1444x1005 px, dynamic range 255, grayscale std 38.7054
+```
+
+Interpretation:
+
+```text
+The detector/assignment gate passes for seed55, but the center seed is 10 mm
+shallow, so the staged policy should correct the largest z residual first and
+avoid a common broad x/z/r sweep.
+```
+
+### 474-476: Target-Specific Location Stage
+
+Outputs:
+
+```text
+outputs/experiments/474_coordinate_optimizer_variable_depth_radius_seed55_target1_location
+outputs/experiments/475_coordinate_optimizer_variable_depth_radius_seed55_target0_location
+outputs/experiments/476_coordinate_optimizer_variable_depth_radius_seed55_target2_location
+```
+
+Command pattern:
+
+```text
+474 target 1: x offsets 0:2:1, z offsets +5:+12:1, radius fixed at 6 mm.
+475 target 0: x offsets 0:2:1, z offsets -6:0:1, radius fixed at 6 mm.
+476 target 2: x offsets 0:2:1, z offsets -6:0:1, radius fixed at 6 mm.
+All three use gpu-cpml, 1 mm grid, 5 sources, seed55 source-mismatch rows,
+and base/highband diagnostics.
+```
+
+Final location-stage state:
+
+```text
+x=[150,250,349] mm
+z=[81,100,119] mm
+r=[6,6,6] mm
+```
+
+Runtime:
+
+```text
+474: 389.5 s
+475: 346.0 s
+476: 341.8 s
+```
+
+Update-case rows:
+
+| Run | Target | Best x/z/r [mm] | Competing geometry | Note |
+| ---: | ---: | --- | --- | --- |
+| 474 | 1 | 250 / 100 / 6 | 250 / 99 / 6 | center exact after largest z correction |
+| 475 | 0 | 150 / 81 / 6 | 149 / 81 / 6 | left x exact, 1 mm deep |
+| 476 | 2 | 349 / 119 / 6 | 350 / 119 / 6 | right near truth, 1 mm x/z residual |
+
+Plot validation:
+
+```text
+474 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 27.0502
+
+475 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 27.0684
+
+476 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 27.0570
+```
+
+### 477-479: Radius and Local Coupled Corrections
+
+Outputs:
+
+```text
+outputs/experiments/477_coordinate_optimizer_variable_depth_radius_seed55_radius_only_pass
+outputs/experiments/478_coordinate_optimizer_variable_depth_radius_seed55_target2_xzr_coupled
+outputs/experiments/479_coordinate_optimizer_variable_depth_radius_seed55_target0_z_radius_coupled
+```
+
+Command pattern:
+
+```text
+477: radius-only pass from x=[150,250,349], z=[81,100,119],
+     r=[6,6,6], with target radii swept by -1:2:0.5 mm.
+478: target 2 x/z/r coupling from x=349, z=119, r=7, using x offsets 0:1,
+     z offsets 0:1, and radius offsets 0:1:0.25.
+479: target 0 z/r coupling from z=81, r=6, using z offsets -1:0
+     and radius offsets -1:0.25:0.25.
+```
+
+Final staged state:
+
+```text
+x=[150,250,350] mm
+z=[80,100,120] mm
+r=[5,6,8] mm
+```
+
+Key rows:
+
+| Run | Target | Best x/z/r [mm] | Next radius [mm] | Margin | Label |
+| ---: | ---: | --- | ---: | ---: | --- |
+| 477 | 0 | 150 / 81 / 6.0 | 5.5 | 9.752e-04 | moderate |
+| 477 | 1 | 250 / 100 / 6.0 | 5.5 | 4.055e-03 | strong |
+| 477 | 2 | 349 / 119 / 7.0 | 7.5 | 1.301e-03 | strong |
+| 478 | 2 | 350 / 120 / 8.0 | 7.25 | 1.083e-03 | strong |
+| 479 | 0 | 150 / 80 / 5.0 | 5.25 | 3.503e-04 | weak |
+
+Ambiguity intervals:
+
+```text
+478 update case: x=350, z=119-120, r=7.25-8.0 mm
+479 update case: x=150, z=80-81, r=5.0-6.0 mm
+```
+
+Interpretation:
+
+```text
+Seed55 reproduces the seed34 failure mode: radius-only profiling looks
+confident but incomplete when a target has a 1 mm geometry residual. A compact
+target-2 x/z/r grid recovers the right bar exactly; a compact target-0 z/r grid
+then recovers the left bar exactly. Target 1 remains the stable control branch.
+```
+
+Plot validation:
+
+```text
+477 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 75.4053
+
+478 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 86.3944
+
+479 coordinate_confidence_margins.png:
+1549x903 px, dynamic range 255, grayscale std 68.7828
+```
+
+### 480-481: Seed55 and Three-Seed Confidence Summaries
+
+Outputs:
+
+```text
+outputs/experiments/480_variable_depth_radius_seed55_staged_coordinate_confidence_summary
+outputs/experiments/481_variable_depth_radius_seed13_seed34_seed55_coordinate_confidence_summary
+```
+
+Command pattern:
+
+```text
+480: run_coordinate_confidence_aggregate.py over coordinate summaries 474-479.
+481: run_coordinate_confidence_aggregate.py over coordinate summaries 455-460,
+     464-469, and 474-479.
+```
+
+Seed55 aggregate metrics:
+
+```text
+rows: 16
+truth-geometry rows: 7
+confidence labels: missing=6, weak=3, moderate=2, strong=5
+minimum radius margin: 3.088e-04
+maximum x/z/r ambiguity widths: 2.0 / 1.0 / 1.0 mm
+target-0 rows: 6, truth-geometry rows: 2, weakest radius margin: 3.088e-04
+target-1 rows: 4, truth-geometry rows: 3, weakest radius margin: 3.142e-03
+target-2 rows: 6, truth-geometry rows: 2, weakest radius margin: 4.471e-04
+```
+
+Three-seed aggregate metrics:
+
+```text
+rows: 68
+truth-geometry rows: 29
+confidence labels: missing=20, weak=21, moderate=8, strong=19
+minimum radius margin: 5.575e-05
+maximum x/z/r ambiguity widths: 2.0 / 1.0 / 1.0 mm
+
+target 0: rows=30, truth-geometry rows=10, weakest radius margin=8.431e-05
+target 1: rows=14, truth-geometry rows=11, weakest radius margin=1.835e-03
+target 2: rows=24, truth-geometry rows=8, weakest radius margin=5.575e-05
+```
+
+Plot validation:
+
+```text
+480 coordinate_confidence_aggregate.png:
+1977x971 px, dynamic range 255, grayscale std 56.2919
+
+480 coordinate_ambiguity_widths.png:
+1977x971 px, dynamic range 255, grayscale std 49.2823
+
+481 coordinate_confidence_aggregate.png:
+8343x971 px, dynamic range 255, grayscale std 55.3670
+
+481 coordinate_ambiguity_widths.png:
+8343x971 px, dynamic range 255, grayscale std 46.0982
+```
+
+Figure notes:
+
+```text
+outputs/experiments/480_variable_depth_radius_seed55_staged_coordinate_confidence_summary/figures/FIGURE_NOTES.md
+outputs/experiments/481_variable_depth_radius_seed13_seed34_seed55_coordinate_confidence_summary/figures/FIGURE_NOTES.md
+```
+
 ## Interpretation
 
 The combined variable-depth/variable-radius staged gate now has a clearer
@@ -830,6 +1375,12 @@ with a remaining radius interval of 5.0-5.25 mm;
 target-2 x polish closes the final right-target 1 mm offset.
 the coordinate confidence aggregate records the weak intermediate target-0
 rows and the stable focused center/right rows.
+seed34 replication reaches exact truth with the same staged policy, but its
+fine target-2 radius margin is weaker than seed13.
+seed55 replication also reaches exact truth after target-specific location,
+target-2 x/z/r coupling, and target-0 z/r coupling.
+the combined seed13/seed34/seed55 aggregate packages the staged evidence and
+exposes the weak target-0/target-2 fine-radius intervals.
 ```
 
 This argues against launching the broad 453 all-parameter command as the next
@@ -840,14 +1391,12 @@ should still be reported with the observed local intervals.
 ## Next Decision
 
 Do not run the full broad x/z/r command from 453 as the next step. The branch
-now needs a CPU summary artifact and then one bounded seed replication, not a
-larger search:
+now has a three-seed evidence package:
 
 ```text
-summarize the staged path 451-460 with detector, assignment, location, radius,
-and final-polish metrics;
-replicate the staged policy on one new noise seed before promoting it as a
-branch-level procedure;
+use the combined summary in run 481 as the current evidence package;
 keep broad all-parameter FWI deferred unless replication exposes a new failure
-mode.
+mode;
+move the next GPU block to a new branch or an acquisition/objective variation,
+not another identical seed replication.
 ```

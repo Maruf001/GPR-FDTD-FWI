@@ -5,7 +5,9 @@ import csv
 import os
 import sys
 
+import numpy as np
 import pytest
+from PIL import Image
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -19,11 +21,21 @@ from run_multi_rebar_coordinate_optimizer import (  # noqa: E402
     objective_top_candidate_rows_for_step,
     parse_target_indices,
     parse_vector_mm,
+    plot_coordinate_margins,
+    plot_coordinate_objective_radius_candidates,
+    plot_coordinate_radius_decision_panel,
     results_from_candidates,
+    summary_truth_radius_mm,
     truth_radius_values_for_run,
     write_coordinate_figure_notes,
     write_objective_top_candidate_csv,
 )
+
+
+def _dynamic_range(path):
+    with Image.open(path) as image:
+        gray = np.asarray(image.convert("L"))
+    return int(gray.max()) - int(gray.min())
 
 
 def test_parse_vector_mm_preserves_duplicates_and_order():
@@ -58,6 +70,14 @@ def test_truth_radius_values_for_run_accepts_per_target_radii():
 def test_truth_radius_values_for_run_rejects_wrong_length():
     with pytest.raises(ValueError, match="truth radius"):
         truth_radius_values_for_run(6.0, [5.0, 6.0], target_count=3)
+
+
+def test_summary_truth_radius_mm_uses_single_target_per_target_radius():
+    radii = [5.0, 6.0, 8.0]
+
+    assert summary_truth_radius_mm(6.0, radii, [2]) == 8.0
+    assert summary_truth_radius_mm(6.0, radii, [0]) == 5.0
+    assert summary_truth_radius_mm(6.0, radii, [0, 2]) == 6.0
 
 
 def test_results_from_candidates_builds_ranked_case_results():
@@ -438,8 +458,89 @@ def test_write_coordinate_figure_notes_describes_weak_update_rows(tmp_path):
     write_coordinate_figure_notes(notes_path, rows)
 
     text = notes_path.read_text(encoding="utf-8")
+    assert "coordinate_radius_decision_panel.png" in text
     assert "coordinate_confidence_margins.png" in text
     assert "Rows in this run: 2" in text
     assert "weak=1" in text
     assert "target 0 best r=6.8 mm" in text
     assert "target 0 r=6.8 mm interval=6-6.8 mm" in text
+
+
+def test_coordinate_optimizer_decision_figures_are_contextual(tmp_path):
+    confidence_rows = [
+        {
+            "case_label": "source_mismatch_ringdown050_noise10_seed20365011074",
+            "update_case_label": "source_mismatch_ringdown050_noise10_seed20365011074",
+            "confidence_label": "weak",
+            "pass_index": 0,
+            "step_target_index": 2,
+            "best_x_mm": 350.0,
+            "best_z_mm": 120.0,
+            "best_radius_mm": 8.0,
+            "next_radius_mm": 8.75,
+            "radius_margin_abs": 4.96e-4,
+            "best_misfit": 0.01669,
+            "next_radius_misfit": 0.01718,
+            "competing_geometry_x_mm": 350.0,
+            "competing_geometry_z_mm": 121.0,
+            "competing_geometry_radius_mm": 8.75,
+            "competing_geometry_misfit": 0.01718,
+            "ambiguity_radius_min_mm": 8.0,
+            "ambiguity_radius_max_mm": 8.0,
+        }
+    ]
+    objective_rows = [
+        {
+            "case_label": "source_mismatch_ringdown050_noise10_seed20365011074",
+            "objective_label": "base",
+            "best_radius_mm": 8.0,
+            "next_radius_mm": 8.75,
+            "radius_margin_abs": 4.96e-4,
+        },
+        {
+            "case_label": "source_mismatch_ringdown050_noise10_seed20365011074",
+            "objective_label": "highband",
+            "best_radius_mm": 8.0,
+            "next_radius_mm": 8.25,
+            "radius_margin_abs": 7.1e-4,
+        },
+    ]
+    top_rows = [
+        {
+            "objective_label": "base",
+            "rank": 1,
+            "radius_mm": 8.0,
+            "z_mm": 120.0,
+        },
+        {
+            "objective_label": "base",
+            "rank": 2,
+            "radius_mm": 8.75,
+            "z_mm": 121.0,
+        },
+        {
+            "objective_label": "highband",
+            "rank": 1,
+            "radius_mm": 8.0,
+            "z_mm": 120.0,
+        },
+    ]
+
+    margin_path = tmp_path / "coordinate_confidence_margins.png"
+    decision_path = tmp_path / "coordinate_radius_decision_panel.png"
+    candidate_path = tmp_path / "coordinate_objective_radius_candidates.png"
+    notes_path = tmp_path / "FIGURE_NOTES.md"
+
+    plot_coordinate_margins(confidence_rows, margin_path)
+    plot_coordinate_radius_decision_panel(confidence_rows, objective_rows, decision_path)
+    plot_coordinate_objective_radius_candidates(top_rows, candidate_path, max_rank=3)
+    write_coordinate_figure_notes(notes_path, confidence_rows, objective_rows, top_rows)
+
+    assert margin_path.exists()
+    assert decision_path.exists()
+    assert candidate_path.exists()
+    assert _dynamic_range(decision_path) > 10
+    assert _dynamic_range(candidate_path) > 10
+    text = notes_path.read_text(encoding="utf-8")
+    assert "which radius won" in text
+    assert "Objective variants below moderate cutoff: base" in text
