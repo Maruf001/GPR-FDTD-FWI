@@ -1,0 +1,67 @@
+{
+  "source": "summary",
+  "summary_path": "outputs/experiments/1006_coordinate_optimizer_variable_depth_radius_seed3524578_target2_sources5_txrx60_ringdown050_objectives/data/multi_rebar_coordinate_optimizer_summary.json",
+  "run_name": "coordinate_optimizer_variable_depth_radius_seed3524578_target2_sources5_txrx60_ringdown050_objectives",
+  "scene_basis": "coordinate optimizer summary geometry",
+  "animation_type": "geometric travel-time schematic",
+  "metadata": {
+    "pair": {
+      "tx_x_mm": 346.0,
+      "rx_x_mm": 406.0,
+      "tx_z_mm": 38.0,
+      "rx_z_mm": 38.0,
+      "target_rebar_index": 2
+    },
+    "travel_time": {
+      "velocity_model": "straight-ray concrete velocity schematic",
+      "concrete_epsr": 6.0,
+      "concrete_velocity_mm_per_ns": 122.38975847245946,
+      "direct_tx_rx_time_ns_air": 0.20013845711889122,
+      "rebar_echoes": [
+        {
+          "rebar_index": 0,
+          "x_mm": 150.0,
+          "z_mm": 80.0,
+          "radius_mm": 5.0,
+          "tx_to_rebar_time_ns": 1.6377963106363571,
+          "rebar_to_rx_time_ns": 2.1196416976330013,
+          "two_way_time_ns": 3.757438008269358,
+          "is_target": false
+        },
+        {
+          "rebar_index": 1,
+          "x_mm": 250.0,
+          "z_mm": 100.0,
+          "radius_mm": 6.0,
+          "tx_to_rebar_time_ns": 0.9337411760887572,
+          "rebar_to_rx_time_ns": 1.371593494726283,
+          "two_way_time_ns": 2.3053346708150397,
+          "is_target": false
+        },
+        {
+          "rebar_index": 2,
+          "x_mm": 350.0,
+          "z_mm": 120.0,
+          "radius_mm": 8.0,
+          "tx_to_rebar_time_ns": 0.6707873602477041,
+          "rebar_to_rx_time_ns": 0.8113222375612051,
+          "two_way_time_ns": 1.4821095978089092,
+          "is_target": true
+        }
+      ]
+    },
+    "frames": 36,
+    "fps": 8,
+    "max_time_ns": 4.321053709509761
+  },
+  "validation": {
+    "width_px": 977,
+    "height_px": 621,
+    "frame_count": 36,
+    "unique_colors_midframe": 256,
+    "nonwhite_fraction_midframe": 0.6822274635456069
+  },
+  "paths": {
+    "animation": "outputs/experiments/1006_coordinate_optimizer_variable_depth_radius_seed3524578_target2_sources5_txrx60_ringdown050_objectives/figures/geometric_wave_propagation.gif"
+  }
+}
