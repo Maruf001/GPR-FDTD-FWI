@@ -4,7 +4,7 @@ path	kind	size_bytes	mtime_utc
 .pytest_cache/CACHEDIR.TAG	file	191	2026-05-29T04:18:25.143476+00:00
 .pytest_cache/README.md	file	302	2026-05-29T04:18:25.143427+00:00
 .pytest_cache/v/cache/lastfailed	file	2	2026-06-11T20:23:38.667888+00:00
-.pytest_cache/v/cache/nodeids	file	34633	2026-06-12T06:32:36.912480+00:00
+.pytest_cache/v/cache/nodeids	file	34633	2026-06-14T20:40:11.309870+00:00
 __pycache__/config.cpython-312.pyc	file	2173	2026-03-30T03:51:49.622336+00:00
 __pycache__/config.cpython-313.pyc	file	2208	2026-03-30T02:14:01.601268+00:00
 __pycache__/run_assigned_coordinate_command_report.cpython-313.pyc	file	15625	2026-06-01T01:16:52.539312+00:00
@@ -139,6 +139,7 @@ inversion/__pycache__/trace_filters.cpython-312.pyc	file	3139	2026-06-05T06:22:5
 inversion/__pycache__/trace_filters.cpython-313.pyc	file	3047	2026-05-28T21:16:04.450661+00:00
 inversion/__pycache__/trace_wasserstein.cpython-313.pyc	file	9371	2026-05-29T05:29:42.963197+00:00
 outputs/.matplotlib/fontlist-v390.json	file	111744	2026-05-28T07:02:18.863562+00:00
+outputs/.~lock.GPR_FDTD_FWI_SingleRebar_Next.pptx#	file	78	2026-05-29T09:07:01.253519+00:00
 outputs/animations/wave_propagation.gif	file	4974960	2026-03-30T02:16:38.659283+00:00
 outputs/archive_resolution/post535_735_resolution_audit/__pycache__/move_admin_outputs_with_symlinks.cpython-313.pyc	file	4376	2026-06-06T01:54:44.994129+00:00
 outputs/data/forward_data.npz	file	1539716	2026-03-30T02:16:33.016218+00:00
@@ -14681,6 +14682,7 @@ outputs/single_rebar_landscape_smoke/data/z_radius_landscape.csv	file	545	2026-0
 outputs/single_rebar_landscape_smoke/figures/radius_sweep.png	file	71934	2026-05-28T09:26:08.544552+00:00
 outputs/single_rebar_landscape_smoke/figures/xz_landscape.png	file	54648	2026-05-28T09:26:08.262545+00:00
 outputs/single_rebar_landscape_smoke/figures/z_radius_landscape.png	file	55134	2026-05-28T09:26:08.379548+00:00
+outputs/~$GPR_FDTD_FWI_SingleRebar_Next_v2.pptx	file	165	2026-06-14T19:51:21.565513+00:00
 tests/__pycache__/test_assigned_coordinate_command_report.cpython-313-pytest-9.0.3.pyc	file	20037	2026-05-31T19:34:07.738726+00:00
 tests/__pycache__/test_bandwidth_schedule_runner.cpython-313-pytest-9.0.3.pyc	file	3490	2026-05-29T04:58:21.293827+00:00
 tests/__pycache__/test_bandwidth_schedule_runner.cpython-313.pyc	file	1636	2026-05-29T04:58:21.248818+00:00

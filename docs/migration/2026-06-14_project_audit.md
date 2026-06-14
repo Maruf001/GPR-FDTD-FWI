@@ -113,6 +113,20 @@ requirements-gpu.txt
 environment.yml
 ```
 
+## Figure And Animation Template Follow-Up
+
+After the first migration package was created, a small documentation-only pass
+added the current figure/animation template inventory:
+
+```text
+FIGURE_ANIMATION_TEMPLATE_INVENTORY.md
+tools/figure_animation_templates/README.md
+tools/figure_animation_templates/NEXT_DGX_SPARK_CHECKLIST.md
+```
+
+Those files are included in the refreshed Git bundle. No experiment outputs
+were deleted, moved, overwritten, or regenerated for that pass.
+
 ## Cleanup Decisions
 
 Temporary office lock files were removed from the Git index and are now ignored:

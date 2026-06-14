@@ -137,6 +137,14 @@ docs/update/summary/004_2026-06-11_experiment_700_1218_holistic_evaluation.ipynb
 outputs/summary_tables/experiment_700_1218_holistic_evaluation/
 ```
 
+The figure and animation template inventory for continuing visual-context work
+on the next DGX Spark is:
+
+```text
+FIGURE_ANIMATION_TEMPLATE_INVENTORY.md
+tools/figure_animation_templates/
+```
+
 Tracked experiment notes currently cover experiments 1-757. The local artifact
 archive preserves output folders through 1218.
 

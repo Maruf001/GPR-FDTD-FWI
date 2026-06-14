@@ -16,6 +16,7 @@ For the latest research state, start with:
 
 - `docs/update/summary/005_2026-06-11_summary_update.md`
 - `outputs/summary_tables/experiment_700_1218_holistic_evaluation/`
+- `FIGURE_ANIMATION_TEMPLATE_INVENTORY.md`
 - `MIGRATION.md`
 - `SETUP.md`
 
