@@ -2,6 +2,21 @@
 
 **Purpose**: This document contains full context for continuing work on this project. When opening this project on a new machine (e.g., DGX Spark), tell Claude to read this file first and it will know exactly what to do.
 
+## Current Migration Note - 2026-06-14
+
+This file contains useful historical architecture context, but the project has
+advanced substantially since the original 2026-03-23 state below. On a new
+machine, read these files first:
+
+- `MIGRATION.md`
+- `SETUP.md`
+- `docs/update/summary/005_2026-06-11_summary_update.md`
+- `docs/migration/2026-06-14_project_audit.md`
+
+Important: `outputs/experiments/` is intentionally ignored by Git. Restore it
+from the local artifact archive described in `MIGRATION.md` if an exact working
+copy is needed.
+
 ---
 
 ## What This Project Is

@@ -1,0 +1,3 @@
+# Developer/test dependencies.
+-r requirements.txt
+pytest>=9.0

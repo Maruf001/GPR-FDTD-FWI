@@ -1,53 +1,55 @@
 # DGX Spark Deployment Guide
 
-This project is designed to run on an NVIDIA DGX Spark for GPU-accelerated FDTD simulation and full-waveform inversion.
+This project is designed to run on an NVIDIA DGX Spark for GPU-accelerated
+FDTD simulation, synthetic coordinate-optimizer experiments, and field-data QC.
 
----
+For complete setup and migration instructions, see:
 
-## Setup on DGX Spark
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/<your-username>/FTDT_Project.git
-cd FTDT_Project
+```text
+SETUP.md
+MIGRATION.md
 ```
 
-### 2. Install Dependencies
+## Setup On DGX Spark
+
+Clone the repository:
 
 ```bash
-# Core packages
-pip install numpy scipy matplotlib numba pillow
-
-# GPU support — match your CUDA version
-# Check CUDA version:
-nvcc --version
-# or:
-nvidia-smi
-
-# Install CuPy for your CUDA version
-pip install cupy-cuda12x   # for CUDA 12.x
-# pip install cupy-cuda11x  # for CUDA 11.x
+git clone https://github.com/Maruf001/GPR-FDTD-FWI.git
+cd GPR-FDTD-FWI
 ```
 
-### 3. Verify GPU Access
+Create the Python environment:
 
 ```bash
-python -c "
+conda env create -f environment.yml
+conda activate gpr-fdtd-fwi
+```
+
+Or use pip:
+
+```bash
+python -m pip install -r requirements-dev.txt
+python -m pip install -r requirements-gpu.txt
+```
+
+Verify GPU access:
+
+```bash
+python - <<'PY'
 import cupy as cp
-print(f'CuPy version: {cp.__version__}')
-print(f'CUDA version: {cp.cuda.runtime.runtimeGetVersion()}')
-d = cp.cuda.Device(0)
-print(f'GPU: {d.attributes[\"DeviceName\"]}' if hasattr(d, 'attributes') else f'GPU device 0 available')
-print(f'Memory: {d.mem_info[1] / 1e9:.1f} GB')
-"
+print("cupy", cp.__version__)
+print("runtime", cp.cuda.runtime.runtimeGetVersion())
+print("device", cp.cuda.Device(0))
+print(cp.asnumpy(cp.arange(8) ** 2))
+PY
 ```
 
 ---
 
 ## What to Run
 
-### Step 1: Forward Simulation (Part B.1)
+### Step 1: Forward Simulation
 
 ```bash
 python run_forward.py
@@ -66,7 +68,7 @@ python run_forward.py
 
 **Runtime**: ~2-5 minutes on CPU, ~10-30 seconds on GPU
 
-### Step 2: Full-Waveform Inversion (Part B.2)
+### Step 2: Full-Waveform Inversion
 
 ```bash
 python run_inversion.py --iterations 30 --method lbfgs
@@ -90,7 +92,7 @@ python run_inversion.py --iterations 30 --method lbfgs
 
 **Runtime**: ~30-60 minutes (30 iterations × ~50 sources × 2 simulations each)
 
-### Step 3: GPU Benchmark (Part B.3 — Bonus)
+### Step 3: GPU Benchmark
 
 ```bash
 python run_benchmark.py
@@ -156,18 +158,12 @@ CuPy compiles CUDA kernels on first use. Subsequent runs will be faster due to k
 
 Make sure you run from the project root directory:
 ```bash
-cd FTDT_Project
+cd GPR-FDTD-FWI
 python run_forward.py
 ```
 
----
+## Migration Note
 
-## File Checklist for Interview
-
-Before the interview, verify these outputs exist:
-- [ ] `outputs/figures/geometry.png` — model geometry
-- [ ] `outputs/figures/bscan.png` — B-scan with rebar hyperbolas
-- [ ] `outputs/animations/wavefield.gif` — wave propagation
-- [ ] `outputs/figures/inversion_result.png` — FWI recovered model
-- [ ] `outputs/figures/convergence.png` — misfit convergence
-- [ ] GPU benchmark results (terminal output or saved)
+`outputs/experiments/` is ignored by Git. To recreate this machine's full
+working copy on another DGX Spark, restore the local artifact archive described
+in `MIGRATION.md` after cloning.

@@ -1,0 +1,17 @@
+name: gpr-fdtd-fwi
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - pip
+  - numpy
+  - scipy
+  - matplotlib
+  - pillow
+  - pandas
+  - nbformat
+  - python-pptx
+  - pytest
+  - pip:
+      - readgssi==0.0.22
+      - cupy-cuda12x==14.0.1

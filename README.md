@@ -4,6 +4,23 @@
 
 A from-scratch implementation of 2D finite-difference time-domain (FDTD) electromagnetic simulation and adjoint-state full-waveform inversion (FWI) for GPR inspection of reinforced concrete.
 
+## Current State
+
+The project now includes three active workflow families:
+
+- Synthetic forward/FWI examples for the original concrete/rebar model.
+- Detector-seeded and coordinate-optimizer workflows for synthetic single- and multi-rebar sizing.
+- Field-data import and QC for local GSSI DZT scans.
+
+For the latest research state, start with:
+
+- `docs/update/summary/005_2026-06-11_summary_update.md`
+- `outputs/summary_tables/experiment_700_1218_holistic_evaluation/`
+- `MIGRATION.md`
+- `SETUP.md`
+
+Important migration note: `outputs/experiments/` is intentionally ignored by Git. Restore it from the migration artifact archive described in `MIGRATION.md` when recreating this working copy on another machine.
+
 ## Problem Setup
 
 - **Scenario**: GPR scanning of a concrete slab with 3 embedded steel rebars
@@ -60,11 +77,19 @@ A from-scratch implementation of 2D finite-difference time-domain (FDTD) electro
 ### Install Dependencies
 
 ```bash
-# CPU-only (works on any machine)
-pip install numpy scipy matplotlib numba pillow
+# Conda environment, recommended on DGX Spark
+conda env create -f environment.yml
+conda activate gpr-fdtd-fwi
 
-# GPU support (NVIDIA GPU required)
-pip install cupy-cuda12x   # match your CUDA version
+# Or pip
+python -m pip install -r requirements-dev.txt
+python -m pip install -r requirements-gpu.txt
+```
+
+Verify the environment:
+
+```bash
+python -m pytest -q
 ```
 
 ### Run Forward Simulation

@@ -12,6 +12,11 @@ build/
 venv/
 env/
 
+# Local test/tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
 # IDE
 .vscode/
 .idea/
@@ -22,6 +27,12 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Runtime and editor temporaries
+*.log
+*.pid
+.~lock.*#
+~$*
 
 # Outputs (regenerated at runtime)
 outputs/figures/*.png
