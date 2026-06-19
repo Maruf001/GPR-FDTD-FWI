@@ -1,0 +1,28 @@
+{
+  "policy_label": "local_2d_detector_parameter_sensitivity_saved_bscan_cpu",
+  "config_count": 81,
+  "case_count": 12,
+  "case_config_row_count": 972,
+  "rescued_case_count": 12,
+  "rescued_case_fraction": 1.0,
+  "best_config_key": "median_top40_moderate12_single667",
+  "best_config_unique_all_truth_case_count": 12,
+  "best_config_mean_unique_truth_hit_count": 3.0,
+  "best_config_mean_max_assigned_rank": 23.416666666666668,
+  "best_config_max_assigned_rank": 36.0,
+  "any_config_target0_case_count": 12,
+  "any_config_target2_case_count": 12,
+  "gpu_used": false,
+  "backend": "saved_bscan_cpu_rescore",
+  "decision": "Saved-B-scan detector sensitivity recovered all truths in every case for at least one configuration, so the earlier negative detector baseline is a parameter-setting artifact. Because some recoveries require deeper candidate ranks, this is candidate-list recoverability, not yet a clean standalone top-pick detector result.",
+  "elapsed_time_s": 97.51552629470825,
+  "paths": {
+    "rows_csv": "outputs/summary_tables/020_local_2d_detector_parameter_sensitivity_post_rank_depth_metrics/data/local_2d_detector_parameter_sensitivity_rows.csv",
+    "config_csv": "outputs/summary_tables/020_local_2d_detector_parameter_sensitivity_post_rank_depth_metrics/data/local_2d_detector_parameter_sensitivity_config_summary.csv",
+    "case_csv": "outputs/summary_tables/020_local_2d_detector_parameter_sensitivity_post_rank_depth_metrics/data/local_2d_detector_parameter_sensitivity_case_summary.csv",
+    "summary_json": "outputs/summary_tables/020_local_2d_detector_parameter_sensitivity_post_rank_depth_metrics/data/local_2d_detector_parameter_sensitivity_summary.json",
+    "figure": "outputs/summary_tables/020_local_2d_detector_parameter_sensitivity_post_rank_depth_metrics/figures/local_2d_detector_parameter_sensitivity.png",
+    "figure_notes": "outputs/summary_tables/020_local_2d_detector_parameter_sensitivity_post_rank_depth_metrics/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/020_local_2d_detector_parameter_sensitivity_post_rank_depth_metrics/data/figure_validation.csv"
+  }
+}

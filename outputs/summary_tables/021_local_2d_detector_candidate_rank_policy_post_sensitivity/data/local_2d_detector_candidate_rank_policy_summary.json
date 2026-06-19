@@ -1,0 +1,47 @@
+{
+  "policy_label": "local_2d_detector_candidate_rank_policy_saved_bscan_cpu",
+  "case_count": 12,
+  "config_count": 81,
+  "rank_caps": [
+    3,
+    5,
+    10,
+    20,
+    40,
+    80
+  ],
+  "config_with_full_case_recovery_count": 8,
+  "minimal_rank_cap_for_full_case_recovery": 40,
+  "best_config_key": "none_top40_moderate12_baseline",
+  "best_config_min_rank_cap_for_all_cases": 40,
+  "best_config_mean_max_assigned_rank": 21.333333333333332,
+  "best_config_worst_max_assigned_rank": 32.0,
+  "best_case_count_by_rank_cap": {
+    "top3": 0,
+    "top5": 2,
+    "top10": 4,
+    "top20": 10,
+    "top40": 12,
+    "top80": 12
+  },
+  "full_recovery_config_count_by_rank_cap": {
+    "top3": 0,
+    "top5": 0,
+    "top10": 0,
+    "top20": 0,
+    "top40": 8,
+    "top80": 8
+  },
+  "branch_row_count": 2,
+  "gpu_used": false,
+  "backend": "saved_bscan_cpu_policy_synthesis",
+  "decision": "All cases are recoverable only with a deeper candidate budget. Use the detector as a truth-containing candidate generator, and gate any detector-to-FWI pilot by rank/cost.",
+  "paths": {
+    "config_csv": "outputs/summary_tables/021_local_2d_detector_candidate_rank_policy_post_sensitivity/data/local_2d_detector_candidate_rank_policy_config_summary.csv",
+    "branch_csv": "outputs/summary_tables/021_local_2d_detector_candidate_rank_policy_post_sensitivity/data/local_2d_detector_candidate_rank_policy_branch_summary.csv",
+    "summary_json": "outputs/summary_tables/021_local_2d_detector_candidate_rank_policy_post_sensitivity/data/local_2d_detector_candidate_rank_policy_summary.json",
+    "figure": "outputs/summary_tables/021_local_2d_detector_candidate_rank_policy_post_sensitivity/figures/local_2d_detector_candidate_rank_policy.png",
+    "figure_notes": "outputs/summary_tables/021_local_2d_detector_candidate_rank_policy_post_sensitivity/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/021_local_2d_detector_candidate_rank_policy_post_sensitivity/data/figure_validation.csv"
+  }
+}

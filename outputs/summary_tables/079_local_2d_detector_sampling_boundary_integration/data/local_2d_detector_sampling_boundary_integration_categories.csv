@@ -1,0 +1,5 @@
+category,case_count,review_case_count,below_clean_case_count,branch_transfer_failure_count,candidate_component_seed_ready_count,max_slot_x_range_mm
+close14 stable reference,6,0,0,0,6,4.0
+close50 source-mismatch stable,3,0,3,0,3,5.0
+close50 nominal stable,1,0,1,0,1,2.0
+close50 nominal review,2,2,2,1,0,21.0

@@ -1,0 +1,3 @@
+branch_key,case_count,all_truth_case_count,target0_hit_count,target1_hit_count,target2_hit_count,mean_unique_truth_hit_count
+target2_close14,6,1,6,1,5,2.0
+target2_close50_linear29p5,6,0,0,2,5,1.1666666666666667

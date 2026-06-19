@@ -1,0 +1,40 @@
+{
+  "policy_label": "local_2d_detector_rank_budget_diagnostic_cpu_no_fwi",
+  "source_policy_label": "local_2d_detector_alltriples_gate_pilot_cpu_no_fwi",
+  "case_count": 12,
+  "combo_row_count": 12180,
+  "objective_count": 6,
+  "budget_row_count": 60,
+  "all_truth_combo_available_case_count": 12,
+  "sparse_all_truth_case_count": 6,
+  "best_top20_objective": "span_bonus",
+  "best_top20_case_count": 6,
+  "best_top50_objective": "span_bonus",
+  "best_top50_case_count": 8,
+  "best_top100_objective": "span_bonus",
+  "best_top100_case_count": 10,
+  "best_top200_objective": "span_bonus",
+  "best_top200_case_count": 12,
+  "minimal_all_case_candidate_triple_budget": 200,
+  "minimal_all_case_objectives": [
+    "balanced",
+    "span_bonus"
+  ],
+  "max_top1_all_truth_case_count": 0,
+  "max_top1_target0_hit_count": 3,
+  "ready_for_rank_gated_upper_bound_study": true,
+  "ready_for_detector_seeded_fwi": false,
+  "gpu_priority": "none",
+  "decision": "Use this as a CPU-only detector handoff diagnostic. All cases contain at least one all-truth triple inside the branch-specific top-20 candidate space, but current objectives need a rank budget up to 200 candidate triples per case to cover all cases and never select an all-truth triple at rank 1. This supports a rank-gated upper-bound study or a stronger waveform gate, not detector-seeded FWI.",
+  "paths": {
+    "source_combo_csv": "outputs/summary_tables/030_local_2d_detector_alltriples_gate_pilot/data/local_2d_detector_alltriples_gate_rows.csv",
+    "source_summary_json": "outputs/summary_tables/030_local_2d_detector_alltriples_gate_pilot/data/local_2d_detector_alltriples_gate_summary.json",
+    "case_diagnostic_csv": "outputs/summary_tables/034_local_2d_detector_rank_budget_diagnostic_post_alltriples_gate/data/local_2d_detector_rank_budget_case_diagnostic.csv",
+    "objective_summary_csv": "outputs/summary_tables/034_local_2d_detector_rank_budget_diagnostic_post_alltriples_gate/data/local_2d_detector_rank_budget_objective_summary.csv",
+    "budget_curve_csv": "outputs/summary_tables/034_local_2d_detector_rank_budget_diagnostic_post_alltriples_gate/data/local_2d_detector_rank_budget_curve.csv",
+    "summary_json": "outputs/summary_tables/034_local_2d_detector_rank_budget_diagnostic_post_alltriples_gate/data/local_2d_detector_rank_budget_diagnostic_summary.json",
+    "figure": "outputs/summary_tables/034_local_2d_detector_rank_budget_diagnostic_post_alltriples_gate/figures/local_2d_detector_rank_budget_diagnostic.png",
+    "figure_notes": "outputs/summary_tables/034_local_2d_detector_rank_budget_diagnostic_post_alltriples_gate/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/034_local_2d_detector_rank_budget_diagnostic_post_alltriples_gate/data/figure_validation.csv"
+  }
+}

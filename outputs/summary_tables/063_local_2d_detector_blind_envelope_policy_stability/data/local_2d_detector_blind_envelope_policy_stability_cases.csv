@@ -1,0 +1,13 @@
+case_label,branch_key,seed,case_variant,variant_count,all_target_slot_variant_count,failed_variant_count,success_fraction,unique_success_selection_count,unique_all_selection_count,dominant_success_selection,dominant_success_selection_count,dominant_success_fraction_of_success,dominant_success_fraction_of_all,max_target_slot_abs_error_median_mm,stability_label
+target2_close14|seed13|nominal,target2_close14,13,nominal,288,288,0,1.0,2,2,"185,250,265",210,0.7291666666666666,0.7291666666666666,5.0,full_success_multi_selection
+target2_close14|seed13|source_mismatch,target2_close14,13,source_mismatch,288,288,0,1.0,3,3,"188,252,264",156,0.5416666666666666,0.5416666666666666,2.0,full_success_multi_selection
+target2_close14|seed21|nominal,target2_close14,21,nominal,288,288,0,1.0,1,1,"191,254,266",288,1.0,1.0,4.0,full_success_single_selection
+target2_close14|seed21|source_mismatch,target2_close14,21,source_mismatch,288,288,0,1.0,3,3,"191,248,263",144,0.5,0.5,2.0,full_success_multi_selection
+target2_close14|seed34|nominal,target2_close14,34,nominal,288,288,0,1.0,1,1,"190,260,272",288,1.0,1.0,10.0,full_success_single_selection
+target2_close14|seed34|source_mismatch,target2_close14,34,source_mismatch,288,288,0,1.0,3,3,"191,247,263",144,0.5,0.5,3.0,full_success_multi_selection
+target2_close50_linear29p5|seed13|nominal,target2_close50_linear29p5,13,nominal,288,252,36,0.875,2,5,"187,250,294",165,0.6547619047619048,0.5729166666666666,6.0,tuning_sensitive_partial_success
+target2_close50_linear29p5|seed13|source_mismatch,target2_close50_linear29p5,13,source_mismatch,288,288,0,1.0,6,6,"187,253,300",90,0.3125,0.3125,5.0,full_success_multi_selection
+target2_close50_linear29p5|seed21|nominal,target2_close50_linear29p5,21,nominal,288,288,0,1.0,2,2,"190,253,298",168,0.5833333333333334,0.5833333333333334,3.0,full_success_multi_selection
+target2_close50_linear29p5|seed21|source_mismatch,target2_close50_linear29p5,21,source_mismatch,288,288,0,1.0,2,2,"188,252,294",216,0.75,0.75,6.0,full_success_multi_selection
+target2_close50_linear29p5|seed34|nominal,target2_close50_linear29p5,34,nominal,288,153,135,0.53125,5,7,"185,257,296",48,0.3137254901960784,0.16666666666666666,7.0,tuning_sensitive_partial_success
+target2_close50_linear29p5|seed34|source_mismatch,target2_close50_linear29p5,34,source_mismatch,288,288,0,1.0,2,2,"182,250,295",216,0.75,0.75,8.0,full_success_multi_selection

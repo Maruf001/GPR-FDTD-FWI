@@ -45,6 +45,9 @@ outputs/.cache/
 outputs/.matplotlib/
 outputs/single_rebar*/
 outputs/experiments/
+outputs/field_experiments/
+outputs/3d_experiments/*
+!outputs/3d_experiments/README.md
 
 # Jupyter
 .ipynb_checkpoints/

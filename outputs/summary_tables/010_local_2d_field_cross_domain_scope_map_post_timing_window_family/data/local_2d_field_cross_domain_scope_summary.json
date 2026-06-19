@@ -1,0 +1,29 @@
+{
+  "policy_label": "local_2d_field_cross_domain_scope_map_ready_no_gpu",
+  "scope_row_count": 7,
+  "field_min_same_time_spacing_mm": 96.657,
+  "synthetic_close_spacing_context_max_mm": 50.0,
+  "field_to_synthetic_spacing_ratio": 1.9331399999999999,
+  "field_ready_for_resolution_benchmark": false,
+  "field_timing_short_nonraw_supported_count": 18.0,
+  "field_timing_short_nonraw_row_count": 18.0,
+  "field_timing_short_nonraw_supported_fraction": 1.0,
+  "field_timing_long_reject_short_transfer_count": 3.0,
+  "field_timing_long_row_count": 3.0,
+  "field_timing_long_reject_short_transfer_fraction": 1.0,
+  "synthetic_immediate_gpu_priority_count": 0.0,
+  "synthetic_conditional_gpu_candidate_count": 0.0,
+  "field_absolute_time_zero_ready": false,
+  "field_fwi_ready": false,
+  "manuscript_table_ready": true,
+  "gpu_priority": "none",
+  "ready_for_manuscript_scope_table": true,
+  "decision": "Use this cross-domain scope map to keep synthetic known-truth resolution, measured-field timing/spacing QC, and no-GPU/no-FWI boundaries separated.",
+  "paths": {
+    "scope_rows_csv": "outputs/summary_tables/010_local_2d_field_cross_domain_scope_map_post_timing_window_family/data/local_2d_field_cross_domain_scope_rows.csv",
+    "summary_json": "outputs/summary_tables/010_local_2d_field_cross_domain_scope_map_post_timing_window_family/data/local_2d_field_cross_domain_scope_summary.json",
+    "figure": "outputs/summary_tables/010_local_2d_field_cross_domain_scope_map_post_timing_window_family/figures/local_2d_field_cross_domain_scope_map.png",
+    "figure_notes": "outputs/summary_tables/010_local_2d_field_cross_domain_scope_map_post_timing_window_family/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/010_local_2d_field_cross_domain_scope_map_post_timing_window_family/data/figure_validation.csv"
+  }
+}

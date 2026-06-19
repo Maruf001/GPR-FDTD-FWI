@@ -1,0 +1,19 @@
+# Figure Notes
+
+## `local_2d_field_manuscript_table_pack.png`
+
+This figure summarizes the row counts in the compact manuscript planning
+tables for current synthetic 2D and measured-field 2D evidence.
+
+Policy label: `local_2d_field_manuscript_table_pack_ready_no_gpu`.
+Synthetic figures: `9`.
+Field figures: `19`.
+Synthetic claims: `11`.
+Field claims: `18`.
+GPU priority: `none`.
+
+This is a manuscript-planning table index, not a new experiment.
+The claim table, figure inventory, and result metrics are stored in
+`local_2d_field_manuscript_claim_table.csv`, `local_2d_field_manuscript_figure_inventory.csv`, and `local_2d_field_manuscript_result_metrics.csv`.
+Image-validation metrics for this figure are stored in `figure_validation.csv`.
+

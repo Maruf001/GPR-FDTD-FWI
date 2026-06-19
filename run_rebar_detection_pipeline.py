@@ -84,6 +84,18 @@ def add_noise(clean, noise_fraction, seed):
     }
 
 
+def build_detector_scan_positions(scan_step_mm, sources, tx_rx_offset_mm, receiver_sampling):
+    """Build detector scan positions with explicit Tx/Rx geometry."""
+    if tx_rx_offset_mm < 0.0:
+        raise ValueError("--tx-rx-offset-mm must be non-negative")
+    return build_scan_positions(
+        float(scan_step_mm) / 1000.0,
+        sources,
+        tx_rx_offset_m=float(tx_rx_offset_mm) / 1000.0,
+        receiver_sampling=receiver_sampling,
+    )
+
+
 def truth_match_metrics(candidates, truth_x_values_mm, truth_z_values_mm, tolerance_x_mm, tolerance_z_mm):
     """Return nearest-error metrics for truth points and detection candidates."""
     metrics = []
@@ -153,6 +165,7 @@ def plot_detection_overlay(
         candidates,
         truth_x_values_mm,
         truth_z_values_mm,
+        tx_rx_offset_m,
         save_path):
     """Plot B-scan with detected candidate hyperbolas and truth markers."""
     bscan = np.asarray(bscan, dtype=np.float64)
@@ -176,7 +189,7 @@ def plot_detection_overlay(
         ) * 1e9
         ax.plot(scan_x * 1000.0, curve, linewidth=1.2, label=f"#{rank} det")
         ax.scatter(
-            [candidate.x_m * 1000.0 - cfg.TX_RX_OFFSET * 500.0],
+            [candidate.x_m * 1000.0 - tx_rx_offset_m * 500.0],
             [np.min(curve)],
             s=32,
             marker="o",
@@ -254,6 +267,8 @@ def main():
     parser.add_argument("--grid-step-mm", type=float, default=2.0)
     parser.add_argument("--scan-step-mm", type=float, default=4.0)
     parser.add_argument("--sources", type=int, default=None)
+    parser.add_argument("--tx-rx-offset-mm", type=float, default=cfg.TX_RX_OFFSET * 1000.0)
+    parser.add_argument("--receiver-sampling", choices=["nearest", "linear"], default="nearest")
     parser.add_argument("--frequency-ghz", type=float, default=1.5)
     parser.add_argument("--truth-x-values-mm", type=parse_vector_mm, default=parse_vector_mm("250"))
     parser.add_argument("--truth-z-values-mm", type=parse_vector_mm, default=parse_vector_mm("90"))
@@ -306,7 +321,13 @@ def main():
     figures_dir.mkdir(parents=True, exist_ok=True)
     print(f"Output directory: {outdir}")
 
-    scan_positions, scan_x = build_scan_positions(args.scan_step_mm / 1000.0, args.sources)
+    scan_positions, scan_x = build_detector_scan_positions(
+        args.scan_step_mm,
+        args.sources,
+        args.tx_rx_offset_mm,
+        args.receiver_sampling,
+    )
+    tx_rx_offset_m = args.tx_rx_offset_mm / 1000.0
     time_values = generate_time_array(cfg.NT, cfg.DT)
     model = build_variable_geometry_model(
         args.truth_x_values_mm,
@@ -346,6 +367,7 @@ def main():
         background_mode=args.background_mode,
         x_min_separation_mm=args.x_min_separation_mm,
         z_min_separation_mm=args.z_min_separation_mm,
+        tx_rx_offset=tx_rx_offset_m,
         time_offset_s=detector_time_offset_s,
         time_offsets_s=detector_time_offsets_s,
     )
@@ -372,6 +394,7 @@ def main():
         candidates,
         args.truth_x_values_mm,
         args.truth_z_values_mm,
+        tx_rx_offset_m,
         plot_path,
     )
 
@@ -387,6 +410,8 @@ def main():
         "grid_step_mm": float(args.grid_step_mm),
         "scan_step_mm": float(args.scan_step_mm),
         "sources": int(len(scan_positions)),
+        "tx_rx_offset_mm": float(args.tx_rx_offset_mm),
+        "receiver_sampling": args.receiver_sampling,
         "frequency_ghz": float(args.frequency_ghz),
         "truth_x_values_mm": args.truth_x_values_mm,
         "truth_z_values_mm": args.truth_z_values_mm,
@@ -442,6 +467,8 @@ def main():
             "csv": str(csv_path),
             "plot": str(plot_path),
             "figure_notes": str(notes_path),
+            "tx_rx_offset_mm": float(args.tx_rx_offset_mm),
+            "receiver_sampling": args.receiver_sampling,
         },
     )
 

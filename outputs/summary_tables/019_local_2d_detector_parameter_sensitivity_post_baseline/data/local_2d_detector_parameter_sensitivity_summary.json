@@ -1,0 +1,26 @@
+{
+  "policy_label": "local_2d_detector_parameter_sensitivity_saved_bscan_cpu",
+  "config_count": 81,
+  "case_count": 12,
+  "case_config_row_count": 972,
+  "rescued_case_count": 12,
+  "rescued_case_fraction": 1.0,
+  "best_config_key": "median_top40_moderate12_single667",
+  "best_config_unique_all_truth_case_count": 12,
+  "best_config_mean_unique_truth_hit_count": 3.0,
+  "any_config_target0_case_count": 12,
+  "any_config_target2_case_count": 12,
+  "gpu_used": false,
+  "backend": "saved_bscan_cpu_rescore",
+  "decision": "Parameter sensitivity over saved B-scans tests whether the simple detector's negative baseline result is a configuration artifact. If rescued_case_count remains zero, the simple-detector baseline should remain framed as weak and under-resolving.",
+  "elapsed_time_s": 98.28802013397217,
+  "paths": {
+    "rows_csv": "outputs/summary_tables/019_local_2d_detector_parameter_sensitivity_post_baseline/data/local_2d_detector_parameter_sensitivity_rows.csv",
+    "config_csv": "outputs/summary_tables/019_local_2d_detector_parameter_sensitivity_post_baseline/data/local_2d_detector_parameter_sensitivity_config_summary.csv",
+    "case_csv": "outputs/summary_tables/019_local_2d_detector_parameter_sensitivity_post_baseline/data/local_2d_detector_parameter_sensitivity_case_summary.csv",
+    "summary_json": "outputs/summary_tables/019_local_2d_detector_parameter_sensitivity_post_baseline/data/local_2d_detector_parameter_sensitivity_summary.json",
+    "figure": "outputs/summary_tables/019_local_2d_detector_parameter_sensitivity_post_baseline/figures/local_2d_detector_parameter_sensitivity.png",
+    "figure_notes": "outputs/summary_tables/019_local_2d_detector_parameter_sensitivity_post_baseline/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/019_local_2d_detector_parameter_sensitivity_post_baseline/data/figure_validation.csv"
+  }
+}

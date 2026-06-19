@@ -1,6 +1,6 @@
 # Figure And Animation Template Inventory
 
-Last audited: 2026-06-14
+Last audited: 2026-06-18
 
 This inventory documents the figure and animation generation scripts for the
 GPR-FDTD-FWI experiment archive. It was reconstructed from the local repository
@@ -543,6 +543,46 @@ markers:
 The marker-based sections are idempotent. Re-running a context script should
 replace only its own bounded section. Do not hand-delete older note content
 during migration.
+
+## 2026-06-18 Figure-Notes Policy Addendum
+
+The original inventory snapshot emphasized coordinate-optimizer outputs through
+experiment `1218`. The refreshed archive-health audit in
+`outputs/experiments/1324_experiment_archive_health_report_post_field_timing_refresh`
+now covers numbered synthetic outputs through `1325`. It reports that
+image-bearing runs without `figures/FIGURE_NOTES.md` are still the dominant
+artifact-hygiene issue:
+
+```text
+figure_images_missing_figure_notes: 125
+missing_run_manifest:               5
+```
+
+This does not mean old experiments should be regenerated. The current policy is:
+
+- New image-bearing synthetic output generators should write
+  `figures/FIGURE_NOTES.md` and include that path in the run summary/manifest.
+- Paper-facing summary/report generators are not exempt just because they do
+  not run FDTD/FWI; if they create a figure, they should document the figure's
+  source CSVs, scope, and no-new-simulation boundary.
+- Existing old outputs should be left intact unless they are selected for a
+  manuscript figure, handoff package, or targeted skip-existing backfill.
+- Current manuscript-facing endpoints have figure notes or targeted source-note
+  coverage:
+  `1322_synthetic_2d_publication_figure_bundle_post_claim_boundary_reconciliation`,
+  `1323_synthetic_2d_next_question_matrix_post_claim_boundary_reconciliation`,
+  `1325_synthetic_publication_source_figure_notes_backfill_report`,
+  field bundle
+  `102_gssi51600s_field_publication_claim_bundle_post_timing_window_family`,
+  field source-note audit
+  `104_gssi51600s_field_publication_source_figure_notes_backfill_post_timing_window_family`,
+  `outputs/summary_tables/008_local_2d_field_manuscript_evidence_audit_post_timing_window_family`,
+  and
+  `outputs/summary_tables/009_local_2d_field_manuscript_table_pack_post_timing_window_family`.
+
+Do not broad-generate optional GIFs or true FDTD animations to fix note hygiene.
+For current publication work, fix notes at the generator level or use targeted
+skip-existing backfills only.
 
 ## Current Best Versions By Artifact
 

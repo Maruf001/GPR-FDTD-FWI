@@ -1,0 +1,10 @@
+domain,metric,value,interpretation
+synthetic_2d,publication_figure_count,9.0,current synthetic publication figures
+synthetic_2d,publication_claim_boundary_count,11.0,current synthetic claim boundaries
+synthetic_2d,next_matrix_immediate_gpu_candidates,0.0,no current synthetic immediate GPU queue
+field_2d,publication_figure_count,18.0,current field publication figures
+field_2d,publication_claim_boundary_count,17.0,current field claim boundaries
+field_2d,cue_spacing_min_same_time_spacing_mm,96.657,"field context only, not known-truth resolution validation"
+field_2d,field_policy_ready_for_field_fwi,0.0,0 means field FWI remains blocked
+cross_bundle,validated_figure_file_count,27.0,validated synthetic plus field figure files
+cross_bundle,claim_boundary_row_count,28.0,complete synthetic plus field claim-boundary rows

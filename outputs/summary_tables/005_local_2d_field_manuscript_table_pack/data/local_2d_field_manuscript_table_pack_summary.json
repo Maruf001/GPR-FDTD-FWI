@@ -1,0 +1,25 @@
+{
+  "policy_label": "local_2d_field_manuscript_table_pack_ready_no_gpu",
+  "claim_table_row_count": 28,
+  "figure_inventory_row_count": 27,
+  "metric_row_count": 9,
+  "synthetic_claim_count": 11,
+  "field_claim_count": 17,
+  "synthetic_figure_count": 9,
+  "field_figure_count": 18,
+  "field_cue_spacing_included": true,
+  "field_cue_spacing_resolution_ready": false,
+  "field_cue_spacing_fwi_ready": false,
+  "audit_policy_label": "local_2d_field_manuscript_evidence_ready_no_gpu",
+  "gpu_priority": "none",
+  "ready_for_manuscript_table_use": true,
+  "decision": "Use these CSVs as compact manuscript planning tables. They summarize current synthetic 2D and measured-field evidence while preserving separate claim scopes; they do not justify a GPU run.",
+  "paths": {
+    "claim_table_csv": "outputs/summary_tables/005_local_2d_field_manuscript_table_pack/data/local_2d_field_manuscript_claim_table.csv",
+    "figure_inventory_csv": "outputs/summary_tables/005_local_2d_field_manuscript_table_pack/data/local_2d_field_manuscript_figure_inventory.csv",
+    "result_metrics_csv": "outputs/summary_tables/005_local_2d_field_manuscript_table_pack/data/local_2d_field_manuscript_result_metrics.csv",
+    "summary_json": "outputs/summary_tables/005_local_2d_field_manuscript_table_pack/data/local_2d_field_manuscript_table_pack_summary.json",
+    "figure": "outputs/summary_tables/005_local_2d_field_manuscript_table_pack/figures/local_2d_field_manuscript_table_pack.png",
+    "figure_validation_csv": "outputs/summary_tables/005_local_2d_field_manuscript_table_pack/data/figure_validation.csv"
+  }
+}

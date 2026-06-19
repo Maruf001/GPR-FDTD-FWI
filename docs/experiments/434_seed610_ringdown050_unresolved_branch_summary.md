@@ -112,3 +112,29 @@ resources: no new FDTD scene; GPU stayed occupied by the next production run
 Move GPU replication to seed987 target0 while keeping seed610 reserved for a
 specialized objective/aperture follow-up if later cross-seed evidence justifies
 it.
+
+## 2026-06-17 Addendum
+
+The specialized target1 acquisition-offset follow-up has now been run:
+
+```text
+run:      1224_coordinate_optimizer_variable_depth_radius_seed610_target1_sources5_txrx52p5_ringdown050_objectives
+target:   target1
+sources:  5
+Tx/Rx:    52.5 mm
+```
+
+Run 1224 preserved exact x/z/r geometry and substantially improved the target1
+base margin relative to the old Tx/Rx=60 source-count branch, but it remained
+strictly weak:
+
+| Run | Sources | Tx/Rx mm | Base margin | Offset from cutoff | Status |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 897 | 5 | 60.0 | 4.677410e-4 | -3.226e-5 | weak |
+| 899 | 8 | 60.0 | 4.205166e-4 | -7.948e-5 | weak |
+| 898 | 9 | 60.0 | 4.197879e-4 | -8.021e-5 | weak |
+| 1224 | 5 | 52.5 | 4.962451e-4 | -3.755e-6 | weak near-miss |
+
+The seed610 target1 policy remains exact-but-unresolved. The 52.5 mm aperture
+is the best tested target1 setting for this seed, but it does not justify
+relabelling the branch as accepted under the strict base-margin rule.

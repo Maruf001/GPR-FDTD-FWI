@@ -1,0 +1,32 @@
+{
+  "policy_label": "local_2d_detector_assignment_failure_taxonomy_per_case_policy_oracle",
+  "selection_scope": "per_case_best_assignment_policy_oracle",
+  "case_count": 12,
+  "oracle_all_truth_case_count": 7,
+  "all_truth_case_count": 7,
+  "target0_hit_count": 9,
+  "target1_hit_count": 12,
+  "target2_hit_count": 10,
+  "mean_unique_truth_hit_count": 2.5833333333333335,
+  "deployable_shared_policy_all_truth_case_count": 2,
+  "deployable_shared_policy_mean_unique_truth_hit_count": 1.6666666666666667,
+  "deployable_shared_policy_config_key": "none_top20_moderate12_baseline",
+  "deployable_shared_assignment_policy_key": "top20_minx8_span0p5",
+  "dominant_failure_label": "all_truth",
+  "dominant_failure_count": 7,
+  "branch_row_count": 2,
+  "method_row_count": 3,
+  "gpu_used": false,
+  "backend": "saved_assignment_rows_cpu_taxonomy",
+  "decision": "This is a per-case policy-oracle over saved blind-assignment rows, not a deployable shared policy. It shows exploitable signal in the candidate lists, but the best shared blind policy still fails most cases. Use this taxonomy to design a stronger assignment-policy selector or downstream objective gate before any detector-to-FWI handoff.",
+  "source_assignment_run": "023_local_2d_detector_blind_assignment_policy_with_span_bonus",
+  "paths": {
+    "case_csv": "outputs/summary_tables/025_local_2d_detector_assignment_failure_taxonomy_policy_oracle/data/local_2d_detector_assignment_failure_taxonomy_cases.csv",
+    "branch_csv": "outputs/summary_tables/025_local_2d_detector_assignment_failure_taxonomy_policy_oracle/data/local_2d_detector_assignment_failure_taxonomy_branch_summary.csv",
+    "method_csv": "outputs/summary_tables/025_local_2d_detector_assignment_failure_taxonomy_policy_oracle/data/local_2d_detector_assignment_failure_taxonomy_method_summary.csv",
+    "summary_json": "outputs/summary_tables/025_local_2d_detector_assignment_failure_taxonomy_policy_oracle/data/local_2d_detector_assignment_failure_taxonomy_summary.json",
+    "figure": "outputs/summary_tables/025_local_2d_detector_assignment_failure_taxonomy_policy_oracle/figures/local_2d_detector_assignment_failure_taxonomy.png",
+    "figure_notes": "outputs/summary_tables/025_local_2d_detector_assignment_failure_taxonomy_policy_oracle/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/025_local_2d_detector_assignment_failure_taxonomy_policy_oracle/data/figure_validation.csv"
+  }
+}

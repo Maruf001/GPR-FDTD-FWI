@@ -1,0 +1,2 @@
+path,width,height,sampled_unique_colors,nonwhite_fraction,dynamic_range
+outputs/summary_tables/020_local_2d_detector_parameter_sensitivity_post_rank_depth_metrics/figures/local_2d_detector_parameter_sensitivity.png,2654,903,116,0.5620000650932461,255

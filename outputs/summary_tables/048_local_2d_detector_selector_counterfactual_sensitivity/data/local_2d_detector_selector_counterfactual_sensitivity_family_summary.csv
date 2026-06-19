@@ -1,0 +1,9 @@
+counterfactual_family,variant_count,best_counterfactual_label,best_all_truth_case_count,best_mean_unique_truth_hit_count,best_median_required_selector_gain,best_dominant_loss_feature
+ablation,6,ablation_drop_component_balanced,3,1.6666666666666667,0.17708102911384194,signed_gap_prior_score
+base,1,base_current,3,1.75,0.18097749906867877,signed_gap_prior_score
+center_sweep,4,center_sweep_w0.2,3,1.75,0.18097749906867877,signed_gap_prior_score
+component_sweep,7,component_sweep_w0.5,3,1.75,0.18097749906867877,signed_gap_prior_score
+hybrid_sweep,5,hybrid_sweep_w0.2,3,1.75,0.18097749906867877,signed_gap_prior_score
+rank_sweep,6,rank_sweep_w0.1,3,1.75,0.18097749906867877,signed_gap_prior_score
+signed_gap_sweep,9,signed_gap_sweep_w2,3,1.75,0.1541958996372459,signed_gap_prior_score
+span_sweep,6,span_sweep_w0.5,3,1.75,0.18097749906867877,signed_gap_prior_score

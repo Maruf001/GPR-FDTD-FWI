@@ -1,0 +1,4 @@
+gate_key,ready,allowed_use,blocked_use,evidence
+final_source3_seed21_replicate,False,one bounded source3 seed21 Tx/Rx40 replicate,broad source-count or threshold sweep,missing source3 seeds=
+broad_gpu_queue,False,none,launch broad GPU queue,source-count synthesis only
+detector_seeded_fwi,False,none,detector-seeded FWI launch,coordinate source-count policy only

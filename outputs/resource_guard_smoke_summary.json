@@ -1,0 +1,15 @@
+{
+  "abort_reasons": [],
+  "aborted": false,
+  "command": [
+    "python",
+    "-c",
+    "print('resource guard smoke')"
+  ],
+  "elapsed_s": 0.05418086051940918,
+  "max_gpu_memory_used_mib": null,
+  "max_gpu_util_percent": 6.0,
+  "max_ram_used_percent": 14.51634996004836,
+  "returncode": 0,
+  "sample_count": 1
+}

@@ -1,0 +1,5 @@
+parameter,value,source,role
+concrete_epsr,6.0,config.py,controlled synthetic material prior
+concrete_sigma_s_per_m,0.01,config.py,controlled synthetic material prior
+rebar_epsr,1.0,config.py,controlled synthetic material prior
+rebar_sigma_s_per_m,10000000.0,config.py,controlled synthetic material prior

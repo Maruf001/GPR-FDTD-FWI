@@ -1,0 +1,3 @@
+branch_key,case_count,stable_case_count,candidate_component_seed_ready_count,review_case_count,max_target_slot_abs_error_mm,median_target_slot_abs_error_mm,review_case_labels
+target2_close14,6,6,6,0,10.0,3.5,
+target2_close50_linear29p5,6,4,4,2,8.0,4.5,target2_close50_linear29p5|seed13|nominal;target2_close50_linear29p5|seed34|nominal

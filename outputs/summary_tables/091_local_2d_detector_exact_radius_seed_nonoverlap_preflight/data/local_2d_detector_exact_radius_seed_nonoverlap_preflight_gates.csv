@@ -1,0 +1,5 @@
+gate_key,ready,allowed_use,blocked_use,evidence
+direct_fixed_radius_pilot_subset,True,narrow one-case-at-a-time controlled fixed-radius pilots,all stable seeds without preflight,7/10 stable seeds non-overlap-ready
+seed_repair_audit,True,CPU-side repair design before more GPU pilots,launch overlap-blocked seeds directly,overlap-blocked=3; max repair=2.000 mm
+broad_gpu_queue,False,none,broad fixed-radius refinement campaign,preflight finds overlap blockers and only one completed pilot so far
+detector_seeded_fwi,False,none,detector-seeded FWI launch,non-overlap preflight is not an FWI launch contract

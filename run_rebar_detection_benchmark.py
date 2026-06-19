@@ -26,9 +26,15 @@ import config as cfg  # noqa: E402
 from core.run_outputs import allocate_output_dir, write_run_manifest  # noqa: E402
 from core.source import generate_time_array  # noqa: E402
 from inversion.rebar_detection import detect_rebar_candidates  # noqa: E402
-from run_multi_rebar_common_radius_profile import build_scan_positions, simulate_bscan  # noqa: E402
+from run_multi_rebar_common_radius_profile import simulate_bscan  # noqa: E402
 from run_multi_rebar_local_geometry_profile import build_variable_geometry_model  # noqa: E402
-from run_rebar_detection_pipeline import add_noise, parse_mm_range, parse_ps_values, truth_match_metrics  # noqa: E402
+from run_rebar_detection_pipeline import (  # noqa: E402
+    add_noise,
+    build_detector_scan_positions,
+    parse_mm_range,
+    parse_ps_values,
+    truth_match_metrics,
+)
 from run_single_rebar_inversion import _override_grid  # noqa: E402
 from run_single_rebar_source_profiled_polish import observed_wavelet  # noqa: E402
 
@@ -83,6 +89,8 @@ def main():
     parser.add_argument("--grid-step-mm", type=float, default=2.0)
     parser.add_argument("--scan-step-mm", type=float, default=4.0)
     parser.add_argument("--sources", type=int, default=None)
+    parser.add_argument("--tx-rx-offset-mm", type=float, default=cfg.TX_RX_OFFSET * 1000.0)
+    parser.add_argument("--receiver-sampling", choices=["nearest", "linear"], default="nearest")
     parser.add_argument("--frequency-ghz", type=float, default=1.5)
     parser.add_argument("--x-mm", type=float, default=250.0)
     parser.add_argument("--z-values-mm", type=parse_mm_range, default=parse_mm_range("70:130:20"))
@@ -104,14 +112,19 @@ def main():
     parser.add_argument("--run-name", default="single_rebar_detection_benchmark")
     parser.add_argument("--outdir", default=None)
     args = parser.parse_args()
-
     _override_grid(args.grid_step_mm)
     outdir = allocate_output_dir(args.outdir, args.run_name)
     data_dir = Path(outdir) / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
     print(f"Output directory: {outdir}")
 
-    scan_positions, scan_x = build_scan_positions(args.scan_step_mm / 1000.0, args.sources)
+    scan_positions, scan_x = build_detector_scan_positions(
+        args.scan_step_mm,
+        args.sources,
+        args.tx_rx_offset_mm,
+        args.receiver_sampling,
+    )
+    tx_rx_offset_m = args.tx_rx_offset_mm / 1000.0
     time_values = generate_time_array(cfg.NT, cfg.DT)
     wavelet = observed_wavelet(
         time_values,
@@ -142,6 +155,7 @@ def main():
                     top_k=args.top_k,
                     x_min_separation_mm=args.x_min_separation_mm,
                     z_min_separation_mm=args.z_min_separation_mm,
+                    tx_rx_offset=tx_rx_offset_m,
                     time_offsets_s=[value * 1e-12 for value in args.detector_time_offset_ps_values],
                 )
                 metrics = truth_match_metrics(
@@ -181,6 +195,8 @@ def main():
         "grid_step_mm": float(args.grid_step_mm),
         "scan_step_mm": float(args.scan_step_mm),
         "sources": len(scan_positions),
+        "tx_rx_offset_mm": float(args.tx_rx_offset_mm),
+        "receiver_sampling": args.receiver_sampling,
         "x_mm": float(args.x_mm),
         "z_values_mm": args.z_values_mm,
         "radius_values_mm": args.radius_values_mm,
@@ -206,4 +222,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

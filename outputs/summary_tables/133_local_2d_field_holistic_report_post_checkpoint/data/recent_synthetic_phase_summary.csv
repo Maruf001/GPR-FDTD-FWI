@@ -1,0 +1,10 @@
+phase,first_run,last_run,run_count,manifest_count
+1200-1259 prior holistic tail and stop-point context,1200,1259,60,59
+1260-1279 weak-exact confidence policy closure,1260,1279,20,20
+"1280-1293 ambiguity, objective, and reporting policy maps",1280,1293,14,14
+1294-1307 close-spacing threshold probes and claim refresh,1294,1307,14,14
+1308-1325 publication bundle and acquisition surfaces,1308,1325,18,18
+1326-1338 local detector baselines and sampling boundary,1326,1338,13,13
+1339-1343 fixed-radius controlled-prior diagnostics,1339,1343,5,4
+1344-1356 matched source-count close-spacing probes,1344,1356,13,13
+1357-1358 fixed-radius locking validation endpoint,1357,1358,2,2

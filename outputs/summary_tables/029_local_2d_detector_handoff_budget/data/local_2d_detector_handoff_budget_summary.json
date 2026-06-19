@@ -1,0 +1,25 @@
+{
+  "policy_label": "local_2d_detector_handoff_budget_cpu_no_fwi",
+  "case_count": 12,
+  "strategy_count": 7,
+  "cheapest_full_candidate_strategy": "branch_top20_candidate_list",
+  "cheapest_full_candidate_triples_per_case": 1140,
+  "cheapest_full_candidate_total_triples": 13680,
+  "best_deployable_strategy": "shared_blind_assignment",
+  "best_deployable_all_truth_case_count": 2,
+  "oracle_all_truth_case_count": 7,
+  "image_gate_all_truth_case_count": 0,
+  "minimal_rank_cap_for_full_case_recovery": 40,
+  "ready_for_detector_seeded_fwi": false,
+  "immediate_gpu_candidate_count": 0,
+  "conditional_gpu_candidate_count": 0,
+  "gpu_priority": "none",
+  "decision": "Do not launch detector-seeded FWI from the current handoff. The saved detector can make truth-containing candidate lists, but the cheapest all-case candidate-list handoff still implies 1140 candidate triples per case under branch-specific top20 settings. Deployable single-triple selectors are cheap but low-recall, while the per-case oracle is not deployable. A stronger CPU waveform/objective gate must shrink the candidate triple set before any GPU/FWI run.",
+  "paths": {
+    "rows_csv": "outputs/summary_tables/029_local_2d_detector_handoff_budget/data/local_2d_detector_handoff_budget_rows.csv",
+    "summary_json": "outputs/summary_tables/029_local_2d_detector_handoff_budget/data/local_2d_detector_handoff_budget_summary.json",
+    "figure": "outputs/summary_tables/029_local_2d_detector_handoff_budget/figures/local_2d_detector_handoff_budget.png",
+    "figure_notes": "outputs/summary_tables/029_local_2d_detector_handoff_budget/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/029_local_2d_detector_handoff_budget/data/figure_validation.csv"
+  }
+}

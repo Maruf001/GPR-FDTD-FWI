@@ -1,0 +1,13 @@
+branch_key,seed,case_variant,run_name,best_config_key,best_unique_truth_hit_count,best_unique_all_truths_within_tolerance,best_unique_target0_hit,best_unique_target1_hit,best_unique_target2_hit,best_assigned_candidate_ranks,best_max_assigned_rank
+target2_close14,13,nominal,local2d_detector_baseline_target2_close14_seed13_nominal_cpu,mean_top20_distinct20_single667,3,True,True,True,True,"6,4,3",6.0
+target2_close14,13,source_mismatch,local2d_detector_baseline_target2_close14_seed13_source_mismatch_cpu,mean_top20_distinct20_baseline,3,True,True,True,True,"5,4,3",5.0
+target2_close14,21,nominal,local2d_detector_baseline_target2_close14_seed21_nominal_cpu,mean_top20_distinct20_baseline,3,True,True,True,True,"6,5,1",6.0
+target2_close14,21,source_mismatch,local2d_detector_baseline_target2_close14_seed21_source_mismatch_cpu,median_top20_distinct20_baseline,3,True,True,True,True,"5,4,3",5.0
+target2_close14,34,nominal,local2d_detector_baseline_target2_close14_seed34_nominal_cpu,median_top20_distinct20_single667,3,True,True,True,True,"4,5,2",5.0
+target2_close14,34,source_mismatch,local2d_detector_baseline_target2_close14_seed34_source_mismatch_cpu,none_top20_distinct20_wide,3,True,True,True,True,"6,1,2",6.0
+target2_close50_linear29p5,13,nominal,local2d_detector_baseline_target2_close50_linear29p5_seed13_nominal_cpu,none_top20_distinct20_single667,3,True,True,True,True,"14,1,5",14.0
+target2_close50_linear29p5,13,source_mismatch,local2d_detector_baseline_target2_close50_linear29p5_seed13_source_mismatch_cpu,median_top20_moderate12_single667,3,True,True,True,True,"10,6,12",12.0
+target2_close50_linear29p5,21,nominal,local2d_detector_baseline_target2_close50_linear29p5_seed21_nominal_cpu,median_top20_distinct20_single667,3,True,True,True,True,"14,1,6",14.0
+target2_close50_linear29p5,21,source_mismatch,local2d_detector_baseline_target2_close50_linear29p5_seed21_source_mismatch_cpu,median_top20_distinct20_baseline,3,True,True,True,True,"11,2,6",11.0
+target2_close50_linear29p5,34,nominal,local2d_detector_baseline_target2_close50_linear29p5_seed34_nominal_cpu,none_top20_distinct20_single667,3,True,True,True,True,"12,2,8",12.0
+target2_close50_linear29p5,34,source_mismatch,local2d_detector_baseline_target2_close50_linear29p5_seed34_source_mismatch_cpu,mean_top20_distinct20_wide,3,True,True,True,True,"11,2,6",11.0

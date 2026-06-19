@@ -1,0 +1,6 @@
+gate_key,ready,allowed_use,blocked_use,evidence
+xz_seed_neighborhood_design,True,matched x/z coordinate seed-neighborhood sizing,narrow refinement launch,min x/z half-width all stable seeds=12.0 mm
+radius_material_contract,False,none,radius/material initialization,component seeds contain x/z only
+narrow_refinement_contract,False,none,narrow coordinate/refinement launch,review cases and non-coordinate launch blockers remain active
+naive_full_tensor_refinement,False,none,full 6D coordinate tensor FWI/refinement queue,h12 step2 x/z tensor=4826809 points/case
+detector_seeded_fwi,False,none,detector-seeded FWI,"radius/material seeds, launch contract, and review-case closure remain blocked"

@@ -115,3 +115,27 @@ resources: production GPU run completed in 673.4 s through the candidate sweep
 
 Continue seed308061521720129 with target1 at the standard 5-source Tx/Rx=60
 control.
+
+## 2026-06-17 Addendum
+
+A target2 Tx/Rx=50 acquisition-offset replication probe has now been run:
+
+```text
+run:      1226_coordinate_optimizer_variable_depth_radius_seed308061521720129_target2_sources5_txrx50_ringdown050_objectives
+target:   target2
+sources:  5
+Tx/Rx:    50.0 mm
+```
+
+Run 1226 preserved exact x/z/r geometry, but it did not rescue the strict base
+margin:
+
+| Run | Sources | Tx/Rx mm | Base margin | Offset from cutoff | Status |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 1184 | 5 | 60.0 | 4.908834e-4 | -9.117e-6 | weak near-miss |
+| 1185 | 7 | 60.0 | 4.508691e-4 | -4.913e-5 | weak |
+| 1186 | 9 | 60.0 | 4.443570e-4 | -5.564e-5 | weak |
+| 1226 | 5 | 50.0 | 4.707138e-4 | -2.929e-5 | weak |
+
+This failed replication is useful: Tx/Rx=50 rescued seed20365011074 target2,
+but it is not a universal target2 weak-branch remedy.

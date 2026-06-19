@@ -1,0 +1,4 @@
+radius_scope_key,radius_combination_count,uses_truth_slot_assignment,claim_scope,ready_for_launch
+fixed_slot_radii,1,True,controlled synthetic exact-radius ablation only,False
+known_radius_permutations,6,False,known radius set with unknown slot assignment; budget only,False
+independent_known_radius_choices,27,False,independent per-slot choices from known synthetic radius set; budget only,False
