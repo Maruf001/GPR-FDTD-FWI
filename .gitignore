@@ -40,6 +40,9 @@ outputs/
 # Local/generated test artifacts
 tests/
 
+# Local/generated root runner scripts
+local_run_scripts/
+
 # Local/raw datasets
 data/
 
