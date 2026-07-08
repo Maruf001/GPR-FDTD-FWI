@@ -37,6 +37,9 @@ Thumbs.db
 # Outputs/results are regenerated locally and can become very large.
 outputs/
 
+# Local/generated test artifacts
+tests/
+
 # Local/raw datasets
 data/
 
