@@ -1,0 +1,9 @@
+feature,failed_case_count,deficit_case_count,median_delta_truth_minus_selected,total_negative_delta_magnitude,max_negative_delta_magnitude
+signed_gap_prior_score,9,7,-0.16,1.72,0.52
+score_component_balanced,9,6,-0.01623767823791833,0.2104321605881586,0.09047223401186144
+score_hybrid_span_component,9,5,-0.010187464469753937,0.18597869058507244,0.07196232275490544
+span_prior_score,9,5,-0.0049999999999999975,0.075,0.025
+max_rank_score,9,6,-0.010000000000000002,0.06750000000000002,0.012500000000000004
+rank_sum_score,9,7,-0.0049999999999999975,0.056666666666666664,0.02
+center_prior_score,9,4,0.0,0.014000000000000054,0.006666666666666685
+score_component_min,9,0,0.0,0.0,0.0

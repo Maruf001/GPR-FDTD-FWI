@@ -1,0 +1,271 @@
+domain,metric,value,interpretation
+synthetic_2d,publication_figure_count,9.0,current synthetic publication figures
+synthetic_2d,publication_claim_boundary_count,11.0,current synthetic claim boundaries
+synthetic_2d,next_matrix_immediate_gpu_candidates,0.0,no current synthetic immediate GPU queue
+synthetic_2d,source_figure_notes_present_after_count,9.0,paper-facing synthetic source figures with FIGURE_NOTES.md
+field_2d,publication_figure_count,22.0,current field publication figures
+field_2d,publication_claim_boundary_count,21.0,current field claim boundaries
+field_2d,cue_spacing_min_same_time_spacing_mm,96.657,"field context only, not known-truth resolution validation"
+field_2d,timing_anchor_early_vs_short_delta_half_widths,2.1666666666666687,"timing-anchor scope boundary, not absolute time-zero"
+field_2d,timing_anchor_long_vs_short_delta_half_widths,1.148666666666663,long timing remains pattern-only relative to short content timing
+field_2d,timing_window_early_strict_near_zero_lag_count,6.0,"early/ringdown windows remain common-mode, not content time-zero"
+field_2d,timing_window_short_nonraw_supported_count,18.0,non-raw short content windows support the relative correction
+field_2d,timing_window_long_reject_short_transfer_count,3.0,long windows reject transferring the short-pair correction
+field_2d,field_policy_ready_for_field_fwi,0.0,0 means field FWI remains blocked
+field_2d,source_figure_notes_present_after_count,22.0,paper-facing field source figures with FIGURE_NOTES.md
+cross_bundle,validated_figure_file_count,31.0,validated synthetic plus field figure files
+cross_bundle,claim_boundary_row_count,32.0,complete synthetic plus field claim-boundary rows
+synthetic_2d,target1_probe_triggered_gate_count,0.0,0 means target1 has no CPU-side gate justifying a GPU probe
+synthetic_2d,target1_probe_gpu_action_count,0.0,0 keeps target1 on CPU-side policy synthesis
+synthetic_2d,target1_probe_ready_for_gpu,0.0,0 means a new target1 hypothesis is required before GPU work
+synthetic_2d,target1_base_weak_exact_count,43.0,target1 weak-but-exact base rows represented in the scorecard
+synthetic_2d,target1_late_high_accepted_count,132.0,late_high rows accepted by the current target1 policy
+synthetic_2d,detector_handoff_cheapest_full_triples_per_case,1140.0,candidate-list FWI cost before a waveform gate
+synthetic_2d,detector_handoff_best_deployable_all_truth_cases,2.0,truth-free detector handoff recovery count across cases
+synthetic_2d,detector_handoff_oracle_all_truth_cases,7.0,oracle upper bound for detector handoff recovery
+synthetic_2d,detector_handoff_ready_for_fwi,0.0,0 means detector-seeded FWI is not yet a narrow run
+synthetic_2d,detector_alltriples_combo_row_count,12180.0,CPU-scored detector triple combinations
+synthetic_2d,detector_alltriples_best_top1_all_truth_cases,0.0,top-1 all-truth recovery after objective scoring
+synthetic_2d,detector_alltriples_best_top10_all_truth_cases,2.0,top-10 all-truth recovery after objective scoring
+synthetic_2d,detector_alltriples_best_top50_all_truth_cases,8.0,top-50 all-truth recovery after objective scoring
+synthetic_2d,detector_alltriples_ready_for_fwi,0.0,0 means all-triples gating still does not justify FWI
+field_2d,field_cue_catalog_raw_cue_count,19.0,raw measured-field cue count before support filtering
+field_2d,field_cue_catalog_support_anchor_count,11.0,field cues that have explicit support-tier anchoring
+field_2d,field_cue_catalog_short_content_backed_anchor_count,2.0,short-profile content-backed timing anchors
+field_2d,field_cue_catalog_ready_for_field_fwi,0.0,"0 means measured-field cues remain QC only, not inversion-ready"
+field_2d,field_cue_catalog_ready_for_3d_hpc,0.0,0 means the local GSSI dataset does not justify 3D/HPC escalation
+synthetic_2d,detector_rank_budget_minimal_all_case_triples,200.0,candidate-triple budget needed for all-case detector upper-bound coverage
+synthetic_2d,detector_rank_budget_best_top50_cases,8.0,best simple all-triples objective coverage within top-50
+synthetic_2d,detector_rank_budget_max_top1_all_truth_cases,0.0,0 means rank-budget diagnostic is not a deployable selector
+synthetic_2d,detector_rank_budget_sparse_all_truth_cases,6.0,cases with only one or two all-truth triples in the candidate space
+synthetic_2d,detector_rank_budget_ready_for_fwi,0.0,"0 means rank-budget result is an upper-bound study, not FWI-ready"
+synthetic_2d,detector_component_gate_component_candidate_count,230.0,unique component candidates scored by CPU waveform masks
+synthetic_2d,detector_component_gate_best_top10_cases,3.0,component-gate coverage within top-10
+synthetic_2d,detector_component_gate_best_top50_cases,10.0,component-gate coverage within top-50
+synthetic_2d,detector_component_gate_top50_improvement,2.0,top-50 gain over the prior all-triples gate
+synthetic_2d,detector_component_gate_best_top1_cases,0.0,0 means component waveform gate is still not deployable top-1
+synthetic_2d,detector_component_gate_ready_for_fwi,0.0,0 means component gate does not justify detector-seeded FWI
+synthetic_2d,detector_component_selector_candidate_count,975.0,truth-free component selector candidates tested
+synthetic_2d,detector_component_selector_best_in_sample_cases,1.0,best top-1 in-sample all-truth recovery after selector tuning
+synthetic_2d,detector_component_selector_leave_one_case_cases,0.0,leave-one-case validated top-1 all-truth recovery
+synthetic_2d,detector_component_selector_leave_one_seed_cases,0.0,leave-one-seed validated top-1 all-truth recovery
+synthetic_2d,detector_component_selector_ready_for_fwi,0.0,0 means selector audit does not justify detector-seeded FWI
+synthetic_2d,detector_geometry_selector_candidate_count,2160.0,branch-family geometry-prior selector candidates tested
+synthetic_2d,detector_geometry_selector_best_in_sample_cases,3.0,best in-sample top-1 all-truth recovery with geometry-family priors
+synthetic_2d,detector_geometry_selector_leave_one_case_cases,2.0,leave-one-case top-1 all-truth recovery with geometry-family priors
+synthetic_2d,detector_geometry_selector_leave_one_case_improvement,2.0,validated improvement over the previous component selector
+synthetic_2d,detector_geometry_selector_ready_for_fwi,0.0,0 means geometry-family selector still does not justify detector-seeded FWI
+synthetic_2d,detector_selector_gap_selected_all_truth_cases,3.0,top-1 all-truth recovery for the selector being decomposed
+synthetic_2d,detector_selector_gap_failed_cases,9.0,cases where the truth-free selector still chooses a wrong triple
+synthetic_2d,detector_selector_gap_best_truth_available_cases,12.0,cases with an all-truth triple available in the saved candidate space
+synthetic_2d,detector_selector_gap_median_required_gain,0.18097749906867877,median selector-score gain needed for truth to beat the selected wrong triple
+synthetic_2d,detector_selector_gap_max_required_gain,0.5505405776977454,largest selector-score gain needed for truth to beat the selected wrong triple
+synthetic_2d,detector_selector_gap_ready_for_fwi,0.0,"0 means gap decomposition supports a guardrail, not detector-seeded FWI"
+synthetic_2d,detector_selector_counterfactual_variant_count,44.0,simple counterfactual selector reweightings tested
+synthetic_2d,detector_selector_counterfactual_best_all_truth_cases,3.0,best top-1 all-truth recovery across counterfactual reweightings
+synthetic_2d,detector_selector_counterfactual_improvement_over_base,0.0,0 means simple reweighting does not beat the current selector
+synthetic_2d,detector_selector_counterfactual_signed_gap_zero_cases,1.0,top-1 all-truth cases after removing the signed-gap prior
+synthetic_2d,detector_selector_counterfactual_best_median_gain,0.1541958996372459,best median selector gain still needed for failed cases
+synthetic_2d,detector_selector_counterfactual_ready_for_fwi,0.0,"0 means counterfactual sensitivity remains a guardrail, not an FWI trigger"
+synthetic_2d,detector_image_rank_best_top50_cases,0.0,cases where image objective ranks first all-truth inside top-50
+synthetic_2d,detector_image_rank_best_top200_cases,1.0,cases where image objective ranks first all-truth inside top-200
+synthetic_2d,detector_image_rank_best_top1000_cases,6.0,cases where image objective ranks first all-truth inside top-1000
+synthetic_2d,detector_image_rank_best_median_first_truth_rank,639.0,rank depth of first all-truth row under the best image objective
+synthetic_2d,detector_image_rank_previous_oracle_cases,7.0,per-case policy-oracle all-truth cases from the source image-objective context
+synthetic_2d,detector_image_rank_ready_for_fwi,0.0,0 means saved image objective does not justify detector-seeded FWI
+synthetic_2d,detector_target_failure_failed_cases,9.0,cases where the truth-free selector drops at least one target
+synthetic_2d,detector_target_failure_missing_target0_cases,5.0,selector failures that drop target0
+synthetic_2d,detector_target_failure_missing_target1_cases,7.0,selector failures that drop target1
+synthetic_2d,detector_target_failure_missing_target2_cases,3.0,selector failures that drop target2
+synthetic_2d,detector_target_failure_multi_target_cases,5.0,selector failures that drop more than one target
+synthetic_2d,detector_target_failure_target1_median_gain,0.28614967362496546,median selector-score gain needed when target1 is dropped
+synthetic_2d,detector_target_failure_ready_for_fwi,0.0,"0 means target-failure taxonomy remains analysis, not detector-seeded FWI"
+synthetic_2d,detector_depth_slot_prior_variant_count,72.0,depth/slot prior variants tested on saved detector rows
+synthetic_2d,detector_depth_slot_prior_base_all_truth_cases,3.0,baseline selector all-truth cases before depth/slot priors
+synthetic_2d,detector_depth_slot_prior_best_all_truth_cases,5.0,best all-truth cases after broad depth/slot prior probe
+synthetic_2d,detector_depth_slot_prior_improvement_cases,2.0,all-truth case gain from the best depth/slot prior variant
+synthetic_2d,detector_depth_slot_prior_best_missing_target1_cases,4.0,remaining target1 misses under the best depth/slot prior variant
+synthetic_2d,detector_depth_slot_prior_ready_for_fwi,0.0,"0 means the prior probe remains feature analysis, not detector-seeded FWI"
+synthetic_2d,detector_slot_component_variant_count,120.0,branch-slot component assembly variants tested on saved detector rows
+synthetic_2d,detector_slot_component_current_triple_cases,3.0,current triple selector all-truth cases before slot assembly
+synthetic_2d,detector_slot_component_depth_prior_cases,5.0,best all-truth cases from the prior depth/slot probe
+synthetic_2d,detector_slot_component_best_slot_cases,12.0,branch-slot upper-bound cases with all target slots hit
+synthetic_2d,detector_slot_component_min_component_candidates,16.0,minimum unique detector components available per case
+synthetic_2d,detector_slot_component_ready_for_fwi,0.0,"0 means slot assembly is an upper-bound contract, not detector-seeded FWI"
+synthetic_2d,detector_blind_envelope_variant_count,288.0,blind component-envelope variants tested on saved detector rows
+synthetic_2d,detector_blind_envelope_best_slot_cases,12.0,best truth-free inference cases with all target slots hit
+synthetic_2d,detector_blind_envelope_leave_one_cases,12.0,leave-one-case selected variants with all target slots hit
+synthetic_2d,detector_blind_envelope_known_slot_upper_bound_cases,12.0,known-slot component upper-bound cases used as comparison
+synthetic_2d,detector_blind_envelope_uses_branch_slots,0.0,0 means inference did not use branch slot coordinates
+synthetic_2d,detector_blind_envelope_ready_for_fwi,0.0,0 means blind envelope assembly remains saved-evidence policy analysis
+synthetic_2d,detector_blind_envelope_robustness_full_success_variants,117.0,blind-envelope variants that recover all saved target slots
+synthetic_2d,detector_blind_envelope_robustness_near_success_variants,288.0,blind-envelope variants within one failed case of full recovery
+synthetic_2d,detector_blind_envelope_robustness_leave_one_seed_cases,12.0,held-out seed split cases with all target slots hit
+synthetic_2d,detector_blind_envelope_robustness_leave_one_branch_cases,11.0,held-out branch split cases with all target slots hit
+synthetic_2d,detector_blind_envelope_robustness_leave_one_condition_cases,12.0,held-out nominal/source-condition split cases with all target slots hit
+synthetic_2d,detector_blind_envelope_robustness_min_margin,0.08362755681394554,minimum selected-truth score margin over the best wrong triple
+synthetic_2d,detector_blind_envelope_robustness_low_margin_cases,1.0,cases below the blind-envelope margin review threshold
+synthetic_2d,detector_blind_envelope_robustness_ready_for_fwi,0.0,0 means robustness audit remains saved-evidence detector analysis
+synthetic_2d,detector_blind_envelope_stability_all_variant_cases,10.0,cases recovered by every saved blind-envelope policy variant
+synthetic_2d,detector_blind_envelope_stability_partial_cases,2.0,cases that depend on policy tuning for target-slot recovery
+synthetic_2d,detector_blind_envelope_stability_tuning_sensitive_cases,2.0,cases below the saved-grid success-fraction stability threshold
+synthetic_2d,detector_blind_envelope_stability_min_success_fraction,0.53125,minimum case-level success fraction across blind-envelope variants
+synthetic_2d,detector_blind_envelope_stability_consensus_cases,2.0,cases with one successful selected component triple across all successful variants
+synthetic_2d,detector_blind_envelope_stability_close50_partial_cases,2.0,close50 cases that are not stable under all blind-envelope variants
+synthetic_2d,detector_blind_envelope_stability_max_unique_success_selections,6.0,maximum number of distinct successful selected triples for a case
+synthetic_2d,detector_blind_envelope_stability_ready_for_fwi,0.0,0 means stability audit remains saved-evidence detector analysis
+synthetic_2d,detector_blind_envelope_tuning_sensitive_cases,2.0,close50 blind-envelope cases decomposed for policy tuning sensitivity
+synthetic_2d,detector_blind_envelope_tuning_max_knob_effect,1.0,largest success-fraction swing across a single policy knob
+synthetic_2d,detector_blind_envelope_tuning_structural_conflict,1.0,1 means best structural-weight direction conflicts across sensitive seeds
+synthetic_2d,detector_blind_envelope_tuning_support_conflict,1.0,1 means best support-weight direction conflicts across sensitive seeds
+synthetic_2d,detector_blind_envelope_tuning_span_effect,0.0,0 means span threshold does not explain the close50 instability
+synthetic_2d,detector_blind_envelope_tuning_global_fix_ready,0.0,0 means close50 tuning sensitivity is not resolved by a global knob choice
+synthetic_2d,detector_blind_envelope_tuning_ready_for_fwi,0.0,0 means tuning sensitivity remains CPU-side ambiguity evidence
+synthetic_2d,detector_blind_envelope_reliability_stable_cases,10.0,cases accepted by the truth-free x-slot drift reliability gate
+synthetic_2d,detector_blind_envelope_reliability_review_cases,2.0,cases flagged for ambiguity review by the truth-free gate
+synthetic_2d,detector_blind_envelope_reliability_tuning_detected,2.0,tuning-sensitive cases caught by the reliability gate
+synthetic_2d,detector_blind_envelope_reliability_tuning_missed,0.0,0 means the gate does not miss known tuning-sensitive cases in this corpus
+synthetic_2d,detector_blind_envelope_reliability_stable_min_success_fraction,1.0,post-hoc truth evaluation for cases accepted by the truth-free gate
+synthetic_2d,detector_blind_envelope_reliability_ready_for_claim,1.0,1 means the gate is usable as reliability/ambiguity-boundary evidence
+synthetic_2d,detector_blind_envelope_reliability_ready_for_fwi,0.0,0 means reliability gate is not a detector-seeded FWI trigger
+synthetic_2d,detector_blind_envelope_reliability_threshold_clean_count,5.0,threshold values that separate stable cases from tuning-sensitive cases
+synthetic_2d,detector_blind_envelope_reliability_threshold_clean_min_mm,5.0,lower edge of the clean x-slot drift threshold interval
+synthetic_2d,detector_blind_envelope_reliability_threshold_clean_max_mm,19.0,upper edge of the clean x-slot drift threshold interval
+synthetic_2d,detector_blind_envelope_reliability_threshold_default_clean,1.0,1 means the default reliability gate threshold is in the clean interval
+synthetic_2d,detector_blind_envelope_reliability_threshold_default_tuning_missed,0.0,known tuning-sensitive cases accepted by the default threshold
+synthetic_2d,detector_blind_envelope_reliability_threshold_default_false_review,0.0,stable cases over-reviewed by the default threshold
+synthetic_2d,detector_blind_envelope_reliability_threshold_ready_for_fwi,0.0,0 means threshold sensitivity remains CPU-side confidence evidence
+synthetic_2d,detector_physics_link_review_cases,2.0,truth-free detector review cases entering the physics-link audit
+synthetic_2d,detector_physics_link_near_boundary_nominal_reviews,2.0,review cases localized to close50 29.5 mm nominal near-boundary rows
+synthetic_2d,detector_physics_link_reviews_all_near_boundary_nominal,1.0,1 means every detector review case is a close50 near-boundary nominal case
+synthetic_2d,detector_physics_link_close50_nominal_review_fraction,0.6666666666666666,fraction of close50 29.5 mm nominal cases flagged for review
+synthetic_2d,detector_physics_link_review_x_ambiguous_cases,1.0,review cases also x-ambiguous in the saved coordinate-confidence rows
+synthetic_2d,detector_physics_link_branch_claim_ready,1.0,1 means the detector review cases can be localized to a branch/variant boundary
+synthetic_2d,detector_physics_link_per_seed_equivalence_ready,0.0,0 means per-seed coordinate ambiguity does not explain every detector review
+synthetic_2d,detector_physics_link_ready_for_fwi,0.0,"0 means this is explanatory evidence, not a detector-seeded FWI trigger"
+synthetic_2d,detector_refinement_contract_case_count,12.0,saved detector cases entering the refinement launch-contract audit
+synthetic_2d,detector_refinement_contract_seed_table_cases,10.0,stable saved-corpus cases exportable as x/z component seed rows
+synthetic_2d,detector_refinement_contract_review_cases,2.0,cases still requiring detector-policy review before any launch contract
+synthetic_2d,detector_refinement_contract_active_blockers,6.0,active blockers preventing detector-seeded refinement/FWI
+synthetic_2d,detector_refinement_contract_radius_seed_available,0.0,0 means detector rows do not yet provide radius seeds
+synthetic_2d,detector_refinement_contract_material_seed_available,0.0,0 means detector rows do not yet provide material seeds
+synthetic_2d,detector_refinement_contract_ready_seed_table,1.0,1 means the stable x/z component rows are usable as a saved seed table
+synthetic_2d,detector_refinement_contract_ready_narrow_refinement,0.0,0 means the saved seed table is not yet a narrow refinement contract
+synthetic_2d,detector_refinement_contract_ready_for_fwi,0.0,0 means no detector-seeded FWI is justified by this audit
+synthetic_2d,detector_component_seed_exported_cases,10.0,stable detector cases exported as coordinate-only x/z seeds
+synthetic_2d,detector_component_seed_exported_components,30.0,component-level x/z seed rows exported for later design
+synthetic_2d,detector_component_seed_excluded_review_cases,2.0,review cases intentionally excluded from the coordinate seed table
+synthetic_2d,detector_component_seed_max_error_mm,10.0,maximum saved truth-evaluated x/z seed error among exported cases
+synthetic_2d,detector_component_seed_ready_coordinate_table,1.0,1 means the coordinate-only seed table is usable for design
+synthetic_2d,detector_component_seed_ready_for_fwi,0.0,0 means the seed export is not a detector-seeded FWI trigger
+synthetic_2d,detector_lateral_slot_budget_min_half_width_mm,10.0,lateral x-slot half-width needed to cover all stable exported seed cases
+synthetic_2d,detector_lateral_slot_budget_stable_coverage_5mm,7.0,stable exported cases covered by a 5 mm lateral x-slot half-width
+synthetic_2d,detector_lateral_slot_budget_stable_coverage_8mm,9.0,stable exported cases covered by an 8 mm lateral x-slot half-width
+synthetic_2d,detector_lateral_slot_budget_stable_coverage_10mm,10.0,stable exported cases covered by a 10 mm lateral x-slot half-width
+synthetic_2d,detector_lateral_slot_budget_h10_step2_per_case_points,1331.0,per-case 3D lateral x-slot tensor points at 10 mm half-width and 2 mm step
+synthetic_2d,detector_lateral_slot_budget_hypothetical_xz_h10_step2_points,1771561.0,hypothetical per-case 6D x/z tensor points; z coverage is not validated
+synthetic_2d,detector_lateral_slot_budget_z_coverage_validated,0.0,0 means detector z-neighborhood coverage remains unvalidated
+synthetic_2d,detector_lateral_slot_budget_ready_for_xz,0.0,0 means x/z neighborhood design remains blocked
+synthetic_2d,detector_lateral_slot_budget_ready_for_fwi,0.0,0 means the lateral-slot budget does not open detector-seeded FWI
+synthetic_2d,detector_seed_geometry_xz_min_half_width_mm,12.0,matched x/z L-infinity half-width needed to cover stable exported seeds
+synthetic_2d,detector_seed_geometry_source_lateral_half_width_mm,10.0,earlier lateral x-slot-only half-width for comparison
+synthetic_2d,detector_seed_geometry_max_stable_x_error_mm,10.0,maximum matched x error among stable exported detector seed cases
+synthetic_2d,detector_seed_geometry_max_stable_z_error_mm,12.0,maximum matched z error among stable exported detector seed cases
+synthetic_2d,detector_seed_geometry_z_exceeds_lateral_count,7.0,stable cases where matched z error exceeds lateral slot error
+synthetic_2d,detector_seed_geometry_stable_xz_coverage_10mm,8.0,stable exported cases covered by a 10 mm matched x/z half-width
+synthetic_2d,detector_seed_geometry_stable_xz_coverage_12mm,10.0,stable exported cases covered by a 12 mm matched x/z half-width
+synthetic_2d,detector_seed_geometry_h12_step2_per_case_points,4826809.0,per-case 6D x/z tensor points at 12 mm half-width and 2 mm step
+synthetic_2d,detector_seed_geometry_ready_xz_seed_neighborhood,1.0,1 means matched x/z seed-neighborhood sizing is supported
+synthetic_2d,detector_seed_geometry_ready_for_fwi,0.0,0 means matched x/z seed sizing does not open detector-seeded FWI
+synthetic_2d,detector_sampling_boundary_review_cases,2.0,detector reliability review cases after linking to close50 sampling boundary
+synthetic_2d,detector_sampling_boundary_review_below_clean_cases,2.0,review cases below the 30 mm clean threshold
+synthetic_2d,detector_sampling_boundary_close50_nominal_review_cases,2.0,close50 linear 29.5 mm nominal rows flagged for detector review
+synthetic_2d,detector_sampling_boundary_close50_source_mismatch_review_cases,0.0,source-mismatch rows at the same offset flagged for detector review
+synthetic_2d,detector_sampling_boundary_claim_ready,1.0,1 means detector reviews are localized to the branch sampling boundary
+synthetic_2d,detector_sampling_boundary_per_seed_equivalence_ready,0.0,0 means the detector caveat is branch-local rather than per-seed equivalent
+synthetic_2d,detector_sampling_boundary_ready_for_fwi,0.0,0 means no detector-seeded FWI or GPU probe is opened
+synthetic_2d,detector_upper_bound_minimal_all_case_triples,200.0,minimal rank-gated detector budget that covers all saved cases
+synthetic_2d,detector_upper_bound_all_truth_cases,12.0,all-truth cases covered by the best rank-gated upper-bound strategy
+synthetic_2d,detector_upper_bound_ready_for_claim,1.0,1 means detector evidence has a paper-safe upper-bound role
+synthetic_2d,detector_upper_bound_ready_for_fwi,0.0,0 means upper-bound policy does not justify detector-seeded FWI
+field_2d,field_cue_timing_short_inside_envelope_count,3.0,short relative-timing anchors inside the conservative envelope
+field_2d,field_cue_timing_short_content_inside_envelope_count,2.0,content-backed short anchors inside the conservative envelope
+field_2d,field_cue_timing_long_reject_short_transfer_count,8.0,long pattern anchors outside the short-transfer timing envelope
+field_2d,field_cue_timing_ready_for_short_qc,1.0,1 means short-pair relative timing QC remains supported
+field_2d,field_cue_timing_ready_for_field_fwi,0.0,0 means timing envelope remains field QC only
+field_2d,field_spatial_transfer_short_covered_count,1.0,short content anchors spatially covered by a long pattern anchor
+field_2d,field_spatial_transfer_long_covered_count,1.0,long pattern anchors spatially covered by a short content anchor
+field_2d,field_spatial_transfer_median_long_distance_mm,701.5965,median nearest short-content distance for long pattern anchors
+field_2d,field_spatial_transfer_ready_for_transfer,0.0,0 means short timing cannot be transferred to long profiles
+field_2d,field_spatial_transfer_ready_for_field_fwi,0.0,0 means spatial-transfer audit does not justify field FWI
+field_2d,field_anchor_interval_short_inside_count,3.0,short timing anchors inside all-window supported intervals
+field_2d,field_anchor_interval_content_inside_count,2.0,content-backed short anchors inside all-window supported intervals
+field_2d,field_anchor_interval_min_margin_mm,13.331999999999994,minimum anchor margin to supported interval edge
+field_2d,field_anchor_interval_ready_for_short_qc,1.0,1 means short relative timing anchors coincide with supported intervals
+field_2d,field_anchor_interval_ready_for_field_fwi,0.0,0 means interval reconciliation does not justify field FWI
+field_2d,field_dimensionality_is_3d_survey,0.0,0 means the local GSSI dataset remains independent 2D line profiles
+field_2d,field_dimensionality_ready_for_short_qc,1.0,1 means short-profile relative timing QC is supported
+field_2d,field_dimensionality_ready_for_long_transfer,0.0,0 means short timing should not be transferred to long profiles
+field_2d,field_dimensionality_ready_for_3d_hpc,0.0,0 means no field-data 3D/HPC job should be submitted
+field_2d,field_dimensionality_ready_for_field_fwi,0.0,0 means measured-field FWI remains blocked
+field_2d,field_dimensionality_decision_gate_count,8.0,decision gates represented in the field dimensionality card
+field_2d,field_time_zero_ladder_ready_short_qc,1.0,1 means the consolidated field ladder supports short-profile relative timing QC
+field_2d,field_time_zero_ladder_ready_long_transfer,0.0,0 means short timing should not be transferred to long profiles
+field_2d,field_time_zero_ladder_ready_content_only_short_qc,1.0,1 means content-backed short anchors support the relative timing QC claim
+field_2d,field_time_zero_ladder_ready_leave_one_content_anchor,0.0,0 means the field short-timing claim is not leave-one-content redundant
+field_2d,field_time_zero_ladder_ready_absolute_t0,0.0,0 means the field data do not support absolute time-zero calibration
+field_2d,field_time_zero_ladder_ready_field_fwi,0.0,"0 means the field ladder remains QC-only, not FWI-ready"
+field_2d,field_time_zero_ladder_short_half_width_ns,0.058939096267190516,conservative half-width for short relative timing QC
+field_2d,field_time_zero_ladder_content_half_range_ns,0.00982318271119842,content-only short-anchor timing half-range after dropping the timing-only cue
+field_2d,field_time_zero_ladder_ladder_row_count,8.0,number of evidence gates represented in the consolidated ladder
+field_2d,field_short_anchor_leave_one_content_only_supported,1.0,1 means the two content-backed short anchors support relative timing without the timing-only cue
+field_2d,field_short_anchor_leave_one_supported_cases,1.0,leave-one subsets that preserve content-redundant short relative timing support
+field_2d,field_short_anchor_leave_one_degraded_cases,2.0,leave-one subsets degraded to a single content-backed short anchor
+field_2d,field_short_anchor_leave_one_content_half_range_ns,0.00982318271119842,content-only short-anchor relative timing half-range
+field_2d,field_short_anchor_leave_one_ready_field_fwi,0.0,"0 means the leave-one audit remains field-QC evidence, not field FWI readiness"
+field_2d,field_short_anchor_spatial_content_residual_range_mm,29.99699999999994,signed x-residual span for content-backed short anchors
+field_2d,field_short_anchor_spatial_content_residual_half_range_mm,14.99849999999997,half-range of content-backed short-anchor spatial residuals
+field_2d,field_short_anchor_spatial_content_min_margin_mm,13.331999999999994,minimum supported-interval margin for content-backed anchors
+field_2d,field_short_anchor_spatial_single_translation_supported,0.0,0 means short anchors do not support calibrated profile translation
+field_2d,field_short_anchor_spatial_ready_short_qc,1.0,1 means short relative timing QC remains supported
+field_2d,field_short_anchor_spatial_ready_spatial_calibration,0.0,0 means do not use short anchors for profile spatial calibration
+field_2d,field_short_anchor_spatial_ready_field_fwi,0.0,0 means spatial audit does not justify field FWI
+field_2d,field_inversion_readiness_gate_count,8.0,field readiness gates synthesized after spatial-consistency audit
+field_2d,field_inversion_readiness_supported_gates,2.0,field gates still supported after current guardrails
+field_2d,field_inversion_readiness_blocked_gates,6.0,field heavy-work gates blocked after current guardrails
+field_2d,field_inversion_readiness_ready_short_qc,1.0,1 means short-profile relative timing QC is still allowed
+field_2d,field_inversion_readiness_ready_depth_scale_qc,1.0,1 means apparent-depth scale QC is still allowed
+field_2d,field_inversion_readiness_ready_long_transfer,0.0,0 means short-to-long profile timing transfer is blocked
+field_2d,field_inversion_readiness_ready_spatial_calibration,0.0,0 means a single profile spatial calibration is blocked
+field_2d,field_inversion_readiness_ready_cover_depth,0.0,0 means calibrated cover-depth recovery is blocked
+field_2d,field_inversion_readiness_ready_radius,0.0,0 means field radius recovery is blocked
+field_2d,field_inversion_readiness_ready_field_fwi,0.0,0 means field FWI is blocked
+field_2d,field_inversion_readiness_ready_3d_hpc,0.0,0 means field 3D/HPC is blocked
+field_2d,field_inversion_readiness_apparent_depth_span_mm,149.9159238899803,absolute apparent-depth span across field scale assumptions
+field_2d,field_short_anchor_radius_degeneracy_weak_sides,4.0,content-backed sides with weak radius separation in saved waveform grids
+field_2d,field_short_anchor_radius_degeneracy_mismatch_pairs,2.0,content-backed pairs where selected repeat-profile radii disagree
+field_2d,field_short_anchor_radius_degeneracy_common_near_tie_pairs,2.0,pairs where forced common-radius alternatives are near-tied
+field_2d,field_short_anchor_radius_degeneracy_ready_morphology_qc,1.0,1 means field waveform morphology QC remains supported
+field_2d,field_short_anchor_radius_degeneracy_ready_radius_seed,0.0,0 means field radius seeding remains blocked
+field_2d,field_short_anchor_radius_degeneracy_ready_field_fwi,0.0,0 means field FWI remains blocked
+field_2d,field_short_anchor_signed_morphology_supported_pairs,2.0,content-backed short-anchor pairs passing signed morphology QC
+field_2d,field_short_anchor_signed_morphology_same_polarity_pairs,2.0,corrected content-backed pairs with same signed polarity
+field_2d,field_short_anchor_signed_morphology_min_signed_corr,0.9394685644349674,minimum corrected signed field-trace correlation
+field_2d,field_short_anchor_signed_morphology_ready_qc,1.0,1 means signed waveform morphology QC is supported
+field_2d,field_short_anchor_signed_morphology_ready_amplitude_calibration,0.0,0 means robust-normalized traces are not amplitude calibration
+field_2d,field_short_anchor_signed_morphology_ready_field_fwi,0.0,0 means signed morphology QC is not field FWI evidence
+field_2d,field_short_anchor_signed_sensitivity_threshold_combos,320.0,signed-morphology threshold combinations swept
+field_2d,field_short_anchor_signed_sensitivity_supported_combos,36.0,threshold combinations where all content-backed pairs pass
+field_2d,field_short_anchor_signed_sensitivity_moderate_ready,1.0,1 means the signed morphology result survives moderate threshold tightening
+field_2d,field_short_anchor_signed_sensitivity_strict_ready,0.0,0 means strict signed morphology claims remain blocked
+field_2d,field_short_anchor_signed_sensitivity_corr_limit,0.9394685644349674,minimum corrected signed-correlation support limit
+field_2d,field_short_anchor_signed_sensitivity_ready_field_fwi,0.0,0 means threshold sensitivity is not field FWI evidence
+field_2d,field_collection_handoff_action_count,7.0,controlled-collection action groups in the current field handoff
+field_2d,field_collection_handoff_critical_new_data_actions,5.0,new controlled-data groups required before field inversion
+field_2d,field_collection_handoff_packet_rows_needing_entry,12.0,planned packet rows that still need measured collection entries
+field_2d,field_collection_handoff_failed_acceptance_gates,7.0,acceptance gates still blocked before packet acceptance
+field_2d,field_collection_handoff_reference_uncertainty_gate_ns,0.02,time-zero reference uncertainty gate for the next controlled field pass
+field_2d,field_collection_handoff_ready_collection_day,1.0,"1 means the run sheet is ready for collection, not packet acceptance"
+field_2d,field_collection_handoff_ready_packet_acceptance,0.0,0 means the packet still needs controlled measurements
+field_2d,field_collection_handoff_ready_field_fwi,0.0,0 means the current archive still does not support field FWI
+field_2d,field_collection_handoff_ready_3d_hpc,0.0,0 means the local field archive is not a 3D/HPC workload

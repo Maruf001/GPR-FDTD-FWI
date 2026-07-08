@@ -6,6 +6,7 @@ so later increments can extend the same tables and figures.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import math
@@ -29,12 +30,14 @@ from PIL import Image
 RUN_MIN = 700
 RUN_MAX = 1218
 CUTOFF = 5.0e-4
+REPORT_DATE = "2026-06-11"
 REPORT_STEM = "004_2026-06-11_experiment_700_1218_holistic_evaluation"
-REPORT_DIR = Path("outputs/summary_tables/experiment_700_1218_holistic_evaluation")
+REPORT_DIR = Path("outputs/summary_tables/wk03_experiment_700_1218_holistic_evaluation")
 DATA_DIR = REPORT_DIR / "data"
 FIG_DIR = REPORT_DIR / "figures"
 SERIES_FIG_DIR = FIG_DIR / "series_charts"
 NOTEBOOK_PATH = Path("docs/update/summary") / f"{REPORT_STEM}.ipynb"
+RUN_RANGE_LABEL = f"{RUN_MIN}_{RUN_MAX}"
 
 
 OBJECTIVE_ORDER = [
@@ -51,6 +54,44 @@ TARGET_NAMES = {
     1: "target1 center rebar",
     2: "target2 deep-right rebar",
 }
+
+
+def configure_report_scope(
+    *,
+    run_min: int = RUN_MIN,
+    run_max: int = RUN_MAX,
+    cutoff: float = CUTOFF,
+    report_date: str = REPORT_DATE,
+    report_stem: str | None = None,
+    report_dir: str | Path | None = None,
+    notebook_path: str | Path | None = None,
+) -> None:
+    """Configure module globals used by the notebook/report generator."""
+    if run_min > run_max:
+        raise ValueError("run_min must be <= run_max")
+    global RUN_MIN, RUN_MAX, CUTOFF, REPORT_DATE, REPORT_STEM, REPORT_DIR
+    global DATA_DIR, FIG_DIR, SERIES_FIG_DIR, NOTEBOOK_PATH, RUN_RANGE_LABEL
+    RUN_MIN = int(run_min)
+    RUN_MAX = int(run_max)
+    CUTOFF = float(cutoff)
+    REPORT_DATE = str(report_date)
+    RUN_RANGE_LABEL = f"{RUN_MIN}_{RUN_MAX}"
+    REPORT_STEM = (
+        str(report_stem)
+        if report_stem
+        else f"004_{REPORT_DATE}_experiment_{RUN_RANGE_LABEL}_holistic_evaluation"
+    )
+    REPORT_DIR = Path(report_dir) if report_dir else Path(
+        f"outputs/summary_tables/wk03_experiment_{RUN_RANGE_LABEL}_holistic_evaluation"
+    )
+    DATA_DIR = REPORT_DIR / "data"
+    FIG_DIR = REPORT_DIR / "figures"
+    SERIES_FIG_DIR = FIG_DIR / "series_charts"
+    NOTEBOOK_PATH = Path(notebook_path) if notebook_path else Path("docs/update/summary") / f"{REPORT_STEM}.ipynb"
+
+
+def ranged_csv_name(stem: str) -> str:
+    return f"{stem}_{RUN_RANGE_LABEL}.csv"
 
 
 def parse_run_id(path_name: str) -> int | None:
@@ -114,6 +155,84 @@ def exact_geometry(summary: dict) -> bool | None:
     )
 
 
+def _variant_float(variant: dict, key: str) -> float | None:
+    value = variant.get(key)
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _close_optional(value: float | None, expected: float | None, tol: float = 1.0e-9) -> bool:
+    if expected is None:
+        return value is None
+    return value is not None and abs(value - expected) <= tol
+
+
+def objective_variant_matches(
+    variant: dict,
+    *,
+    t_start_ns: float,
+    t_end_ns: float,
+    taper_ns: float,
+    low_ghz: float | None,
+    high_ghz: float | None,
+    band_taper_ghz: float,
+) -> bool:
+    return (
+        _close_optional(_variant_float(variant, "t_start_ns"), t_start_ns)
+        and _close_optional(_variant_float(variant, "t_end_ns"), t_end_ns)
+        and _close_optional(_variant_float(variant, "taper_ns"), taper_ns)
+        and _close_optional(_variant_float(variant, "low_ghz"), low_ghz)
+        and _close_optional(_variant_float(variant, "high_ghz"), high_ghz)
+        and _close_optional(_variant_float(variant, "band_taper_ghz"), band_taper_ghz)
+    )
+
+
+def primary_objective_metadata(summary: dict) -> dict:
+    variants = list(summary.get("diagnostic_objective_variants") or [])
+    if not variants:
+        return {
+            "primary_objective_label": "implicit_base",
+            "primary_objective_family": "implicit_canonical_base",
+            "base_margin_is_canonical": True,
+        }
+    primary = variants[0]
+    label = str(primary.get("label", ""))
+    if objective_variant_matches(
+        primary,
+        t_start_ns=1.0,
+        t_end_ns=7.0,
+        taper_ns=0.3,
+        low_ghz=None,
+        high_ghz=None,
+        band_taper_ghz=0.0,
+    ):
+        family = "canonical_base"
+        canonical = True
+    elif objective_variant_matches(
+        primary,
+        t_start_ns=1.5,
+        t_end_ns=5.5,
+        taper_ns=0.2,
+        low_ghz=1.1,
+        high_ghz=3.4,
+        band_taper_ghz=0.15,
+    ):
+        family = "late_high_primary"
+        canonical = False
+    else:
+        family = "noncanonical_primary"
+        canonical = False
+    return {
+        "primary_objective_label": label,
+        "primary_objective_family": family,
+        "base_margin_is_canonical": canonical,
+    }
+
+
 def read_csv_rows(path: Path) -> list[dict]:
     if not path.exists():
         return []
@@ -157,6 +276,7 @@ def discover_coordinate_runs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame
         ring_label = parse_ringdown_label(run_dir.name)
         tx_rx = float(summary.get("tx_rx_offset_mm") or confidence.get("tx_rx_offset_mm") or 0.0)
         sources = int(summary.get("sources") or 0)
+        objective_meta = primary_objective_metadata(summary)
         margin = float(confidence.get("radius_margin_abs") or "nan")
         best_misfit = float(confidence.get("best_misfit") or "nan")
         next_misfit = float(confidence.get("next_radius_misfit") or "nan")
@@ -178,6 +298,9 @@ def discover_coordinate_runs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame
                 "ringdown_label": ring_label,
                 "ringdown_value": ringdown_value(ring_label),
                 "linear_receiver": "linear_receiver" in run_dir.name,
+                "primary_objective_label": objective_meta["primary_objective_label"],
+                "primary_objective_family": objective_meta["primary_objective_family"],
+                "base_margin_is_canonical": objective_meta["base_margin_is_canonical"],
                 "base_margin": margin,
                 "margin_offset_from_cutoff": margin - CUTOFF,
                 "confidence_label": confidence.get("confidence_label", ""),
@@ -739,6 +862,17 @@ def summarize_intervention_series(specs: list[SeriesSpec], run_df: pd.DataFrame)
     return pd.DataFrame(rows).sort_values(["series_type", "first_run"]).reset_index(drop=True)
 
 
+def canonical_base_policy_runs(run_df: pd.DataFrame) -> pd.DataFrame:
+    if "base_margin_is_canonical" not in run_df.columns:
+        return run_df.copy()
+    mask = run_df["base_margin_is_canonical"].map(
+        lambda value: True
+        if pd.isna(value)
+        else str(value).strip().lower() not in {"0", "false", "no"}
+    )
+    return run_df[mask].copy()
+
+
 def make_source_count_summary(run_df: pd.DataFrame) -> pd.DataFrame:
     return (
         run_df.groupby(["target", "sources"])
@@ -1058,6 +1192,7 @@ def write_notebook(
     appendix_specs: list[SeriesSpec],
     appendix_paths: dict[str, Path],
     seed_branch_path: Path,
+    excluded_noncanonical_count: int = 0,
 ) -> None:
     nb = nbf.v4.new_notebook()
     cells = []
@@ -1072,12 +1207,18 @@ def write_notebook(
     accepted_count = int((run_df["base_margin"] >= CUTOFF).sum())
     exact_count = int(run_df["exact_geometry"].fillna(False).sum())
     weak_count = int((run_df["base_margin"] < CUTOFF).sum())
+    noncanonical_note = (
+        "\nNoncanonical-primary objective runs excluded from base-policy charts "
+        f"and series: `{excluded_noncanonical_count}`."
+        if excluded_noncanonical_count
+        else ""
+    )
 
     cells.append(
         nbf.v4.new_markdown_cell(
             f"""# Holistic Technical Evaluation: Output Experiments {RUN_MIN}-{RUN_MAX}
 
-Generated: 2026-06-11.
+Generated: {REPORT_DATE}.
 
 This notebook evaluates the coordinate-optimizer experiment archive from output
 experiment IDs `{RUN_MIN}` through `{RUN_MAX}`. The scope includes
@@ -1087,6 +1228,7 @@ coordinate-optimizer runs with confidence CSV files.
 The goal is not to repeat each individual run report. It is to show how groups
 of experiments support decisions: when a source-density ladder works, when a
 transmitter/receiver spacing probe works, and where a branch should stop.
+{noncanonical_note}
 """
         )
     )
@@ -1141,12 +1283,12 @@ transmitter/receiver spacing probe works, and where a branch should stop.
 
     cells.append(
         nbf.v4.new_code_cell(
-            """# This notebook is generated by run_experiment_700_1218_holistic_report.py.
+            f"""# This notebook is generated by run_experiment_700_1218_holistic_report.py.
 # The supporting tables are in:
-# outputs/summary_tables/experiment_700_1218_holistic_evaluation/data
+# {DATA_DIR}
 import pandas as pd
-run_summary = pd.read_csv("../../../outputs/summary_tables/experiment_700_1218_holistic_evaluation/data/coordinate_run_summary_700_1218.csv")
-series_summary = pd.read_csv("../../../outputs/summary_tables/experiment_700_1218_holistic_evaluation/data/series_summary_700_1218.csv")
+run_summary = pd.read_csv("{notebook_rel(DATA_DIR / ranged_csv_name('coordinate_run_summary'))}")
+series_summary = pd.read_csv("{notebook_rel(DATA_DIR / ranged_csv_name('series_summary'))}")
 run_summary.head()"""
         )
     )
@@ -1475,8 +1617,8 @@ Runs: `{values_text(spec.run_ids)}`.
             """## Automatically Detected Series Index
 
 The table below is the systematic index of multi-run series detected from
-output experiment IDs 700-1218. Each row has a corresponding plot in the
-appendix and a CSV row in `series_summary_700_1218.csv`.
+output experiment IDs {RUN_MIN}-{RUN_MAX}. Each row has a corresponding plot in the
+appendix and a CSV row in `{ranged_csv_name('series_summary')}`.
 """
             + "\n\n"
             + md_table(
@@ -1547,37 +1689,57 @@ not more blind queueing.
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--run-min", type=int, default=RUN_MIN)
+    parser.add_argument("--run-max", type=int, default=RUN_MAX)
+    parser.add_argument("--cutoff", type=float, default=CUTOFF)
+    parser.add_argument("--report-date", default=REPORT_DATE)
+    parser.add_argument("--report-stem", default=None)
+    parser.add_argument("--report-dir", default=None)
+    parser.add_argument("--notebook-path", default=None)
+    args = parser.parse_args()
+    configure_report_scope(
+        run_min=args.run_min,
+        run_max=args.run_max,
+        cutoff=args.cutoff,
+        report_date=args.report_date,
+        report_stem=args.report_stem,
+        report_dir=args.report_dir,
+        notebook_path=args.notebook_path,
+    )
     ensure_dirs()
     run_df, diag_df, top_df = discover_coordinate_runs()
     if run_df.empty:
         raise RuntimeError("No coordinate optimizer runs found in requested range")
+    policy_run_df = canonical_base_policy_runs(run_df)
+    excluded_noncanonical_count = len(run_df) - len(policy_run_df)
 
-    detected_specs = detect_series(run_df)
-    curated_specs = curated_series(run_df)
+    detected_specs = detect_series(policy_run_df)
+    curated_specs = curated_series(policy_run_df)
     all_specs = detected_specs
 
-    series_rows = [make_series_summary(spec, run_df) for spec in all_specs]
+    series_rows = [make_series_summary(spec, policy_run_df) for spec in all_specs]
     series_df = pd.DataFrame(series_rows).sort_values(["series_type", "best_run"])
-    policy_df = summarize_intervention_series(all_specs, run_df)
-    source_summary_df = make_source_count_summary(run_df)
-    txrx_summary_df = make_txrx_summary(run_df)
+    policy_df = summarize_intervention_series(all_specs, policy_run_df)
+    source_summary_df = make_source_count_summary(policy_run_df)
+    txrx_summary_df = make_txrx_summary(policy_run_df)
     target1_source_policy_df = policy_df[
         (policy_df["series_type"] == "source_density") & (policy_df["target"] == 1)
     ].copy()
 
-    run_df.to_csv(DATA_DIR / "coordinate_run_summary_700_1218.csv", index=False)
-    diag_df.to_csv(DATA_DIR / "objective_variant_summary_700_1218.csv", index=False)
-    top_df.to_csv(DATA_DIR / "rank1_candidate_summary_700_1218.csv", index=False)
-    series_df.to_csv(DATA_DIR / "series_summary_700_1218.csv", index=False)
-    policy_df.to_csv(DATA_DIR / "intervention_series_policy_700_1218.csv", index=False)
-    source_summary_df.to_csv(DATA_DIR / "source_count_target_policy_700_1218.csv", index=False)
-    txrx_summary_df.to_csv(DATA_DIR / "txrx_target_policy_700_1218.csv", index=False)
-    target1_source_policy_df.to_csv(DATA_DIR / "target1_source_density_policy_700_1218.csv", index=False)
+    run_df.to_csv(DATA_DIR / ranged_csv_name("coordinate_run_summary"), index=False)
+    diag_df.to_csv(DATA_DIR / ranged_csv_name("objective_variant_summary"), index=False)
+    top_df.to_csv(DATA_DIR / ranged_csv_name("rank1_candidate_summary"), index=False)
+    series_df.to_csv(DATA_DIR / ranged_csv_name("series_summary"), index=False)
+    policy_df.to_csv(DATA_DIR / ranged_csv_name("intervention_series_policy"), index=False)
+    source_summary_df.to_csv(DATA_DIR / ranged_csv_name("source_count_target_policy"), index=False)
+    txrx_summary_df.to_csv(DATA_DIR / ranged_csv_name("txrx_target_policy"), index=False)
+    target1_source_policy_df.to_csv(DATA_DIR / ranged_csv_name("target1_source_density_policy"), index=False)
 
-    overview_paths = save_overview_plots(run_df, series_df)
-    seed_branch_path = make_seed_branch_plot(run_df)
+    overview_paths = save_overview_plots(policy_run_df, series_df)
+    seed_branch_path = make_seed_branch_plot(policy_run_df)
     policy_paths = save_policy_plots(
-        run_df,
+        policy_run_df,
         policy_df,
         source_summary_df,
         txrx_summary_df,
@@ -1585,11 +1747,11 @@ def main() -> None:
     )
 
     curated_paths = {
-        spec.series_id: plot_series(spec, run_df, diag_df, FIG_DIR, detailed=True)
+        spec.series_id: plot_series(spec, policy_run_df, diag_df, FIG_DIR, detailed=True)
         for spec in curated_specs
     }
     appendix_paths = {
-        spec.series_id: plot_series(spec, run_df, diag_df, SERIES_FIG_DIR, detailed=False)
+        spec.series_id: plot_series(spec, policy_run_df, diag_df, SERIES_FIG_DIR, detailed=False)
         for spec in all_specs
     }
 
@@ -1600,10 +1762,10 @@ def main() -> None:
         + list(curated_paths.values())
         + list(appendix_paths.values())
     )
-    validation_df.to_csv(DATA_DIR / "figure_validation_700_1218.csv", index=False)
+    validation_df.to_csv(DATA_DIR / ranged_csv_name("figure_validation"), index=False)
 
     write_notebook(
-        run_df=run_df,
+        run_df=policy_run_df,
         series_df=series_df,
         policy_df=policy_df,
         source_summary_df=source_summary_df,
@@ -1616,14 +1778,17 @@ def main() -> None:
         appendix_specs=all_specs,
         appendix_paths=appendix_paths,
         seed_branch_path=seed_branch_path,
+        excluded_noncanonical_count=excluded_noncanonical_count,
     )
 
     print(f"Wrote notebook: {NOTEBOOK_PATH}")
-    print(f"Wrote run summary: {DATA_DIR / 'coordinate_run_summary_700_1218.csv'}")
-    print(f"Wrote series summary: {DATA_DIR / 'series_summary_700_1218.csv'}")
-    print(f"Wrote policy summary: {DATA_DIR / 'intervention_series_policy_700_1218.csv'}")
+    print(f"Wrote run summary: {DATA_DIR / ranged_csv_name('coordinate_run_summary')}")
+    print(f"Wrote series summary: {DATA_DIR / ranged_csv_name('series_summary')}")
+    print(f"Wrote policy summary: {DATA_DIR / ranged_csv_name('intervention_series_policy')}")
     print(f"Wrote figures: {FIG_DIR}")
     print(f"Parseable coordinate runs: {len(run_df)}")
+    print(f"Canonical-base policy runs: {len(policy_run_df)}")
+    print(f"Excluded noncanonical-primary runs: {excluded_noncanonical_count}")
     print(f"Detected series: {len(series_df)}")
     print(f"Validated figures: {len(validation_df)}")
 

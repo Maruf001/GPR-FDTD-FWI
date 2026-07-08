@@ -1,0 +1,4 @@
+gate_key,ready,allowed_use,blocked_use,evidence
+single_gpu_source_count_seed_replicate,True,one bounded close50 Tx/Rx40 sources3 seed replicate,broad close50 threshold sweep,recommended case=274_coordinate_optimizer_close50_seed34_sources3_txrx40_objectives
+broad_gpu_queue,False,none,launch broad GPU queue,saved archive already defines the close50 clean threshold boundary
+detector_seeded_fwi,False,none,detector-seeded FWI launch,this scorecard concerns coordinate branch preservation only

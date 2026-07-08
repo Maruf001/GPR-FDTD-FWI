@@ -1,0 +1,4 @@
+source_count,row_count,truth_geometry_count,truth_geometry_fraction,strong_count,weak_count,seed_values
+3,2,0,0.0,0,2,34
+4,2,2,1.0,2,0,34
+5,2,2,1.0,2,0,34

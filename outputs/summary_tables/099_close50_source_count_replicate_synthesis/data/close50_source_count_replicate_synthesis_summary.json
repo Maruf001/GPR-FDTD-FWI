@@ -1,0 +1,34 @@
+{
+  "policy_label": "close50_txrx40_source_count_replicate_synthesis",
+  "source_row_count": 18,
+  "source_count_group_count": 3,
+  "source3_seed_count": 3,
+  "source3_seed_values": "13,21,34",
+  "source3_truth_geometry_fraction": 0.0,
+  "source3_replicated_failure": true,
+  "source4_three_seed_clean": true,
+  "source5_three_seed_clean": true,
+  "source_count_transition_supported": true,
+  "missing_source3_seed_values": "",
+  "ready_for_final_source3_seed21_replicate": false,
+  "ready_for_broad_gpu_queue": false,
+  "ready_for_detector_seeded_fwi": false,
+  "gpu_priority": "none",
+  "decision": "The close50 Tx/Rx40 source-count comparison is now seed-symmetric: sources3 fails across seeds 13/21/34, while sources4 and sources5 are clean across the same three seeds. This supports a source-density transition claim and closes additional GPU replication for this local question.",
+  "paths": {
+    "rows_csv": "outputs/summary_tables/099_close50_source_count_replicate_synthesis/data/close50_source_count_replicate_rows.csv",
+    "source_summary_csv": "outputs/summary_tables/099_close50_source_count_replicate_synthesis/data/close50_source_count_replicate_by_source_count.csv",
+    "gates_csv": "outputs/summary_tables/099_close50_source_count_replicate_synthesis/data/close50_source_count_replicate_gates.csv",
+    "summary_json": "outputs/summary_tables/099_close50_source_count_replicate_synthesis/data/close50_source_count_replicate_synthesis_summary.json",
+    "figure": "outputs/summary_tables/099_close50_source_count_replicate_synthesis/figures/close50_source_count_replicate_synthesis.png",
+    "figure_notes": "outputs/summary_tables/099_close50_source_count_replicate_synthesis/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/099_close50_source_count_replicate_synthesis/data/figure_validation.csv",
+    "source3_runs": [
+      "274_coordinate_optimizer_close50_seed34_sources3_txrx40_objectives",
+      "1344_coordinate_optimizer_close50_seed13_sources3_txrx40_objectives",
+      "1345_coordinate_optimizer_close50_seed21_sources3_txrx40_objectives"
+    ],
+    "source4_aggregate_csv": "outputs/experiments/280_coordinate_confidence_close50_sources4_txrx40_seed_replicates/data/coordinate_confidence_aggregate.csv",
+    "source5_confidence_csv": "outputs/experiments/271_close50_txrx40_seed_replication_summary/data/txrx40_seed_confidence_summary.csv"
+  }
+}

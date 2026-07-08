@@ -1,0 +1,3 @@
+feature_family,selector_strategy,branch_key,case_count,top10_case_count,top50_case_count,top200_case_count,deeper_than_top200_case_count,median_first_all_truth_rank
+component_only,branch,target2_close14,6,0,6,6,0,23.5
+component_only,branch,target2_close50_linear29p5,6,3,4,6,0,18.5

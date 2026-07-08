@@ -1,0 +1,3 @@
+branch_key,case_count,stable_assignment_case_count,review_assignment_case_count,tuning_sensitive_case_count_truth_eval,max_slot_x_range_mm,median_slot_x_range_mm,review_case_labels
+target2_close14,6,6,0,0,4.0,1.5,
+target2_close50_linear29p5,6,4,2,2,21.0,3.5,target2_close50_linear29p5|seed13|nominal;target2_close50_linear29p5|seed34|nominal

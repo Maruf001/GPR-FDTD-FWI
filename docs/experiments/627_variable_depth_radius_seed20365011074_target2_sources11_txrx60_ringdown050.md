@@ -111,3 +111,29 @@ resources: production GPU utilization was about 92-93%; host RAM stayed about 94
 ## Next Decision
 
 Run seed20365011074 target1 with the standard 5-source Tx/Rx=60 control.
+
+## 2026-06-17 Addendum
+
+A specialized target2 acquisition-offset probe has now been run:
+
+```text
+run:      1225_coordinate_optimizer_variable_depth_radius_seed20365011074_target2_sources5_txrx50_ringdown050_objectives
+target:   target2
+sources:  5
+Tx/Rx:    50.0 mm
+```
+
+Run 1225 rescues the target2 branch. It preserves exact x/z/r geometry and
+clears the strict base-margin cutoff:
+
+| Run | Sources | Tx/Rx mm | Base margin | Offset from cutoff | Status |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 1090 | 5 | 60.0 | 4.964072e-4 | -3.593e-6 | weak |
+| 1091 | 7 | 60.0 | 4.743122e-4 | -2.569e-5 | weak |
+| 1092 | 9 | 60.0 | 4.981292e-4 | -1.871e-6 | weak |
+| 1093 | 11 | 60.0 | 4.033775e-4 | -9.662e-5 | weak |
+| 1225 | 5 | 50.0 | 5.181019e-4 | +1.810e-5 | accepted |
+
+All six diagnostic objective variants in run 1225 rank the exact geometry
+first and clear the cutoff. This changes the seed20365011074 target2 status
+from source-density unresolved to Tx/Rx=50 acquisition-offset rescued.

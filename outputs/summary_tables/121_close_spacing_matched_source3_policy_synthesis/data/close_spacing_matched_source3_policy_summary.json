@@ -1,0 +1,32 @@
+{
+  "policy_label": "close_spacing_matched_source3_policy_synthesis",
+  "family_count": 2,
+  "claim_count": 7,
+  "queue_complete": true,
+  "close14_truth_geometry_fraction": 1.0,
+  "close50_truth_geometry_fraction": 0.0,
+  "close14_all_truth_strong": true,
+  "close50_replicated_wrong_branch": true,
+  "guarded_acquisition_geometry_contrast_ready": true,
+  "spacing_only_causal_generalization_ready": false,
+  "ready_for_broad_gpu_queue": false,
+  "ready_for_field_fwi": false,
+  "ready_for_3d_hpc_handoff": false,
+  "ready_for_neural_network_training": false,
+  "gpu_priority": "none",
+  "recommended_next_local_mode": "cpu_manuscript_policy_or_field_collection_packet",
+  "decision": "The completed matched-source3 queue supports a guarded acquisition/geometry-aware contrast: close14 source3 Tx/Rx40 is exact and strong across all six rows, while close50 source3 Tx/Rx45 repeatedly selects x=299 mm, z=90 mm, r=7.5 mm instead of the truth x=300 mm, z=90 mm, r=8 mm. Do not launch a broad GPU queue from this result; write it as a controlled identifiability contrast with explicit caveats.",
+  "paths": {
+    "family_csv": "outputs/summary_tables/121_close_spacing_matched_source3_policy_synthesis/data/close_spacing_matched_source3_family_rows.csv",
+    "claims_csv": "outputs/summary_tables/121_close_spacing_matched_source3_policy_synthesis/data/close_spacing_matched_source3_claim_rows.csv",
+    "gates_csv": "outputs/summary_tables/121_close_spacing_matched_source3_policy_synthesis/data/close_spacing_matched_source3_gate_rows.csv",
+    "summary_json": "outputs/summary_tables/121_close_spacing_matched_source3_policy_synthesis/data/close_spacing_matched_source3_policy_summary.json",
+    "figure": "outputs/summary_tables/121_close_spacing_matched_source3_policy_synthesis/figures/close_spacing_matched_source3_policy_synthesis.png",
+    "figure_validation_csv": "outputs/summary_tables/121_close_spacing_matched_source3_policy_synthesis/data/figure_validation.csv",
+    "figure_notes": "outputs/summary_tables/121_close_spacing_matched_source3_policy_synthesis/figures/FIGURE_NOTES.md",
+    "close14_aggregate": "outputs/experiments/1351_coordinate_confidence_close14_sources3_txrx40_matched_seed_replicates/data/coordinate_confidence_aggregate.json",
+    "close50_aggregate": "outputs/experiments/1355_coordinate_confidence_close50_sources3_txrx45_matched_seed_replicates/data/coordinate_confidence_aggregate.json",
+    "queue_summary": "outputs/summary_tables/120_close_spacing_matched_source3_probe_queue/data/close_spacing_matched_source3_probe_queue_summary.json",
+    "confound_summary": "outputs/summary_tables/111_close_spacing_source_density_confound_audit/data/close_spacing_source_density_confound_summary.json"
+  }
+}

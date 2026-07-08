@@ -1,0 +1,3 @@
+recommended_action,row_count,max_linf_improvement_mm,source_counts,tx_rx_offsets_mm
+no_gpu_archive_boundary_caveat,2,1.0,4,25
+single_gpu_source_count_seed_replicate,1,1.0,3,40

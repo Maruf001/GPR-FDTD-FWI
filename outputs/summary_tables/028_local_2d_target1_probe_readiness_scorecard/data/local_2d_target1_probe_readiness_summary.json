@@ -1,0 +1,27 @@
+{
+  "policy_label": "local_2d_target1_probe_readiness_requires_new_hypothesis",
+  "scorecard_row_count": 10,
+  "triggered_gate_count": 0,
+  "gpu_action_count": 0,
+  "ready_for_target1_gpu_probe": false,
+  "target1_canonical_row_count": 133,
+  "target1_exact_geometry_count": 133,
+  "target1_base_weak_exact_count": 43,
+  "target1_late_high_accepted_count": 132,
+  "modern_exception_series_count": 0,
+  "legacy_exception_series_count": 1,
+  "terminal_11_worse_count": 2,
+  "closed_no_probe_count": 5,
+  "manuscript_policy_row_count": 1,
+  "do_not_extend_source_density_count": 1,
+  "gpu_priority": "none",
+  "ready_for_manuscript_target1_probe_decision": true,
+  "decision": "Do not launch a target1 Tx/Rx/source-count GPU probe under the current archived hypothesis. Target1 canonical rows are exact; weak base margins are secondary-confirmed for modern ringdown050 rows; source-density escalation is nonmonotonic and terminal 11-source branches are worse. A future GPU run needs a new objective, geometry, or acquisition hypothesis stated before execution.",
+  "paths": {
+    "rows_csv": "outputs/summary_tables/028_local_2d_target1_probe_readiness_scorecard/data/local_2d_target1_probe_readiness_rows.csv",
+    "summary_json": "outputs/summary_tables/028_local_2d_target1_probe_readiness_scorecard/data/local_2d_target1_probe_readiness_summary.json",
+    "figure": "outputs/summary_tables/028_local_2d_target1_probe_readiness_scorecard/figures/local_2d_target1_probe_readiness_scorecard.png",
+    "figure_notes": "outputs/summary_tables/028_local_2d_target1_probe_readiness_scorecard/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/028_local_2d_target1_probe_readiness_scorecard/data/figure_validation.csv"
+  }
+}

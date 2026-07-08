@@ -1,0 +1,27 @@
+{
+  "policy_label": "local_2d_branch_preservation_threshold_sensitivity_cpu_no_gpu",
+  "threshold_combo_count": 25,
+  "default_abs_gap_cutoff": 0.01,
+  "default_rel_gap_cutoff": 0.1,
+  "default_recovered_count": 13,
+  "default_mean_extra_candidates_per_step": 4.598393574297189,
+  "max_recovered_count": 14,
+  "min_mean_extra_candidates_per_step": 0.1994645247657296,
+  "most_efficient_max_recovery_abs_gap_cutoff": 0.01,
+  "most_efficient_max_recovery_rel_gap_cutoff": 0.2,
+  "most_efficient_max_recovery_mean_extra_candidates_per_step": 6.317269076305221,
+  "default_recovers_max_count": false,
+  "ready_for_default_threshold_policy": true,
+  "ready_for_broad_gpu_queue": false,
+  "ready_for_detector_seeded_fwi": false,
+  "gpu_priority": "none",
+  "decision": "Use this as CPU threshold sensitivity for branch preservation. Thresholds can support manuscript policy wording, but this does not launch GPU work or detector-seeded FWI.",
+  "paths": {
+    "threshold_rows_csv": "outputs/summary_tables/096_local_2d_branch_preservation_threshold_sensitivity/data/local_2d_branch_preservation_threshold_sensitivity_rows.csv",
+    "gates_csv": "outputs/summary_tables/096_local_2d_branch_preservation_threshold_sensitivity/data/local_2d_branch_preservation_threshold_sensitivity_gates.csv",
+    "summary_json": "outputs/summary_tables/096_local_2d_branch_preservation_threshold_sensitivity/data/local_2d_branch_preservation_threshold_sensitivity_summary.json",
+    "figure": "outputs/summary_tables/096_local_2d_branch_preservation_threshold_sensitivity/figures/local_2d_branch_preservation_threshold_sensitivity.png",
+    "figure_notes": "outputs/summary_tables/096_local_2d_branch_preservation_threshold_sensitivity/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/096_local_2d_branch_preservation_threshold_sensitivity/data/figure_validation.csv"
+  }
+}

@@ -141,6 +141,32 @@ def candidate_rebar_arrays_from_base(
     return x_values, z_values, radii
 
 
+def overlapping_rebar_pairs(x_values_mm, z_values_mm, radii_mm, tolerance_mm=1.0e-9):
+    """Return index pairs whose circular cross-sections overlap."""
+    if len(x_values_mm) != len(z_values_mm) or len(x_values_mm) != len(radii_mm):
+        raise ValueError("x, z, and radius lists must have the same length")
+    overlaps = []
+    for first in range(len(x_values_mm)):
+        for second in range(first + 1, len(x_values_mm)):
+            dx = float(x_values_mm[first]) - float(x_values_mm[second])
+            dz = float(z_values_mm[first]) - float(z_values_mm[second])
+            center_distance = float(np.hypot(dx, dz))
+            radius_sum = float(radii_mm[first]) + float(radii_mm[second])
+            if center_distance + float(tolerance_mm) < radius_sum:
+                overlaps.append((first, second))
+    return overlaps
+
+
+def geometry_is_nonoverlapping(x_values_mm, z_values_mm, radii_mm, tolerance_mm=1.0e-9):
+    """Return True when every rebar pair is separated or tangent."""
+    return not overlapping_rebar_pairs(
+        x_values_mm,
+        z_values_mm,
+        radii_mm,
+        tolerance_mm=tolerance_mm,
+    )
+
+
 def build_variable_geometry_model(
         x_values_mm,
         z_values_mm,
@@ -264,6 +290,7 @@ def evaluate_local_geometry_grid(
         rebar_epsr=cfg.REBAR_EPSR,
         rebar_sigma=cfg.REBAR_SIGMA,
         objective_variants=None,
+        enforce_nonoverlap_candidates=False,
         progress_every=25):
     variants = list(objective_variants or [])
     observed_objective_by_case = {}
@@ -289,9 +316,11 @@ def evaluate_local_geometry_grid(
     total = len(target_x_values_mm) * len(target_z_values_mm) * len(target_radius_values_mm)
     started = time.time()
     count = 0
+    visited = 0
     for x_mm in target_x_values_mm:
         for z_mm in target_z_values_mm:
             for radius_mm in target_radius_values_mm:
+                visited += 1
                 x_values, z_values, radii = candidate_rebar_arrays_from_base(
                     base_x_mm,
                     base_z_mm,
@@ -301,6 +330,14 @@ def evaluate_local_geometry_grid(
                     z_mm,
                     radius_mm,
                 )
+                if enforce_nonoverlap_candidates and not geometry_is_nonoverlapping(x_values, z_values, radii):
+                    if progress_every and (visited == 1 or visited % int(progress_every) == 0):
+                        elapsed = time.time() - started
+                        print(
+                            "  Multi-rebar local geometry profile: "
+                            f"{visited}/{total}, accepted={count}, elapsed={elapsed:.1f} s"
+                        )
+                    continue
                 model = build_variable_geometry_model(
                     x_values,
                     z_values,
@@ -465,9 +502,12 @@ def evaluate_local_geometry_grid(
                     candidate["objective_results"] = objective_results
                 candidates.append(candidate)
                 count += 1
-                if progress_every and (count == 1 or count % int(progress_every) == 0):
+                if progress_every and (visited == 1 or visited % int(progress_every) == 0):
                     elapsed = time.time() - started
-                    print(f"  Multi-rebar local geometry profile: {count}/{total}, elapsed={elapsed:.1f} s")
+                    extra = f", accepted={count}" if enforce_nonoverlap_candidates else ""
+                    print(f"  Multi-rebar local geometry profile: {visited}/{total}{extra}, elapsed={elapsed:.1f} s")
+    if not candidates:
+        raise ValueError("no candidate geometries survived the non-overlap filter")
     return candidates
 
 
@@ -766,6 +806,11 @@ def main():
     parser.add_argument("--progress-every", type=int, default=25)
     parser.add_argument("--geometry-mode", choices=["hard", "subcell"], default="hard")
     parser.add_argument("--subcell-samples", type=int, default=5)
+    parser.add_argument(
+        "--enforce-nonoverlap-candidates",
+        action="store_true",
+        help="Skip candidate geometries with overlapping circular rebar cross-sections.",
+    )
     parser.add_argument("--run-name", default="multi_rebar_local_geometry_profile")
     parser.add_argument("--outdir", default=None)
     args = parser.parse_args()
@@ -859,6 +904,7 @@ def main():
         source_ringdown_delay_ps=args.source_ringdown_delay_ps,
         source_ringdown_frequency_scale=args.source_ringdown_frequency_scale,
         objective_variants=args.objective_variants,
+        enforce_nonoverlap_candidates=args.enforce_nonoverlap_candidates,
         progress_every=args.progress_every,
     )
     elapsed = time.time() - started
@@ -922,6 +968,7 @@ def main():
         },
         "objective_variants": [variant.as_dict() for variant in args.objective_variants],
         "primary_objective_label": objective_labels[0],
+        "enforce_nonoverlap_candidates": bool(args.enforce_nonoverlap_candidates),
         "elapsed_time_s": float(elapsed),
         "candidate_count": len(candidates),
         "case_count": len(case_labels),

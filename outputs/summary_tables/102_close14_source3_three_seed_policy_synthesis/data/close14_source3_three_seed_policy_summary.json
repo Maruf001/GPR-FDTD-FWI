@@ -1,0 +1,41 @@
+{
+  "policy_label": "close14_source3_three_seed_policy_synthesis",
+  "source_row_count": 18,
+  "source_count_group_count": 3,
+  "source3_seed_count": 3,
+  "source3_seed_values": "13,21,34",
+  "source3_truth_geometry_fraction": 0.8333333333333334,
+  "source3_strong_fraction": 1.0,
+  "source3_max_x_abs_error_mm": 1.0,
+  "source3_max_radius_abs_error_mm": 0.0,
+  "source3_selected_wrong_x_count": 1,
+  "source3_replicated_failure": false,
+  "source3_near_exact_three_seed_context": true,
+  "source4_three_seed_clean": true,
+  "source5_noise_boundary_three_seed_clean": true,
+  "close14_source_density_failure_supported": false,
+  "close14_source3_additional_replicate_needed": false,
+  "ready_for_broad_gpu_queue": false,
+  "ready_for_detector_seeded_fwi": false,
+  "ready_for_field_or_3d_work": false,
+  "gpu_priority": "none",
+  "recommended_next_local_mode": "field_controls_or_cpu_baseline_contract",
+  "wrong_source3_case_labels": "source_mismatch_noise10_seed34",
+  "decision": "Close14 Tx/Rx45 source3 does not replicate the close50 Tx/Rx40 source3 failure. Across seeds 13/21/34, all source3 rows are strong and radius-exact, with one saved seed34 source-mismatch row selecting the adjacent 265 mm x branch by 1 mm. Saved source4 rows are clean at the same nominal noise level, and saved source5 rows are clean in the higher-noise boundary context. Treat close14 source3 as a near-exact three-seed context result, not as a broad GPU-launch trigger.",
+  "paths": {
+    "rows_csv": "outputs/summary_tables/102_close14_source3_three_seed_policy_synthesis/data/close14_source3_three_seed_policy_rows.csv",
+    "source_summary_csv": "outputs/summary_tables/102_close14_source3_three_seed_policy_synthesis/data/close14_source3_three_seed_by_source_count.csv",
+    "gates_csv": "outputs/summary_tables/102_close14_source3_three_seed_policy_synthesis/data/close14_source3_three_seed_gates.csv",
+    "summary_json": "outputs/summary_tables/102_close14_source3_three_seed_policy_synthesis/data/close14_source3_three_seed_policy_summary.json",
+    "figure": "outputs/summary_tables/102_close14_source3_three_seed_policy_synthesis/figures/close14_source3_three_seed_policy_synthesis.png",
+    "figure_notes": "outputs/summary_tables/102_close14_source3_three_seed_policy_synthesis/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/102_close14_source3_three_seed_policy_synthesis/data/figure_validation.csv",
+    "source3_runs": [
+      "336_coordinate_optimizer_close14_seed34_sources3_txrx45_objectives",
+      "1346_coordinate_optimizer_close14_seed13_sources3_txrx45_objectives",
+      "1347_coordinate_optimizer_close14_seed21_sources3_txrx45_objectives"
+    ],
+    "source4_aggregate_csv": "outputs/experiments/335_coordinate_confidence_close14_sources4_txrx45_seed_replicates/data/coordinate_confidence_aggregate.csv",
+    "source5_aggregate_csv": "outputs/experiments/1296_coordinate_confidence_close14_target2_sources5_txrx45_seed13_21_34_probe_aggregate/data/coordinate_confidence_aggregate.csv"
+  }
+}

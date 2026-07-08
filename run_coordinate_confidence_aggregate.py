@@ -342,6 +342,12 @@ def write_rows_csv(rows, path):
     if not rows:
         raise ValueError("no rows to write")
     fieldnames = list(rows[0].keys())
+    seen = set(fieldnames)
+    for row in rows[1:]:
+        for key in row:
+            if key not in seen:
+                fieldnames.append(key)
+                seen.add(key)
     with Path(path).open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()

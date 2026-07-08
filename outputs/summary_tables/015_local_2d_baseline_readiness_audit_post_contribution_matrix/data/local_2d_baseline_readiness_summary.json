@@ -1,0 +1,28 @@
+{
+  "policy_label": "local_2d_baseline_readiness_cpu_first_no_gpu",
+  "baseline_row_count": 6,
+  "ready_baseline_count": 2,
+  "partial_baseline_count": 1,
+  "field_context_count": 1,
+  "blocked_or_contract_needed_count": 2,
+  "single_detector_scenario_count": 96.0,
+  "single_detector_hit_rate": 1.0,
+  "two_stage_row_count": 10,
+  "two_stage_exact_fraction": 1.0,
+  "two_stage_strong_count": 3,
+  "two_stage_weak_count": 7,
+  "assignment_run_count": 3,
+  "assignment_candidate_count": 9.0,
+  "immediate_gpu_priority_count": 0,
+  "conditional_gpu_candidate_count": 0,
+  "gpu_priority": "none",
+  "ready_for_baseline_section_planning": true,
+  "decision": "Existing detector outputs support a location-seed and single-rebar detector-to-refinement baseline, while same-case close14/close50 detector/database comparisons still need a CPU-first contract. Do not launch broad GPU work.",
+  "paths": {
+    "rows_csv": "outputs/summary_tables/015_local_2d_baseline_readiness_audit_post_contribution_matrix/data/local_2d_baseline_readiness_rows.csv",
+    "summary_json": "outputs/summary_tables/015_local_2d_baseline_readiness_audit_post_contribution_matrix/data/local_2d_baseline_readiness_summary.json",
+    "figure": "outputs/summary_tables/015_local_2d_baseline_readiness_audit_post_contribution_matrix/figures/local_2d_baseline_readiness_audit.png",
+    "figure_notes": "outputs/summary_tables/015_local_2d_baseline_readiness_audit_post_contribution_matrix/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/015_local_2d_baseline_readiness_audit_post_contribution_matrix/data/figure_validation.csv"
+  }
+}

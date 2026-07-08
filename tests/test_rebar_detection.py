@@ -2,6 +2,7 @@ import os
 import sys
 
 import numpy as np
+import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -14,6 +15,7 @@ from inversion.rebar_detection import (  # noqa: E402
     hyperbola_times,
 )
 from run_rebar_detection_pipeline import (  # noqa: E402
+    build_detector_scan_positions,
     parse_mm_range,
     truth_match_metrics,
     write_detection_figure_notes,
@@ -65,6 +67,41 @@ def test_detect_rebar_candidates_finds_synthetic_hyperbola():
     assert best.normalized_score > 0.0
 
 
+def test_detect_rebar_candidates_scores_explicit_tx_rx_offset():
+    scan_x = np.linspace(0.05, 0.45, 101)
+    time = np.linspace(0.0, 4.0e-9, 900)
+    truth_x_m = 0.250
+    truth_z_m = 0.090
+    tx_rx_offset = 0.0295
+    bscan = np.zeros((time.size, scan_x.size), dtype=np.float64)
+    curve = hyperbola_times(scan_x, truth_x_m, truth_z_m, tx_rx_offset=tx_rx_offset)
+    for col, t0 in enumerate(curve):
+        bscan[:, col] += np.exp(-0.5 * ((time - t0) / 45e-12) ** 2)
+
+    correct = detect_rebar_candidates(
+        bscan,
+        scan_x,
+        time,
+        x_values_mm=[250.0],
+        z_values_mm=[90.0],
+        top_k=1,
+        background_mode="none",
+        tx_rx_offset=tx_rx_offset,
+    )[0]
+    wrong = detect_rebar_candidates(
+        bscan,
+        scan_x,
+        time,
+        x_values_mm=[250.0],
+        z_values_mm=[90.0],
+        top_k=1,
+        background_mode="none",
+        tx_rx_offset=0.060,
+    )[0]
+
+    assert correct.score > wrong.score * 1.5
+
+
 def test_candidate_window_reports_mm_bounds():
     scan_x = np.linspace(0.05, 0.45, 11)
     time = np.linspace(0.0, 4.0e-9, 100)
@@ -90,6 +127,21 @@ def test_candidate_window_reports_mm_bounds():
 def test_parse_mm_range_accepts_inclusive_range_and_lists():
     assert parse_mm_range("10:14:2") == [10.0, 12.0, 14.0]
     assert parse_mm_range("10,12") == [10.0, 12.0]
+
+
+def test_build_detector_scan_positions_accepts_txrx_and_receiver_sampling():
+    nearest_positions, nearest_scan_x = build_detector_scan_positions(8.0, 3, 45.0, "nearest")
+    linear_positions, linear_scan_x = build_detector_scan_positions(8.0, 3, 29.5, "linear")
+
+    assert len(nearest_positions) == 3
+    assert len(nearest_scan_x) == 3
+    assert all(len(position) == 4 for position in nearest_positions)
+    assert len(linear_positions) == 3
+    assert len(linear_scan_x) == 3
+    assert all(len(position) == 6 for position in linear_positions)
+    assert all(0.0 <= position[-1] <= 1.0 for position in linear_positions)
+    with pytest.raises(ValueError, match="tx-rx-offset"):
+        build_detector_scan_positions(8.0, 3, -1.0, "nearest")
 
 
 def test_truth_match_metrics_reports_tolerance():

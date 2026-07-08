@@ -1,0 +1,30 @@
+{
+  "policy_label": "local_2d_detector_baseline_synthesis_simple_detector_under_resolves",
+  "source_command_plan_policy_label": "local_2d_same_case_detector_baseline_command_plan_cpu_first_not_launched",
+  "case_count": 12,
+  "all_truth_case_count": 0,
+  "all_truth_case_fraction": 0.0,
+  "target0_hit_count": 0,
+  "target1_hit_count": 12,
+  "target2_hit_count": 6,
+  "unique_all_truth_case_count": 0,
+  "unique_target0_hit_count": 0,
+  "unique_target1_hit_count": 12,
+  "unique_target2_hit_count": 6,
+  "branch_count": 2,
+  "gpu_used": false,
+  "backend": "cpu",
+  "max_parallel_processes": 1,
+  "mean_elapsed_time_s": 72.6935819586118,
+  "max_elapsed_time_s": 85.8285162448883,
+  "detector_baseline_status": "completed_but_not_positive_comparator",
+  "decision": "The same-case simple hyperbola detector baseline does not recover all three truth positions in any close14 or close50 case. It is useful as a weak image-feature baseline showing that the controlled FWI/coordinate objective is doing substantially more than naive detector seeding, but it should not be framed as a competitive detector that tracks the optimizer's clean versus x-ambiguous distinction.",
+  "paths": {
+    "rows_csv": "outputs/summary_tables/018_local_2d_detector_baseline_synthesis_post_cpu_runs/data/local_2d_detector_baseline_synthesis_rows.csv",
+    "branch_csv": "outputs/summary_tables/018_local_2d_detector_baseline_synthesis_post_cpu_runs/data/local_2d_detector_baseline_branch_summary.csv",
+    "summary_json": "outputs/summary_tables/018_local_2d_detector_baseline_synthesis_post_cpu_runs/data/local_2d_detector_baseline_synthesis_summary.json",
+    "figure": "outputs/summary_tables/018_local_2d_detector_baseline_synthesis_post_cpu_runs/figures/local_2d_detector_baseline_synthesis.png",
+    "figure_notes": "outputs/summary_tables/018_local_2d_detector_baseline_synthesis_post_cpu_runs/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/018_local_2d_detector_baseline_synthesis_post_cpu_runs/data/figure_validation.csv"
+  }
+}

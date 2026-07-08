@@ -1,0 +1,4 @@
+gate_key,ready,allowed_use,blocked_use,evidence
+broad_gpu_queue,False,none,broad source-density GPU sweep,"close50 transition already closed; close14 source3 is near-exact context, not failure"
+detector_seeded_fwi,False,none,detector-seeded FWI,archive map is coordinate source-density synthesis only
+field_or_3d_handoff,False,none,field FWI or 3D/HPC work,synthetic 2D archive map; field controls are separate

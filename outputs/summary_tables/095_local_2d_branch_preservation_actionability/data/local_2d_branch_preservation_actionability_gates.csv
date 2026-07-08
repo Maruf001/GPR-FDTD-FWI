@@ -1,0 +1,4 @@
+gate_key,ready,allowed_use,blocked_use,evidence
+branch_preservation_actionability_claim,True,CPU triage of preserved truth-lateral branch impact,deployable branch selector guarantee,missed-retained rows=13
+narrow_gpu_probe,False,none,launch narrow GPU probe from this summary alone,requires a separate case-specific coupled-search design
+broad_gpu_queue,False,none,launch broad branch-preserving queue,CPU triage only

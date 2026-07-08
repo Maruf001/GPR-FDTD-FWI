@@ -1,0 +1,32 @@
+{
+  "policy_label": "synthetic_2d_archive_corpus_card_current_ready_legacy_hygiene_caveats",
+  "archive_run_count": 1325.0,
+  "physics_or_diagnostic_count": 802.0,
+  "analysis_report_count": 181.0,
+  "reporting_audit_checkpoint_count": 188.0,
+  "unclear_run_type_count": 154.0,
+  "image_bearing_run_count": 1111.0,
+  "figure_notes_run_count": 963.0,
+  "archive_figure_note_coverage_fraction": 0.8667866786678667,
+  "legacy_issue_count": 130.0,
+  "figure_images_missing_figure_notes_count": 125.0,
+  "missing_run_manifest_count": 5.0,
+  "unclear_run_type_warning_count": 154.0,
+  "current_publication_figure_count": 9.0,
+  "current_publication_validated_figure_count": 9.0,
+  "current_publication_claim_boundary_count": 11.0,
+  "current_source_figure_count": 9.0,
+  "current_source_figure_notes_present": 9.0,
+  "synthetic_immediate_gpu_priority_count": 0.0,
+  "synthetic_conditional_gpu_candidate_count": 0.0,
+  "gpu_priority": "none",
+  "ready_for_methods_corpus_card": true,
+  "decision": "Use this as a methods-ready synthetic archive/corpus card. The current publication-facing synthetic endpoint is ready and has complete source-figure notes; legacy archive hygiene caveats remain historical and should not trigger broad regeneration or GPU reruns.",
+  "paths": {
+    "range_csv": "outputs/summary_tables/012_synthetic_2d_archive_corpus_card_post_field_timing_refresh/data/synthetic_2d_archive_corpus_ranges.csv",
+    "summary_json": "outputs/summary_tables/012_synthetic_2d_archive_corpus_card_post_field_timing_refresh/data/synthetic_2d_archive_corpus_card_summary.json",
+    "figure": "outputs/summary_tables/012_synthetic_2d_archive_corpus_card_post_field_timing_refresh/figures/synthetic_2d_archive_corpus_card.png",
+    "figure_notes": "outputs/summary_tables/012_synthetic_2d_archive_corpus_card_post_field_timing_refresh/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/012_synthetic_2d_archive_corpus_card_post_field_timing_refresh/data/figure_validation.csv"
+  }
+}

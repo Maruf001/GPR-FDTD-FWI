@@ -1,0 +1,29 @@
+domain,metric,value,interpretation
+synthetic_2d,recent_window_first_run,1200,report window lower bound
+synthetic_2d,recent_window_last_run,1358,latest synthetic output in scope
+synthetic_2d,recent_output_dir_count,159,numbered output directories from run 1200 onward
+synthetic_2d,recent_manifest_count,157,recent output directories with run_manifest.json
+synthetic_2d,claim_table_rows,32,paper-facing claim rows in latest table pack
+synthetic_2d,synthetic_publication_figures,9,synthetic figures in latest table pack
+synthetic_2d,lock_selected_target_index,1,truth-free lock candidate selected before unlock probe
+synthetic_2d,lock_objective_penalty_rel,0.03414563772312538,relative objective penalty for locking target1 to exact truth branch
+synthetic_2d,downstream_truth_clearance_before_mm,-0.9615951895947017,target2 clearance before target1 lock
+synthetic_2d,downstream_truth_clearance_after_mm,0.0,target2 clearance after target1 lock
+synthetic_2d,unlock_probe_final_linf_error_mm,0.0,final geometry error after guarded unlock probe
+synthetic_2d,locking_mechanism_claim_ready,True,single-branch mechanism evidence is usable
+synthetic_2d,general_detector_policy_ready,False,general detector policy claim status
+synthetic_2d,broad_gpu_queue_ready,False,whether current endpoint opens broad GPU queue
+field,field_first_run,1,first field output in local archive
+field,field_last_run,156,latest field output in scope
+field,field_run_count,156,numbered field output directories
+field,field_manifest_count,156,field output directories with run_manifest.json
+field,field_geometry_type,independent_2d_line_profiles,survey geometry classification
+field,is_3d_survey,False,whether the current field archive is a 3D survey
+field,field_gate_count,7,acceptance gates at critical path checkpoint
+field,field_ready_gate_count,0,gates ready at checkpoint
+field,field_current_archive_unblockable_gate_count,0,gates the existing archive can unblock alone
+field,field_critical_new_data_action_count,5,critical actions requiring new controlled data
+field,packet_missing_required_value_count,44,missing required values in controlled packet
+field,ready_for_collection_execution,True,whether the next action is collection execution
+field,ready_for_current_archive_field_fwi,False,whether current archive is sufficient for field FWI
+field,ready_for_field_3d_hpc,False,whether current field archive calls for 3D/HPC

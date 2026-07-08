@@ -17,6 +17,8 @@ from run_multi_rebar_local_geometry_profile import (  # noqa: E402
     build_variable_geometry_model,
     candidate_rebar_arrays,
     candidate_rebar_arrays_from_base,
+    geometry_is_nonoverlapping,
+    overlapping_rebar_pairs,
     parse_vector_mm,
     rank_case,
     truth_radius_values_for_run,
@@ -81,6 +83,17 @@ def test_candidate_rebar_arrays_from_base_preserves_non_target_radii():
 def test_candidate_rebar_arrays_rejects_bad_target():
     with pytest.raises(ValueError, match="valid"):
         candidate_rebar_arrays([150.0], [90.0], 6.0, 1, 150.0, 90.0, 6.0)
+
+
+def test_overlapping_rebar_pairs_allows_tangent_and_separated_depths():
+    assert overlapping_rebar_pairs([250.0, 264.0], [90.0, 90.0], [6.0, 8.0]) == []
+    assert geometry_is_nonoverlapping([250.0, 264.0], [90.0, 90.0], [6.0, 8.0]) is True
+    assert geometry_is_nonoverlapping([250.0, 250.0], [90.0, 104.0], [6.0, 8.0]) is True
+
+
+def test_overlapping_rebar_pairs_flags_center_spacing_below_radius_sum():
+    assert overlapping_rebar_pairs([250.0, 260.0], [90.0, 90.0], [6.0, 8.0]) == [(0, 1)]
+    assert geometry_is_nonoverlapping([250.0, 260.0], [90.0, 90.0], [6.0, 8.0]) is False
 
 
 def test_build_variable_geometry_model_accepts_material_overrides():

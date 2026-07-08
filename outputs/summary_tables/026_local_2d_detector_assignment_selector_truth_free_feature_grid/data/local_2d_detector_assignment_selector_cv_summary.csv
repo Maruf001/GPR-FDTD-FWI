@@ -1,0 +1,4 @@
+cv_strategy,case_count,all_truth_case_count,target0_hit_count,target1_hit_count,target2_hit_count,mean_unique_truth_hit_count,selected_selector_count,dominant_failure_label
+leave_one_case,12,0,3,3,2,0.6666666666666666,3,no_truth
+leave_one_seed,12,0,3,3,2,0.6666666666666666,3,no_truth
+leave_one_branch,12,0,2,2,1,0.4166666666666667,2,no_truth

@@ -1,0 +1,31 @@
+{
+  "policy_label": "local_2d_detector_blind_envelope_reliability_threshold_sensitivity_cpu_no_fwi",
+  "source_reliability_policy_label": "local_2d_detector_blind_envelope_reliability_gate_cpu_no_fwi",
+  "source_tuning_policy_label": "local_2d_detector_blind_envelope_tuning_sensitivity_cpu_no_fwi",
+  "threshold_count": 12,
+  "clean_threshold_count": 5,
+  "clean_threshold_min_mm": 5.0,
+  "clean_threshold_max_mm": 19.0,
+  "default_threshold_mm": 5.0,
+  "default_threshold_clean": true,
+  "default_threshold_stable_cases": 10.0,
+  "default_threshold_review_cases": 2.0,
+  "default_threshold_tuning_missed": 0.0,
+  "default_threshold_false_review": 0.0,
+  "thresholds_with_tuning_missed": "20;21",
+  "thresholds_with_false_review": "0;1;2;3;4",
+  "ready_for_reliability_claim": true,
+  "ready_for_detector_seeded_fwi": false,
+  "gpu_priority": "none",
+  "decision": "The truth-free x-slot reliability gate is not a single-point artifact: the default 5 mm threshold lies inside a clean interval that accepts the stable cases and flags the known close50 nominal tuning-sensitive cases. Keep this as CPU-side confidence-boundary evidence, not a detector-seeded FWI trigger.",
+  "paths": {
+    "threshold_rows_csv": "outputs/summary_tables/071_local_2d_detector_blind_envelope_reliability_threshold_sensitivity/data/local_2d_detector_blind_envelope_reliability_threshold_sensitivity_rows.csv",
+    "summary_json": "outputs/summary_tables/071_local_2d_detector_blind_envelope_reliability_threshold_sensitivity/data/local_2d_detector_blind_envelope_reliability_threshold_sensitivity_summary.json",
+    "source_reliability_summary_json": "outputs/summary_tables/069_local_2d_detector_blind_envelope_reliability_gate/data/local_2d_detector_blind_envelope_reliability_gate_summary.json",
+    "source_reliability_cases_csv": "outputs/summary_tables/069_local_2d_detector_blind_envelope_reliability_gate/data/local_2d_detector_blind_envelope_reliability_gate_cases.csv",
+    "source_tuning_summary_json": "outputs/summary_tables/066_local_2d_detector_blind_envelope_tuning_sensitivity/data/local_2d_detector_blind_envelope_tuning_sensitivity_summary.json",
+    "figure": "outputs/summary_tables/071_local_2d_detector_blind_envelope_reliability_threshold_sensitivity/figures/local_2d_detector_blind_envelope_reliability_threshold_sensitivity.png",
+    "figure_notes": "outputs/summary_tables/071_local_2d_detector_blind_envelope_reliability_threshold_sensitivity/figures/FIGURE_NOTES.md",
+    "figure_validation_csv": "outputs/summary_tables/071_local_2d_detector_blind_envelope_reliability_threshold_sensitivity/data/figure_validation.csv"
+  }
+}

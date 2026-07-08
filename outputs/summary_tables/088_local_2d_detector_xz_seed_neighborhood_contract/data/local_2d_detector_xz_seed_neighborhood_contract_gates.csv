@@ -1,0 +1,5 @@
+gate_key,ready,allowed_use,blocked_use,evidence
+branch_specific_xz_seed_neighborhood_contract,True,stable saved-case coordinate-neighborhood sizing,none within sizing-only scope,10 stable cases covered; branch half-widths=target2_close14:10;target2_close50_linear29p5:12
+review_case_inclusion,False,none,include close50 nominal review cases in a launch contract,excluded review cases=2
+radius_material_contract,False,none,radius/material tensor refinement,source seed export reports radius/material blockers
+detector_seeded_fwi,False,none,GPU/FWI launch,coordinate-only contract is not a full refinement/FWI launch contract

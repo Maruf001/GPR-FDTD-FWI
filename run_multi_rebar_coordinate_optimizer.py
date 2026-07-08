@@ -1012,6 +1012,11 @@ def main():
     parser.add_argument("--progress-every", type=int, default=25)
     parser.add_argument("--geometry-mode", choices=["hard", "subcell"], default="hard")
     parser.add_argument("--subcell-samples", type=int, default=5)
+    parser.add_argument(
+        "--enforce-nonoverlap-candidates",
+        action="store_true",
+        help="Skip candidate geometries with overlapping circular rebar cross-sections.",
+    )
     parser.add_argument("--revisit-weak-high-radius-targets", action="store_true")
     parser.add_argument("--revisit-broad-radius-ambiguity-targets", action="store_true")
     parser.add_argument("--revisit-ambiguity-min-width-mm", type=float, default=0.2)
@@ -1135,6 +1140,7 @@ def main():
                 source_ringdown_delay_ps=args.source_ringdown_delay_ps,
                 source_ringdown_frequency_scale=args.source_ringdown_frequency_scale,
                 objective_variants=args.diagnostic_objective_variants,
+                enforce_nonoverlap_candidates=args.enforce_nonoverlap_candidates,
                 progress_every=args.progress_every,
             )
             results = results_from_candidates(candidates, case_labels, args.top_k)
@@ -1282,6 +1288,7 @@ def main():
                 source_ringdown_delay_ps=args.source_ringdown_delay_ps,
                 source_ringdown_frequency_scale=args.source_ringdown_frequency_scale,
                 objective_variants=args.diagnostic_objective_variants,
+                enforce_nonoverlap_candidates=args.enforce_nonoverlap_candidates,
                 progress_every=args.progress_every,
             )
             results = results_from_candidates(candidates, case_labels, args.top_k)
@@ -1451,6 +1458,7 @@ def main():
             variant.as_dict()
             for variant in (args.diagnostic_objective_variants or [])
         ],
+        "enforce_nonoverlap_candidates": bool(args.enforce_nonoverlap_candidates),
         "elapsed_time_s": float(elapsed),
         "steps": steps,
         "confidence_rows": confidence_rows,

@@ -1,0 +1,7 @@
+comparison_label,comparison_kind,left_family,left_source_count,right_family,right_source_count,left_truth_geometry_fraction,right_truth_geometry_fraction,truth_geometry_fraction_delta,left_strong_fraction,right_strong_fraction,strong_fraction_delta,left_weak_fraction,right_weak_fraction,weak_fraction_delta,left_max_x_abs_error_mm,right_max_x_abs_error_mm,max_x_abs_error_delta_mm,left_replicated_failure,right_replicated_failure,left_near_exact,right_near_exact
+close50_source3_to_source4,within_family_source_density,close50,3,close50,4,0.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,-1.0,1.0,0.0,-1.0,True,False,False,True
+close50_source4_to_source5,within_family_source_density,close50,4,close50,5,1.0,1.0,0.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,False,True,True
+close14_source3_to_source4,within_family_source_density,close14,3,close14,4,0.8333333333333334,1.0,0.16666666666666663,1.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,-1.0,False,False,True,True
+close14_source4_to_source5,within_family_source_density,close14,4,close14,5,1.0,1.0,0.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,False,True,True
+source3_close50_to_close14,cross_spacing_source3_contrast,close50,3,close14,3,0.0,0.8333333333333334,0.8333333333333334,0.0,1.0,1.0,1.0,0.0,-1.0,1.0,1.0,0.0,True,False,False,True
+source4_close50_to_close14,cross_spacing_source4_contrast,close50,4,close14,4,1.0,1.0,0.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,False,True,True

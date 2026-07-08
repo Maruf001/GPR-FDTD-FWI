@@ -1,0 +1,4 @@
+source_count,row_count,seed_count,seed_values,truth_geometry_count,truth_geometry_fraction,strong_count,strong_fraction,weak_count,selected_wrong_x_count,min_radius_margin_abs,max_x_abs_error_mm,max_z_abs_error_mm,max_radius_abs_error_mm,max_ambiguity_x_width_mm
+3,6,3,"13,21,34",5,0.8333333333333334,6,1.0,0,1,0.002948119127519813,1.0,0.0,0.0,2.0
+4,6,3,"13,21,34",6,1.0,6,1.0,0,0,0.002573550414975867,0.0,0.0,0.0,0.0
+5,6,3,"13,21,34",6,1.0,6,1.0,0,0,0.001499984906299226,0.0,0.0,0.0,1.0

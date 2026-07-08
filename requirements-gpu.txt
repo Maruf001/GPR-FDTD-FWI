@@ -1,0 +1,6 @@
+# GPU dependencies for NVIDIA/CUDA machines.
+#
+# This project currently runs on a DGX Spark with NVIDIA driver 580.95.05,
+# CUDA 13.0 tools, and cupy-cuda12x 14.0.1.
+-r requirements.txt
+cupy-cuda12x==14.0.1
