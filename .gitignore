@@ -48,6 +48,11 @@ outputs/experiments/
 outputs/field_experiments/
 outputs/3d_experiments/*
 !outputs/3d_experiments/README.md
+outputs/bem_experiments/*
+!outputs/bem_experiments/README.md
+
+# Local/raw datasets
+data/
 
 # Jupyter
 .ipynb_checkpoints/
