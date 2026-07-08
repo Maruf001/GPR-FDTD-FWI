@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-within_close50_source_density_claim,True,manuscript source-density transition claim for close50 Tx/Rx40,generalize to all close spacings,"source3 fails, source4/5 exact in matched close50 three-seed evidence"
-guarded_cross_spacing_contrast,True,guarded contrast table with explicit confounds,spacing-only causal wording,close14 source3 near-exact but Tx/Rx and target2 absolute x differ
-spacing_only_causal_generalization,False,none,claim target spacing alone controls source3 outcome,requires matched Tx/Rx/absolute-geometry probe not present in archive
-broad_gpu_queue,False,none,broad source-density sweep,"current need is claim-boundary discipline, not broad compute"

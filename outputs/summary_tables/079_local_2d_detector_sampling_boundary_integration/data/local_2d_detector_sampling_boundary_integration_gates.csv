@@ -1,5 +1,0 @@
-gate_key,ready,evidence,allowed_use,blocked_use
-branch_localized_detector_boundary_claim,True,review below clean=2/2; review nominal=2/2,detector ambiguity-boundary manuscript claim,global detector policy fix
-per_seed_physics_equivalence,False,x-ambiguous reviews=1/2,none,claiming every detector review is explained by per-seed coordinate ambiguity
-sub30_clean_threshold,False,close50 linear 29.5 mm is exact/strong but not clean; nearest 30 mm is clean replicated,sub-30 caveat text,sub-30 clean threshold claim
-detector_seeded_fwi,False,review cases and launch-contract blockers remain,none,detector-seeded FWI or GPU probe

@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-controlled_synthetic_prior_contract,True,controlled synthetic stable-case radius/material prior scoping,detector-inferred radius/material claim,"stable prior cases=10; radius patterns=5,6,8; material params=4"
-detector_inferred_radius_material_contract,False,none,detector-inferred radius/material refinement contract,detector radius seeds=0; detector material seeds=0
-field_transfer,False,none,field radius/material transfer,field dataset lacks calibrated radius/material/depth controls
-detector_seeded_fwi,False,none,GPU/FWI launch,prior-scope audit is not a refinement launch contract

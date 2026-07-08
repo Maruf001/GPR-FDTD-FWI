@@ -1,6 +1,0 @@
-evidence_key,evidence_role,case_count,all_truth_case_count,target0_hit_count,target1_hit_count,target2_hit_count,rank_or_budget,supports_claim,blocks_claim
-simple_top20_detector,weak_image_feature_baseline,12,0,0,12,6,top20 detector candidates,naive detector under-resolves close-spacing cases,detector is a competitive standalone recovery method
-saved_bscan_parameter_sensitivity,truth_containing_candidate_generator,12,12,12,12,12,best config max rank 36.0,detector family contains all truths for every case under tuned CPU rescore,top-pick or parameter-free detector baseline
-candidate_rank_policy,rank_budget_gate,12,12,,,,minimal all-case rank cap 40,all-case detector candidate recovery needs a deeper rank cap,cheap top-5/top-10 detector-to-FWI handoff
-rank_gated_upper_bound,upper_bound_not_deployable_selector,12,12,,,,top200 triples per case,truth-containing upper bound exists with rank-gated triples,validated truth-free top-1 selector or detector-seeded FWI readiness
-close14_source3_source_density_context,source_density_guardrail,6,5,,,,"source3 Tx/Rx45 seeds 13,21,34","close14 source3 is near-exact context, not replicated failure",generic statement that three-source acquisition fails

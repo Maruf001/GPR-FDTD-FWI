@@ -1,3 +1,0 @@
-branch_key,case_count,exported_seed_case_count,exported_component_row_count,excluded_case_count,max_exported_case_seed_error_mm,median_exported_case_seed_error_mm,excluded_case_labels
-target2_close14,6,6,18,0,10.0,3.5,
-target2_close50_linear29p5,6,4,12,2,8.0,4.5,target2_close50_linear29p5|seed13|nominal;target2_close50_linear29p5|seed34|nominal

@@ -1,3 +1,0 @@
-branch_key,case_count,top1_possible_case_count,top10_possible_case_count,top50_possible_case_count,top200_possible_case_count,median_best_first_all_truth_rank,dominant_budget_label
-target2_close14,6,0,5,6,6,3.5,top10_rank_gate
-target2_close50_linear29p5,6,0,3,5,6,12.5,top10_rank_gate

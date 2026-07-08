@@ -1,4 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-broad_target1_gpu_queue,False,none,broad target1 weak-exact GPU sweep,ringdown050 and modern target1 weak-exact rows are late_high-confirmed
-target1_exception_probe,False,none,GPU probe for legacy target1 run 785,exception role=legacy_archive_exception_no_gpu_priority
-secondary_objective_as_production_gate,False,none,replacing base production confidence gate with late_high,late_high is diagnostic confirmation only

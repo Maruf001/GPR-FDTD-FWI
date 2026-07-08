@@ -1,8 +1,0 @@
-split_field,holdout_value,selected_variant_label,selected_envelope_weight,selected_structural_weight,selected_support_weight,selected_center_weight,selected_span_threshold_mm,training_case_count,training_all_target_slot_case_count,heldout_case_count,heldout_all_target_slot_case_count,heldout_failed_case_count,heldout_mean_target_slot_hit_count,heldout_failed_case_labels
-seed,13,env6_struct0.4_support0.12_center0_span90,6.0,0.4,0.12,0.0,90.0,8,8,4,4,0,3.0,
-seed,21,env2_struct0.4_support0.12_center0.1_span90,2.0,0.4,0.12,0.1,90.0,8,8,4,4,0,3.0,
-seed,34,env2_struct0.4_support0.12_center0.1_span90,2.0,0.4,0.12,0.1,90.0,8,8,4,4,0,3.0,
-branch_key,target2_close14,env2_struct0.4_support0.12_center0.1_span90,2.0,0.4,0.12,0.1,90.0,6,6,6,6,0,3.0,
-branch_key,target2_close50_linear29p5,env6_struct0_support0.12_center0_span90,6.0,0.0,0.12,0.0,90.0,6,6,6,5,1,2.8333333333333335,target2_close50_linear29p5|seed13|nominal
-case_variant,nominal,env6_struct0.4_support0.12_center0.1_span90,6.0,0.4,0.12,0.1,90.0,6,6,6,6,0,3.0,
-case_variant,source_mismatch,env2_struct0.4_support0.12_center0.1_span90,2.0,0.4,0.12,0.1,90.0,6,6,6,6,0,3.0,

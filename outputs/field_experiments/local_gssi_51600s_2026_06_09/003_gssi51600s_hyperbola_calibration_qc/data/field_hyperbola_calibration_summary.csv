@@ -1,3 +1,0 @@
-file,apex_cue_count,best_velocity_m_per_ns,best_epsr,best_time_zero_ns,profile_score,score_margin_vs_p95,best_on_grid_boundary,mean_support_fraction,median_depth_m,min_depth_m,max_depth_m,median_apex_spacing_m,calibration_scope
-PROJECT001C__014.DZT,3,0.176,2.9014565429261934,-0.05,3.1754442290426197,0.0038347776625222707,True,1.0,0.06663968565815324,0.06577524557956778,0.06663968565815324,0.2816385,field_template_overlay_not_ground_truth
-PROJECT001C__016.DZT,3,0.1,8.987551787368176,-0.05,3.305832434030061,0.052093648563900086,True,1.0,0.04081041257367388,0.03884577603143419,0.044248526522593326,0.29663700000000004,field_template_overlay_not_ground_truth

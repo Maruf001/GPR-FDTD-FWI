@@ -1,4 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-default_threshold_policy,True,branch-preservation threshold wording,deployable selector guarantee,default recovered=13; default extra/step=4.598
-broad_gpu_queue,False,none,launch broad branch-preserving queue,threshold sensitivity is CPU-only
-detector_seeded_fwi,False,none,detector-seeded FWI launch,no detector-to-FWI contract

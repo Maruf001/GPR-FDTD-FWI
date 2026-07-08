@@ -1,4 +1,0 @@
-policy_key,truth_free,deployable_now,uses_oracle_truth,final_linf_error_mm,expected_effect,ready_for_gpu_validation,ready_for_broad_gpu_queue,ready_for_detector_seeded_fwi,selected_target_index,selected_lock_x_mm,selected_lock_z_mm,selected_objective_penalty_rel
-current_greedy_sequential,True,True,False,1.0,baseline observed in run 1357,False,False,False,,,,
-oracle_truth_lock_diagnostic,False,False,True,0.0,diagnostic only: truth lock would make downstream truth non-overlap-feasible,False,False,False,1,250.0,90.0,0.03414563772312538
-near_tie_downstream_clearance_lock,True,True,False,,select a near-tie candidate that preserves more downstream clearance before updating the next target,True,False,False,1,250.0,90.0,0.03414563772312538

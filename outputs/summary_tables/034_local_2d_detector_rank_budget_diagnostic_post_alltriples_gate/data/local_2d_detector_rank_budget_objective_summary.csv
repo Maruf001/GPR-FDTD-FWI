@@ -1,7 +1,0 @@
-objective,case_count,top1_all_truth_case_count,top1_target0_hit_count,top1_target1_hit_count,top1_target2_hit_count,median_first_all_truth_rank,max_first_all_truth_rank,first_truth_top1_case_count,first_truth_top3_case_count,first_truth_top5_case_count,first_truth_top10_case_count,first_truth_top20_case_count,first_truth_top50_case_count,first_truth_top100_case_count,first_truth_top200_case_count,first_truth_top500_case_count,first_truth_top1140_case_count
-sum,12,0,0,8,5,101.0,360.0,0,0,0,0,0,1,6,9,12,12
-span_bonus,12,0,3,4,5,23.5,129.0,0,0,0,2,6,8,10,12,12,12
-min,12,0,0,8,5,225.5,714.0,0,0,0,0,0,2,3,4,11,12
-min_span,12,0,0,6,9,67.5,276.0,0,0,1,1,3,4,10,11,12,12
-balanced,12,0,0,6,5,29.5,145.0,0,0,0,2,2,8,9,12,12,12
-mask,12,0,3,9,3,103.0,309.0,0,0,1,1,1,4,6,10,12,12

@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-branch_preserving_selector_design,True,CPU design of branch-preserving selector or beam rule,claim deployable detector refinement policy,target1 near-tie rel gap=0.0922; target2 true lateral unlocked=True
-coupled_middle_right_probe,True,one-case coupled middle-right diagnostic after CPU sizing,broad GPU campaign,L-inf error improves 2.0->1.0 mm
-broad_gpu_queue,False,none,launch many repaired or coupled searches,single-case counterfactual only
-detector_seeded_fwi,False,none,detector-seeded FWI launch,branch-lock mechanism is not a validated FWI launch contract

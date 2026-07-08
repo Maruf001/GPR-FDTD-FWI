@@ -1,3 +1,0 @@
-branch_key,case_count,top1_case_count,top10_case_count,top50_case_count,top100_case_count,top200_case_count,median_selected_first_all_truth_rank,max_selected_first_all_truth_rank,median_rank_penalty_vs_case_best,dominant_rank_gate_label,dominant_top_missing_targets
-target2_close14,6,0,0,6,6,6,23.5,50.0,15.5,top50,"target0,target1"
-target2_close50_linear29p5,6,0,3,4,5,6,18.5,151.0,2.0,top10,"target0,target1"

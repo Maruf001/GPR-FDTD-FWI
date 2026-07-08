@@ -1,4 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-repaired_fixed_radius_pilot_subset,True,one-case-at-a-time fixed-radius pilot after repair,claim repaired seeds are waveform validated,repair found=3/3
-broad_gpu_queue,False,none,launch all repaired seeds or a broad fixed-radius campaign,repair design is geometric only
-detector_seeded_fwi,False,none,detector-seeded FWI launch,repair design is not an FWI launch contract

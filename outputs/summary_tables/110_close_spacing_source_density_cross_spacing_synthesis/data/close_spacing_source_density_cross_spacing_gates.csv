@@ -1,6 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-manuscript_source_density_table,True,synthetic 2D source-density contrast table/figure,unqualified universal source-count claim,close50 source3 failure contrasts with close14 source3 near-exact context
-cross_spacing_generalization,False,none,generalize source3 failure to all close spacings,close14 source3 does not replicate the close50 source3 failure
-broad_gpu_queue,False,none,broad local GPU source-density sweep,saved three-seed evidence already resolves this claim boundary
-detector_seeded_fwi,False,none,detector-seeded FWI launch,this synthesis compares coordinate-confidence summaries only
-field_fwi_or_3d_hpc,False,none,"field FWI, 3D, or HPC handoff",synthetic 2D source-density evidence; field and 3D scopes remain separate

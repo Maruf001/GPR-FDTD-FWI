@@ -1,4 +1,0 @@
-source_count,row_count,seed_count,seed_values,truth_geometry_count,truth_geometry_fraction,strong_count,weak_count,selected_wrong_x_count,min_radius_margin_abs,max_x_abs_error_mm,max_radius_abs_error_mm
-3,6,3,"13,21,34",0,0.0,0,6,6,3.792580948191668e-05,1.0,0.5
-4,6,3,"13,21,34",6,1.0,6,0,0,0.004817171324461536,0.0,0.0
-5,6,3,"13,21,34",6,1.0,6,0,0,0.0023560651198494195,0.0,0.0

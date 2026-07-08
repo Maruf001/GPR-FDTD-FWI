@@ -1,5 +1,0 @@
-comparison_key,target_index,x_mm,z_mm,misfit,misfit_gap_abs_vs_selected,misfit_gap_rel_vs_selected,target2_true_lateral_candidate_available,role
-target1_selected_branch,1,252.0,89.0,0.06620447797340417,0.0,0.0,,greedy selected middle branch
-target1_near_tie_truth_lateral_branch,1,250.0,89.0,0.07230618122169422,0.006101703248290041,0.0921645096384754,,near-tie middle branch retained by branch-preserving rule
-target2_greedy_selected_middle,2,266.0,91.0,0.06620447797340417,,,False,target2 after greedy middle branch
-target2_counterfactual_near_tie_middle,2,264.0,91.0,0.06986572489290593,,,True,target2 after near-tie middle branch

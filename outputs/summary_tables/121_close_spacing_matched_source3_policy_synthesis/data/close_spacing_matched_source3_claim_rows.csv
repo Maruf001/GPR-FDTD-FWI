@@ -1,8 +1,0 @@
-claim_key,ready,allowed_wording,blocked_wording,evidence
-matched_source3_queue_complete,True,the two matched source3 probe families are complete,more queued matched source3 seeds remain,missing_seed_probe_count=0
-close14_matched_txrx40_truth_result,True,close14 source3 Tx/Rx40 selects the exact target2 geometry in all six rows,close14 source3 fails when Tx/Rx is moved to 40 mm,truth_rows=6/6; labels=strong=6
-close50_reciprocal_txrx45_wrong_branch,True,close50 source3 Tx/Rx45 repeatedly selects the same near-truth wrong branch,Tx/Rx45 rescues close50 source3 to exact recovery,"truth_rows=0/6; selected=x=299 mm, z=90 mm, r=7.5 mm"
-guarded_acquisition_geometry_contrast,True,matched source3 controls show a replicated close14/close50 contrast with explicit geometry caveats,target spacing alone controls source3 success/failure,old_confound_count=3; close14_truth=True; close50_wrong=True
-spacing_only_causal_generalization,False,none from the completed matched-source3 controls,target1-target2 spacing alone explains the source3 outcome,"absolute target2 x-position changes with spacing, and close50 produces a stable wrong branch rather than an ambiguity interval around truth"
-broad_gpu_queue,False,none,launch broad close-spacing GPU sweeps,the narrow matched queue is complete; the next step is CPU/manuscript synthesis
-field_fwi_or_3d_hpc_from_local_field_archive,False,field archive remains scoped 2D QC and collection-planning evidence,"launch field FWI, heavy field GPU work, or field 3D/HPC from this archive","field evidence chain still lacks absolute time-zero, amplitude calibration, target truth, and surveyed profile geometry"

@@ -1,4 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-single_guarded_unlock_probe,True,one guarded target2 unlock validation probe,multi-case queue,lock target=1; penalty_rel=0.03414563772312538; clearance_after=0.0
-broad_gpu_queue,False,none,broad detector-refinement queue,only one lock candidate has been designed
-detector_seeded_fwi,False,none,FWI launch,fixed radii remain controlled priors and one coordinate residual remains unresolved

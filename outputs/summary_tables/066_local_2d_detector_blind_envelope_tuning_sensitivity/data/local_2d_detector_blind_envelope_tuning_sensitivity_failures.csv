@@ -1,3 +1,0 @@
-case_label,variant_count,success_count,failure_count,success_fraction,unique_failure_selection_count,dominant_failure_selection,dominant_failure_count
-target2_close50_linear29p5|seed13|nominal,288,252,36,0.875,3,"187,271,294",24
-target2_close50_linear29p5|seed34|nominal,288,153,135,0.53125,2,"183,237,296",105

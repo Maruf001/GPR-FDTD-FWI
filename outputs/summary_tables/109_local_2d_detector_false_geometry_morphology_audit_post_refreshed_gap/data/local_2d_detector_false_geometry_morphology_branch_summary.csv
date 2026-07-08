@@ -1,3 +1,0 @@
-branch_key,case_count,top50_case_count,top200_case_count,positive_false_truth_gap_count,compressed_span_case_count,median_selected_to_truth_x_span_ratio,min_selected_to_truth_x_span_ratio,median_max_assignment_abs_error_mm,max_assignment_abs_error_mm,dominant_false_geometry_mode,dominant_missing_targets
-target2_close14,6,6,6,6,3,0.8426971227761915,0.6571428571428571,19.25,35.0,single_truth_only_target2,"target0,target1"
-target2_close50_linear29p5,6,4,6,6,0,1.0261639091958445,0.959349593495935,10.0,20.0,single_truth_only_target2,"target0,target1"

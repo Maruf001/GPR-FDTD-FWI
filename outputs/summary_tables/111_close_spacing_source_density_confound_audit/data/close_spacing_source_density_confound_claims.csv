@@ -1,8 +1,0 @@
-claim_key,ready,allowed_wording,blocked_wording,limiting_factors
-close50_within_family_source_density_transition,True,close50 Tx/Rx40 shows a three-seed source-density transition from source3 failure to source4/5 exact recovery,all close-spacing source3 acquisitions fail,
-close14_source3_near_exact_context,True,close14 Tx/Rx45 source3 is a strong near-exact three-seed context,close14 reproduces the close50 source3 failure,
-guarded_cross_spacing_source3_contrast,True,saved evidence contrasts close50 Tx/Rx40 source3 failure with close14 Tx/Rx45 source3 near-exact recovery,spacing alone explains the source3 outcome,"tx_rx_offset_mm,target2_absolute_x_mm,receiver_sampling_metadata"
-spacing_only_causal_generalization,False,none from current saved evidence,target spacing alone controls source3 success/failure across close14 and close50,"tx_rx_offset_mm,target2_absolute_x_mm,receiver_sampling_metadata"
-source5_cross_family_comparison,False,source5 remains within-family/context evidence,close14 and close50 source5 are a matched cross-family comparison,source5_context_scope
-broad_gpu_queue,False,none,launch broad close-spacing source-density sweep,"current evidence is sufficient for guarded claim boundary; causal generalization needs a deliberately matched narrow probe, not a queue"
-matched_narrow_probe_design,True,"if manuscript requires spacing-only causality, design one skip-existing matched Tx/Rx source3 probe set",start broad GPU experiments,candidate sets: close14 source3 Tx/Rx40 seeds 13/21/34 or close50 source3 Tx/Rx45 seeds 13/21/34

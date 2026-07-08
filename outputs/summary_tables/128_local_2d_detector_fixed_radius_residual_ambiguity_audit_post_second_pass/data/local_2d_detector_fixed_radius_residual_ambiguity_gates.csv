@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-residual_cause_identified,True,interpret second-pass residual,exact-recovery claim,objective-neighbor=1; nonoverlap-absent=1
-immediate_gpu_iteration,False,none,another second-pass GPU loop,"residual cause is policy/coordinate-coupling, not missing local samples"
-broad_gpu_queue,False,none,fresh detector-seed queue,post-pilot residual needs interpretation first
-detector_seeded_fwi,False,none,FWI launch,coordinate residual remains and radius/material are controlled priors

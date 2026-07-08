@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-locking_mechanism_claim,True,single-branch mechanism evidence,general detector policy claim,exact=True; guard_ok=True; truth_selected=1/1
-general_detector_policy_claim,False,none,claiming deployable policy without multi-case validation,validation covers one target2_close14 repaired branch
-broad_gpu_queue,False,none,broad detector-refinement queue,mechanism validation does not open a queue
-detector_seeded_fwi,False,none,FWI launch,fixed radii are still controlled priors

@@ -1,7 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-lateral_x_slot_neighborhood_design,True,saved-corpus lateral x-slot half-width sizing,none within design scope,min half-width all stable seeds=10.0 mm
-xz_neighborhood_design,False,none,z-validated x/z neighborhood design,z coverage validated=False
-radius_material_contract,False,none,radius/material initialization,component seeds contain x/z only
-narrow_refinement_contract,False,none,narrow refinement launch,active blockers=6.0
-naive_full_tensor_refinement,False,none,full 6D coordinate tensor FWI/refinement queue,h10 step2 lateral grid=1331; hypothetical x/z tensor=1771561
-detector_seeded_fwi,False,none,detector-seeded FWI,radius_material_contract_missing;policy_grid_selected_on_saved_corpus;deployable_top1_selector_not_validated;branch_independent_transfer_not_robust;review_cases_present;per_seed_physics_equivalence_not_ready

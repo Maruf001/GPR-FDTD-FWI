@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-additional_close14_source3_replicate,False,none,more close14 source3 Tx/Rx45 replication,"source3 seeds=13,21,34; near_exact=True"
-broad_gpu_queue,False,none,broad close-spacing source-density sweep,close14 source3 is near-exact context; close50 source3 failure remains spacing/acquisition-specific
-detector_seeded_fwi,False,none,detector-seeded FWI launch,this synthesis only reconciles saved coordinate-confidence evidence
-field_or_3d_handoff,False,none,field FWI or 3D/HPC work,synthetic 2D close14 policy synthesis; field controls remain separate

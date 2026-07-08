@@ -1,4 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-branch_preservation_policy_claim,True,CPU evidence for preserving near-tie lateral branches,general deployable selector guarantee,retained-but-not-selected=13
-broad_gpu_queue,False,none,launch broad branch-preserving GPU queue,archive scan is CPU-only and does not size a GPU queue
-detector_seeded_fwi,False,none,detector-seeded FWI launch,candidate-surface audit only; no detector/FWI handoff contract

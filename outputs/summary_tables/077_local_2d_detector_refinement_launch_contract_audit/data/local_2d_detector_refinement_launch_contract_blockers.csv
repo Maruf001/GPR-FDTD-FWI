@@ -1,7 +1,0 @@
-blocker_key,blocks_gpu_refinement,evidence,source_metric
-radius_material_contract_missing,True,blind-envelope detector rows provide x/z component locations but not radius/material seeds,radius_seed_available=false; material_seed_available=false
-policy_grid_selected_on_saved_corpus,True,best blind-envelope grid was selected using the saved synthetic corpus,uses_truth_for_grid_scoring=True
-deployable_top1_selector_not_validated,True,validated truth-free top-1 selector does not recover all saved cases,deployable_top1=0/12
-branch_independent_transfer_not_robust,True,leave-one-branch transfer drops one case,leave_one_branch=11/12
-review_cases_present,True,truth-free reliability gate flags close50 nominal review cases,review_cases=2
-per_seed_physics_equivalence_not_ready,True,coordinate x ambiguity explains only part of the detector review set,x_ambiguous_reviews=1/2

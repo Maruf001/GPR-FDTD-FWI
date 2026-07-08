@@ -1,4 +1,0 @@
-objective_label,case_count,all_truth_case_count,target0_hit_count,target1_hit_count,target2_hit_count,mean_unique_truth_hit_count,mean_image_objective_score,dominant_failure_label
-row_background_sigma60,12,0,0,8,7,1.25,0.5694763819516283,target0_missed
-median_sigma60,12,0,0,8,6,1.1666666666666667,0.5722281354885248,target0_missed
-row_background_sigma100,12,0,3,7,3,1.0833333333333333,0.6296607477886889,middle_only_target0_target2_missed

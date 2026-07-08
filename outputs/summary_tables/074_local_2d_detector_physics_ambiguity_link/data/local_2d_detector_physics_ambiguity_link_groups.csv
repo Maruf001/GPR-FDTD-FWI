@@ -1,5 +1,0 @@
-branch_key,case_variant,case_count,detector_review_count,detector_review_fraction,detector_tuning_sensitive_count,max_detector_slot_x_range_mm,median_detector_slot_x_range_mm,near_boundary_case_count,synthetic_x_ambiguous_case_count,review_case_labels
-target2_close14,nominal,3,0,0.0,0,1.0,0.0,0,0,
-target2_close14,source_mismatch,3,0,0.0,0,4.0,3.0,0,0,
-target2_close50_linear29p5,nominal,3,2,0.6666666666666666,2,21.0,20.0,3,1,target2_close50_linear29p5|seed13|nominal;target2_close50_linear29p5|seed34|nominal
-target2_close50_linear29p5,source_mismatch,3,0,0.0,0,5.0,2.0,3,0,

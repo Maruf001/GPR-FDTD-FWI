@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-rank_gated_upper_bound_claim,True,publication baseline-context upper-bound statement,validated standalone detector,upper_bound_cases=12
-detector_seeded_fwi,False,none,detector-seeded FWI launch,truth-free selector still has zero deployable all-truth top-1 recovery
-broad_gpu_queue,False,none,broad detector or FWI GPU queue,CPU synthesis only; no new simulation requested
-field_or_3d_handoff,False,none,field FWI or 3D/HPC handoff,synthetic 2D detector baseline evidence; field controls remain separate

@@ -1,3 +1,0 @@
-branch_key,case_count,all_variant_success_case_count,partial_success_case_count,tuning_sensitive_case_count,min_success_fraction,median_success_fraction,max_unique_success_selection_count
-target2_close14,6,6,0,0,1.0,1.0,3
-target2_close50_linear29p5,6,4,2,2,0.53125,1.0,6

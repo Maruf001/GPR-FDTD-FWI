@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-single_guarded_second_pass_probe,False,one guarded local GPU probe under caps,multi-case queue,best final Linf=1.0 mm; case=target2_close14|seed21|nominal
-fresh_one_case_probe_now,False,none until residual ambiguity is interpreted,fresh detector-seed coverage before residual synthesis,untested direct=6; untested repaired=2
-broad_gpu_queue,False,none,broad fixed-radius detector-seed GPU queue,pilot outcomes=3; exact=0; best Linf=1.0 mm
-detector_seeded_fwi,False,none,FWI launch,fixed-radius local coordinate pilots are not FWI readiness evidence

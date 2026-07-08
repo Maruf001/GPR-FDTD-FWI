@@ -1,3 +1,0 @@
-file,apex_cue_count,tx_rx_offset_m,tx_rx_offset_mm,velocity_m_per_ns,time_zero_ns,epsr,profile_score,mean_support_fraction,median_depth_m,valid_cue_count,best_on_grid_boundary,calibration_scope
-PROJECT001C__014.DZT,3,0.06,60.0,0.0975,0.0775,9.454360854562182,3.070322891779744,1.0,0.006524302673429751,3,False,field_common_offset_sensitivity_not_ground_truth
-PROJECT001C__016.DZT,3,0.06,60.0,0.09,-0.05,11.095742947368118,3.1236395292496426,1.0,0.021190722434384288,3,True,field_common_offset_sensitivity_not_ground_truth

@@ -1,3 +1,0 @@
-branch_key,case_count,best_config_key,best_assignment_policy_key,best_unique_all_truth_case_count,best_mean_unique_truth_hit_count,best_candidate_budget,best_min_x_separation_mm
-target2_close14,6,median_top40_dense4_baseline,top40_minx20,1,1.3333333333333333,40,20.0
-target2_close50_linear29p5,6,median_top20_moderate12_wide,top20_minx45,1,1.3333333333333333,20,45.0

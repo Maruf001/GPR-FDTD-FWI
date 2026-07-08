@@ -34,22 +34,8 @@ Thumbs.db
 .~lock.*#
 ~$*
 
-# Outputs (regenerated at runtime)
-outputs/figures/*.png
-outputs/figures/*.pdf
-outputs/animations/*.gif
-outputs/animations/*.mp4
-outputs/data/*.npy
-outputs/data/*.npz
-outputs/.cache/
-outputs/.matplotlib/
-outputs/single_rebar*/
-outputs/experiments/
-outputs/field_experiments/
-outputs/3d_experiments/*
-!outputs/3d_experiments/README.md
-outputs/bem_experiments/*
-!outputs/bem_experiments/README.md
+# Outputs/results are regenerated locally and can become very large.
+outputs/
 
 # Local/raw datasets
 data/

@@ -1,4 +1,0 @@
-objective_label,case_count,top1_all_truth_case_count,median_first_all_truth_rank,max_first_all_truth_rank,first_truth_top1_case_count,first_truth_top10_case_count,first_truth_top50_case_count,first_truth_top200_case_count,first_truth_top1000_case_count,first_truth_top2000_case_count
-row_background_sigma100,12,0,639.0,1980.0,0,0,0,1,6,7
-median_sigma60,12,0,434.0,1983.0,0,0,0,1,5,7
-row_background_sigma60,12,0,619.0,1913.0,0,0,0,0,5,7

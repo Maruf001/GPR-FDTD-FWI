@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-controlled_fixed_radius_budget,True,synthetic fixed-radius refinement budget design,blind detector-inferred radius/material claim,stable cases=10; fine points=29936602
-known_radius_permutation_budget,True,cost comparison only,launch without objective/runtime contract,combos=6; multiplier=6.0
-independent_radius_search,False,none,naive independent radius tensor search,combos=27; fine points=808288254
-detector_seeded_fwi,False,none,FWI/GPU launch,budget audit is not a launch contract

@@ -1,5 +1,0 @@
-gate_key,ready,allowed_use,blocked_use,evidence
-paper_guarded_matched_source3_contrast,True,paper-facing matched-control table with caveats,spacing-only causal proof,close14 all truth; close50 repeated wrong branch
-spacing_only_causal_claim,False,none,claim spacing alone controls source3 outcome,absolute x-position and branch-lock behavior remain part of the geometry
-broad_gpu_queue,False,none,broad local GPU close-spacing sweep,matched queue is complete; no broad GPU hypothesis is defined
-field_or_3d_handoff,False,none from this synthetic matched-control result,"field FWI, heavy field GPU, or field 3D/HPC",field controls remain separate from synthetic trackers
