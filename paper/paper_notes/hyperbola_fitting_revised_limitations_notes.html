@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper Notes: Limitations of Hyperbola Fitting for Radius Estimation</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172026;
+      --muted: #5c6973;
+      --line: #d8dee3;
+      --paper: #ffffff;
+      --soft: #f5f7f9;
+      --accent: #0b5e8e;
+    }
+    body {
+      margin: 0;
+      background: #eef2f5;
+      color: var(--ink);
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+      background: var(--paper);
+      min-height: 100vh;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+    }
+    h1, h2, h3 {
+      line-height: 1.2;
+      margin: 0;
+      color: #0f1a21;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    h2 {
+      font-size: 1.35rem;
+      margin-top: 34px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+    h3 {
+      font-size: 1.05rem;
+      margin-top: 22px;
+    }
+    p {
+      margin: 12px 0;
+    }
+    ul, ol {
+      padding-left: 24px;
+      margin: 10px 0 16px;
+    }
+    li {
+      margin: 5px 0;
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: 0.94em;
+    }
+    code {
+      background: var(--soft);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+    pre {
+      white-space: pre-wrap;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      overflow-x: auto;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 14px 0 20px;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--soft);
+    }
+    .meta {
+      color: var(--muted);
+      margin-bottom: 26px;
+    }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: #f0f7fb;
+      padding: 12px 16px;
+      margin: 18px 0;
+    }
+    .small {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Paper Notes: Limitations of Hyperbola Fitting for Radius Estimation</h1>
+  <p class="meta">
+    Source PDF: <code>paper/hyperbola_fitting/Hyperbola_Fitting_Revised.pdf</code><br>
+    Rendered visual pages inspected: <code>outputs/literature_method_work/2026-07-03_paper_vision_pages/hyperbola_fitting/</code><br>
+    Text extraction used for equations/captions: <code>outputs/literature_method_work/2026-07-03_paper_vision_pages/raw_text/hyperbola_fitting.txt</code>
+  </p>
+
+  <section>
+    <h2>Bibliographic Details</h2>
+    <p><strong>Title:</strong> On the Limitations of Hyperbola Fitting for Estimating the Radius of Cylindrical Targets in Non-Destructive Testing and Utility Detection</p>
+    <p><strong>Authors:</strong> Iraklis Giannakis, Feng Zhou, Craig Warren, Antonios Giannopoulos</p>
+    <p><strong>Venue:</strong> IEEE Geoscience and Remote Sensing Letters</p>
+  </section>
+
+  <section>
+    <h2>Main Claim</h2>
+    <div class="callout">
+      Conventional hyperbola fitting can estimate target depth and host-medium permittivity reasonably well, but it is not reliable for estimating cylindrical target radius when only first-arrival hyperbola shape is used.
+    </div>
+    <p>
+      The paper argues that practical GPR data always contain some combination of picking noise, time-zero error, antenna-positioning error, clutter, antenna noise, or medium heterogeneity. Under these normal conditions, many different radius/depth/permittivity combinations can generate almost indistinguishable hyperbolas.
+    </p>
+    <p>
+      This is a negative result for radius estimation, not a rejection of hyperbola fitting altogether. The method remains useful for fast location, cover depth, and bulk velocity/permittivity estimates.
+    </p>
+  </section>
+
+  <section>
+    <h2>Problem Setup</h2>
+    <p>
+      The paper considers ground-coupled GPR antennas moving along the x-axis, perpendicular to the long axis of a buried cylindrical target. The host medium is assumed to be a homogeneous non-magnetic half-space with relative permittivity <code>epsilon_r</code>.
+    </p>
+    <p>
+      Hyperbola fitting uses only first-arrival times. It is amplitude-agnostic, so it cannot infer target conductivity or target permittivity. It also does not use the waveform details that full waveform inversion uses.
+    </p>
+    <p>Unknowns in the generalized hyperbola model:</p>
+    <ul>
+      <li><code>x0</code>: horizontal projection of the cylinder center.</li>
+      <li><code>d</code>: cover depth.</li>
+      <li><code>R</code>: cylinder radius.</li>
+      <li><code>epsilon_r</code>: host-medium relative permittivity.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Forward Hyperbola Model</h2>
+    <p>
+      For a midpoint antenna coordinate <code>x</code> and half-offset <code>w</code>, the modeled two-way arrival time is:
+    </p>
+    <pre>t = ((D_T + D_R) - 2R) * sqrt(epsilon_r) / c0</pre>
+    <p>where:</p>
+    <pre>D_T = sqrt((x + w - x0)^2 + (d + R)^2)
+D_R = sqrt((x - w - x0)^2 + (d + R)^2)</pre>
+    <p>
+      Here <code>c0</code> is the velocity of light in free space. The subtraction of <code>2R</code> accounts for a finite-radius cylindrical target rather than a zero-radius point diffractor.
+    </p>
+    <p>
+      First-arrival picks are collected at positions:
+    </p>
+    <pre>T in R^n at x = [x1, x2, ..., xn]</pre>
+  </section>
+
+  <section>
+    <h2>Optimization Formulation</h2>
+    <p>
+      The fitting problem is posed as least-squares arrival-time matching:
+    </p>
+    <pre>argmin over x0, d, R, epsilon_r of (t - T) dot (t - T)^T</pre>
+    <p>
+      The paper uses a hybrid optimizer:
+    </p>
+    <ol>
+      <li>Particle swarm optimization (PSO) as the global search stage.</li>
+      <li>Simplex/local optimization using the PSO result as the starting point.</li>
+    </ol>
+    <p>
+      The authors state that PSO plus simplex is not essential; any global optimizer followed by any local optimizer could be used. The core issue is not optimizer quality. The core issue is non-uniqueness in the data-to-parameter mapping.
+    </p>
+  </section>
+
+  <section>
+    <h2>Figure-Level Notes From Visual Reading</h2>
+
+    <h3>Figure 1: Geometry and Arrival Hyperbola</h3>
+    <p>
+      The figure shows the transmitter/receiver pair over a cylindrical target and the characteristic first-arrival hyperbola. It visually defines the variables <code>2w</code>, <code>x0</code>, <code>d</code>, and <code>R</code>.
+    </p>
+
+    <h3>Figures 2 and 3: Utility Detection Non-Uniqueness</h3>
+    <p>
+      The synthetic utility example uses a pipe with <code>R = 0.1 m</code>, depth <code>d = 1 m</code>, and <code>epsilon_r = 10</code>. Without noise, the fit can recover the correct parameters. With small Gaussian noise, the depth and permittivity remain in a plausible range, but the radius becomes effectively unconstrained.
+    </p>
+    <p>
+      Figure 3 shows three almost identical hyperbolas from very different parameter combinations:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Curve</th>
+          <th>Depth</th>
+          <th>Radius</th>
+          <th>Permittivity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Solid line</td>
+          <td>1.00 m</td>
+          <td>0.10 m</td>
+          <td>10.0</td>
+        </tr>
+        <tr>
+          <td>Circles</td>
+          <td>0.97 m</td>
+          <td>0.20 m</td>
+          <td>10.6</td>
+        </tr>
+        <tr>
+          <td>Stars</td>
+          <td>0.91 m</td>
+          <td>0.40 m</td>
+          <td>12.1</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      This is the visual heart of the paper: the hyperbola shapes are nearly indistinguishable even though radius varies by a factor of four.
+    </p>
+
+    <h3>Figures 4 and 5: Rebar-Scale Non-Uniqueness</h3>
+    <p>
+      The concrete/rebar synthetic example uses <code>R = 0.01 m</code>, <code>d = 0.12 m</code>, and <code>epsilon_r = 8</code>. Again, no-noise fitting recovers the correct answer, but small noise causes non-unique radius estimates.
+    </p>
+    <p>
+      Figure 5 shows three almost identical hyperbolas:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Curve</th>
+          <th>Depth</th>
+          <th>Radius</th>
+          <th>Permittivity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Solid line</td>
+          <td>0.120 m</td>
+          <td>0.010 m</td>
+          <td>8.0</td>
+        </tr>
+        <tr>
+          <td>Circles</td>
+          <td>0.118 m</td>
+          <td>0.030 m</td>
+          <td>8.5</td>
+        </tr>
+        <tr>
+          <td>Stars</td>
+          <td>0.116 m</td>
+          <td>0.050 m</td>
+          <td>9.1</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      These radii span the practical range of common rebar sizes, while fitting essentially the same hyperbola. That means the radius result adds little useful information unless additional constraints are available.
+    </p>
+
+    <h3>Figure 6: Time-Zero Error</h3>
+    <p>
+      Time-zero error is modeled as a constant shift in arrival times. The figure shows that time-zero mostly affects estimated depth and radius, while estimated permittivity is less affected. This is directly relevant to field GSSI data, where time-zero can be profile-dependent.
+    </p>
+
+    <h3>Figures 7 and 8: Numerical Utility Case</h3>
+    <p>
+      The gprMax numerical experiment contains three pipes with true radii <code>[0.05, 0.10, 0.15] m</code> at depths <code>[0.65, 0.90, 0.90] m</code>, embedded in a stochastic soil model with varying water fraction and host permittivity roughly <code>4-9</code>.
+    </p>
+    <p>
+      Hyperbola fitting estimates permittivity and cover depth reasonably, but radius estimates are wrong: the reported fitted radii are <code>[0, 0.32, 0] m</code>, with about 140 percent average error.
+    </p>
+
+    <h3>Figures 9 and 10: Laboratory Concrete/Rebar Case</h3>
+    <p>
+      The laboratory experiment uses a mature concrete slab with six metallic rebars. The measurements are made perpendicular to the rebars using a commercial GSSI 2000 MHz palm antenna. This figure is especially relevant to our field-data work because it is a real GSSI rebar B-scan.
+    </p>
+    <p>
+      The authors constrain radius to four candidate values, <code>R = [0, 0.015, 0.030, 0.045] m</code>. For all candidate radii, the optimizer can find corresponding depth/permittivity values that fit the measured hyperbolas. This demonstrates that measured rebar hyperbolas do not uniquely determine radius.
+    </p>
+  </section>
+
+  <section>
+    <h2>Numerical Utility Case Details</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Targets</td>
+          <td>Three low-dielectric pipes</td>
+        </tr>
+        <tr>
+          <td>True radii</td>
+          <td>0.05 m, 0.10 m, 0.15 m</td>
+        </tr>
+        <tr>
+          <td>True depths</td>
+          <td>0.65 m, 0.90 m, 0.90 m</td>
+        </tr>
+        <tr>
+          <td>Target permittivity</td>
+          <td>epsilon_r = 3</td>
+        </tr>
+        <tr>
+          <td>Host medium</td>
+          <td>Stochastic sand/clay, water fraction 2-10 percent, epsilon_r about 4-9</td>
+        </tr>
+        <tr>
+          <td>Source</td>
+          <td>Ground-coupled ideal Hertzian dipole, 500 MHz center frequency</td>
+        </tr>
+        <tr>
+          <td>Offset</td>
+          <td>w = 0.04 m in the paper notation</td>
+        </tr>
+        <tr>
+          <td>Measurement step</td>
+          <td>0.03 m</td>
+        </tr>
+        <tr>
+          <td>Forward simulator</td>
+          <td>gprMax</td>
+        </tr>
+        <tr>
+          <td>Grid spacing</td>
+          <td>0.009 m in x, y, and z</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Processing includes time-zero correction, time-varying gain, SVD filtering, and polynomial removal of static components due to conductivity.
+    </p>
+    <p>
+      The fitted hyperbolas do not perfectly follow arrivals because the heterogeneous soil produces misshaped and asymmetric events. Despite this, depth/permittivity are approximately usable, while radius is not.
+    </p>
+  </section>
+
+  <section>
+    <h2>Laboratory Rebar Case Details</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Specimen</td>
+          <td>Mature concrete slab</td>
+        </tr>
+        <tr>
+          <td>Targets</td>
+          <td>Six metallic rebars</td>
+        </tr>
+        <tr>
+          <td>True radii</td>
+          <td>0.00127 m (#8 imperial size) and 0.0079 m (#6 imperial size), as stated in the extracted text</td>
+        </tr>
+        <tr>
+          <td>Instrument</td>
+          <td>GSSI 2000 MHz palm antenna</td>
+        </tr>
+        <tr>
+          <td>Measurement orientation</td>
+          <td>Perpendicular to the main axis of rebars</td>
+        </tr>
+        <tr>
+          <td>Measurement step</td>
+          <td>0.0078125 m</td>
+        </tr>
+        <tr>
+          <td>Transmitter-receiver offset</td>
+          <td>2w = 0.04 m</td>
+        </tr>
+        <tr>
+          <td>Processing</td>
+          <td>Time-zero correction, zero-offset correction, background removal, time gain</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      For each measured hyperbola, the optimization is run while constraining radius to multiple values. Each radius value can still fit the arrivals by changing <code>d</code> and <code>epsilon_r</code>. Estimated permittivity varies roughly from 7 to 11, while cover depth remains within about plus/minus 1 cm accuracy.
+    </p>
+  </section>
+
+  <section>
+    <h2>Main Conclusions</h2>
+    <ul>
+      <li>Hyperbola fitting is useful for fast target localization, cover depth, and approximate medium permittivity.</li>
+      <li>Radius estimation from first-arrival hyperbola shape alone is non-unique.</li>
+      <li>Even less than 2 percent arrival-time noise can produce up to 500 percent radius error.</li>
+      <li>Time-zero errors mainly affect depth and radius.</li>
+      <li>Realistic medium heterogeneity makes the fitted hyperbola asymmetric or misshaped, worsening the radius ambiguity.</li>
+      <li>The only reliable ways around the radius ambiguity are near-noiseless data, independent constraints on depth/permittivity, or methods that use more information than first-arrival shape.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Relevance to Our GSSI 51600S Field Data</h2>
+    <p>
+      This paper should be treated as a fast baseline and identifiability warning, not as a final radius-estimation method.
+    </p>
+    <p>Directly useful pieces for our data:</p>
+    <ul>
+      <li>Use hyperbola fitting to estimate approximate rebar lateral position.</li>
+      <li>Use hyperbola fitting to estimate cover depth and effective concrete permittivity.</li>
+      <li>Run radius sweeps to show whether the field B-scans actually constrain radius.</li>
+      <li>Use the spread of acceptable radii as an uncertainty diagnostic.</li>
+      <li>Use time-zero sensitivity tests because time-zero shifts can strongly bias depth/radius.</li>
+    </ul>
+    <p>What it cannot do alone:</p>
+    <ul>
+      <li>It cannot reliably estimate rebar radius from the B-scan arrival curve alone.</li>
+      <li>It cannot estimate rebar material properties because amplitudes and waveforms are not used.</li>
+      <li>It cannot replace Jazayeri-style SBD plus FWI if diameter is the target quantity.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How To Test This Paper Separately On Our Field Data</h2>
+    <ol>
+      <li>Select one clear GSSI B-scan profile from <code>data/2026-06-09_GSSI_model_51600S</code>.</li>
+      <li>Apply only the preprocessing needed for arrival picking: time-zero correction, dewow/background removal, bandpass if needed, and gain normalization for display.</li>
+      <li>Pick first-arrival points along each visible hyperbola.</li>
+      <li>Fit <code>{x0, d, R, epsilon_r}</code> using the paper's PSO plus local optimization formulation.</li>
+      <li>Repeat with multiple noise realizations or bootstrap pick perturbations.</li>
+      <li>Repeat with constrained radius values to test whether many radii fit equally well.</li>
+      <li>Report parameter ranges, not just one best-fit value.</li>
+      <li>Use the result as an initial model or uncertainty bound for a separate FWI method.</li>
+    </ol>
+    <p>
+      The output should include hyperbola overlays for several acceptable radii. If the overlays are visually indistinguishable, that is evidence that the field data do not constrain radius by hyperbola shape alone.
+    </p>
+  </section>
+
+  <section>
+    <h2>Implementation Notes</h2>
+    <p>Minimal code components needed:</p>
+    <ul>
+      <li>First-arrival pick loader or picker.</li>
+      <li>Forward hyperbola function using non-zero transmitter-receiver offset.</li>
+      <li>PSO global search over bounded <code>x0, d, R, epsilon_r</code>.</li>
+      <li>Local optimizer refinement, such as Nelder-Mead or least-squares.</li>
+      <li>Bootstrap/noise perturbation of arrival picks.</li>
+      <li>Radius-constrained fitting mode.</li>
+      <li>Overlay plot of measured picks and fitted hyperbolas.</li>
+      <li>Summary table of accepted parameter ranges.</li>
+    </ul>
+    <p>
+      Bounds should be physically constrained for our concrete data. For example, <code>epsilon_r</code> should be in a plausible concrete range, and radius should span expected rebar sizes rather than unbounded utility-scale pipes.
+    </p>
+  </section>
+
+  <section>
+    <h2>Risks and Caveats</h2>
+    <ul>
+      <li>If arrival picking uses the wrong phase lobe, all fitted parameters can shift.</li>
+      <li>If the profile is not perpendicular to the rebar, the 2-D hyperbola model is biased.</li>
+      <li>If the concrete is layered or heterogeneous, the homogeneous half-space assumption is violated.</li>
+      <li>If antenna offset or time-zero is unknown, depth and radius become even less reliable.</li>
+      <li>If multiple rebars overlap, first-arrival picks may mix events from different bars.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>One-Sentence Takeaway</h2>
+    <p>
+      Hyperbola fitting is valuable for quick rebar position, cover depth, and concrete permittivity estimates, but this paper shows it should not be trusted as a standalone method for rebar radius estimation from our field B-scans.
+    </p>
+  </section>
+
+  <p class="small">Created for project notes in <code>paper/paper_notes</code>.</p>
+</main>
+</body>
+</html>
